@@ -369,3 +369,31 @@ P-040: Петрович остаётся у переправы с пулемёт
 `BACKLOG.md`, `DEVELOPMENT_LOG.md`.
 
 **Следующая задача:** оценка набора создателем; угловой модуль и текстуры.
+
+---
+
+## 2026-11-02 — Сессия 20: набор «Больница» v0.2 — текстуры и углы
+
+**Выполнено:**
+- Угловой модуль `hosp_wall_corner` (колонна 0,2 × 0,2) — щели на стыках закрыты; в демо-сцене 8 углов.
+- `tools/blender/build_textures.py`: 7 процедурных бесшовных текстур × 3 карты (цвет, нормали,
+  шероховатость) — метлахская плитка, побелка, масляная краска со сколами, бетон, мозаичная крошка,
+  крашеное дерево, дерево. Ничего не скачивалось (P-044).
+- `build_hospital_kit.py` пишет библиотеку из 17 материалов Godot и рендерит превью с текстурами (EEVEE).
+- `scripts/editor/kit_material_import.gd` — скрипт импорта: подставляет общие материалы по имени.
+- Импорт текстур: VRAM-сжатие, мипмапы, карты нормалей.
+- Генератор демо-сцены перенесён в `tools/gen_hospital_demo.py`.
+- Автотест набора: 7/7 (добавлены проверка материалов и углов); контроллер: 7/7.
+
+**Известные ограничения:** нет перил, дверь не открывается, нет мелких деталей; новым модулям
+`import_script/path` прописывается вручную.
+
+**Изменённые файлы:** новые — `tools/blender/build_textures.py`, `tools/gen_hospital_demo.py`,
+`scripts/editor/kit_material_import.gd`, `assets/textures/hospital/*`, `assets/materials/hospital/*`,
+`assets/models/kits/hospital/hosp_wall_corner.glb`, `docs/art/hospital_kit_v02_preview.png`;
+изменены — `tools/blender/build_hospital_kit.py`, модели и `.import` набора,
+`scenes/levels/prototype/hospital_kit_demo.tscn`, `tests/test_hospital_kit.gd`,
+`docs/TECHNICAL_DESIGN.md`, `ASSETS_LICENSES.md`, `DECISIONS.md`, `CURRENT_STATE.md`, `BACKLOG.md`,
+`DEVELOPMENT_LOG.md`.
+
+**Следующая задача:** оценка набора создателем в редакторе; перила и детали.

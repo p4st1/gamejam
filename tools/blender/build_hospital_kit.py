@@ -1,6 +1,8 @@
-"""Модульный набор «Больница» v0.1 — генератор для Blender.
+"""Модульный набор «Больница» v0.2 — генератор для Blender.
 
-Строит модули (стены, перекрытия, двери, лестницы, реквизит) и выгружает каждый в отдельный .glb.
+Строит модули (стены, углы, перекрытия, двери, лестницы, реквизит) и выгружает каждый в отдельный
+.glb. Пишет библиотеку материалов Godot (assets/materials/hospital/*.tres), которые ссылаются на
+текстуры из tools/blender/build_textures.py. Превью рендерится с текстурами.
 Техописание — docs/TECHNICAL_DESIGN.md, «Модульный набор „Больница“ v0.1».
 
 Запуск (из корня проекта):
@@ -188,6 +190,15 @@ def build_wall():
 	return [mb.build("hosp_wall-col")]
 
 
+def build_wall_corner():
+	"""Угловая колонна 0,2 × 0,2 м: ставится в узел сетки, где сходятся стены, и закрывает щель."""
+	mb = MeshBuilder()
+	t = WALL_THICKNESS / 2
+	for z0, z1, mat in ((0, PAINT_HEIGHT, "paint_green"), (PAINT_HEIGHT, WALL_HEIGHT, "whitewash")):
+		mb.box((-t, -t, z0), (t, t, z1), mat)
+	return [mb.build("hosp_wall_corner-col")]
+
+
 def build_wall_door():
 	mb = MeshBuilder()
 	h, d = CELL / 2, DOOR_WIDTH / 2
@@ -333,6 +344,7 @@ def build_bench():
 MODULES = {
 	"hosp_floor": build_floor,
 	"hosp_wall": build_wall,
+	"hosp_wall_corner": build_wall_corner,
 	"hosp_wall_door": build_wall_door,
 	"hosp_wall_window": build_wall_window,
 	"hosp_door": build_door,
@@ -357,30 +369,142 @@ def export(objects, path):
 		export_yup=True, export_apply=True)
 
 
-def render_preview(groups, path):
-	"""Раскладывает модули в ряд и рендерит превью движком Workbench."""
-	x = 0.0
-	for objects in groups:
-		width = max(max(abs(v[0]) for v in o.bound_box) for o in objects) * 2
+# Материалы с текстурами: набор текстур и число повторов текстуры на метр (UV 1 = 1 м).
+TEXTURED = {
+	"paint_green": ("paint_green", 0.5),
+	"whitewash": ("whitewash", 0.5),
+	"ceiling": ("whitewash", 0.5),
+	"floor_tile": ("floor_tile", 1.0),
+	"concrete": ("concrete", 0.5),
+	"stair_tread": ("stair_tread", 1.0),
+	"door_paint": ("door_paint", 1.0),
+	"frame_paint": ("door_paint", 1.0),
+	"wood": ("wood", 1.0),
+}
+TEXTURE_DIR = "assets/textures/hospital"
+MATERIAL_DIR = "assets/materials/hospital"
+
+
+def write_godot_materials():
+	"""Пишет библиотеку StandardMaterial3D (.tres) для Godot — по одному файлу на материал палитры.
+	Скрипт импорта scripts/editor/kit_material_import.gd подставляет их в модели по имени материала."""
+	os.makedirs(MATERIAL_DIR, exist_ok=True)
+	for name, (rgb, roughness, metallic, alpha) in PALETTE.items():
+		lines, resources = [], []
+		color = (*rgb, alpha)
+		if name in TEXTURED:
+			texture, scale = TEXTURED[name]
+			base = PALETTE[texture][0]
+			color = (*[min(1.0, c / b) for c, b in zip(rgb, base)], alpha)  # оттенок поверх текстуры
+			for i, (kind, prop) in enumerate((("albedo", "albedo_texture"), ("normal", "normal_texture"),
+					("roughness", "roughness_texture"))):
+				resources.append(f'[ext_resource type="Texture2D" path="res://{TEXTURE_DIR}/{texture}_{kind}.png" id="{i + 1}_{kind}"]')
+				lines.append(f'{prop} = ExtResource("{i + 1}_{kind}")')
+			lines += ["normal_enabled = true", "roughness = 1.0", f"uv1_scale = Vector3({scale}, {scale}, {scale})"]
+		else:
+			lines.append(f"roughness = {roughness}")
+		lines.insert(0, f'albedo_color = Color({color[0]:.3f}, {color[1]:.3f}, {color[2]:.3f}, {color[3]})')
+		if metallic:
+			lines.append(f"metallic = {metallic}")
+		if alpha < 1.0:
+			lines.append("transparency = 1")
+		text = "[gd_resource type=\"StandardMaterial3D\" format=3]\n\n"
+		if resources:
+			text += "\n".join(resources) + "\n\n"
+		text += f'[resource]\nresource_name = "{name}"\n' + "\n".join(lines) + "\n"
+		with open(os.path.join(MATERIAL_DIR, name + ".tres"), "w") as f:
+			f.write(text)
+	print(f"[hospital_kit] материалы Godot: {MATERIAL_DIR}")
+
+
+def apply_preview_textures():
+	"""Подключает текстуры к материалам Blender — только для превью, после экспорта."""
+	for name, (texture, scale) in TEXTURED.items():
+		mat = material(name)
+		nodes, links = mat.node_tree.nodes, mat.node_tree.links
+		bsdf = nodes["Principled BSDF"]
+		coords = nodes.new("ShaderNodeTexCoord")
+		mapping = nodes.new("ShaderNodeMapping")
+		mapping.inputs["Scale"].default_value = (scale, scale, scale)
+		links.new(coords.outputs["UV"], mapping.inputs["Vector"])
+		for kind, socket in (("albedo", "Base Color"), ("roughness", "Roughness"), ("normal", None)):
+			node = nodes.new("ShaderNodeTexImage")
+			node.image = bpy.data.images.load(os.path.abspath(f"{TEXTURE_DIR}/{texture}_{kind}.png"))
+			if kind != "albedo":
+				node.image.colorspace_settings.name = "Non-Color"
+			links.new(mapping.outputs["Vector"], node.inputs["Vector"])
+			if socket:
+				links.new(node.outputs["Color"], bsdf.inputs[socket])
+			else:
+				normal_map = nodes.new("ShaderNodeNormalMap")
+				links.new(node.outputs["Color"], normal_map.inputs["Color"])
+				links.new(normal_map.outputs["Normal"], bsdf.inputs["Normal"])
+
+
+def place(objects, location, rotation_z=0.0):
+	"""Ставит копию модуля (меши общие) в сцену превью. Координаты — Blender (Z вверх)."""
+	for obj in objects:
+		if obj.name.endswith("-colonly"):
+			continue
+		copy = obj.copy()
+		copy.hide_render = False
+		copy.location = location
+		copy.rotation_euler = (0, 0, math.radians(rotation_z))
+		bpy.context.scene.collection.objects.link(copy)
+
+
+def render_preview(modules, path):
+	"""Уголок палаты 6 × 6 м с текстурами — рендер EEVEE (запасной вариант — Workbench)."""
+	for objects in modules.values():
 		for obj in objects:
-			obj.location.x = x + width / 2
-			obj.hide_render = obj.name.endswith("-colonly")
-		x += width + 0.8
+			obj.hide_render = True
+	for x in (0, 3):
+		for y in (0, 3):
+			place(modules["hosp_floor"], (x, y, 0))
+			place(modules["hosp_floor"], (x, y, FLOOR_HEIGHT))
+	place(modules["hosp_wall_window"], (0, 4.5, 0), 180)
+	place(modules["hosp_wall_window"], (3, 4.5, 0), 180)
+	place(modules["hosp_wall_door"], (-1.5, 0, 0), 90)
+	place(modules["hosp_wall"], (-1.5, 3, 0), 90)
+	place(modules["hosp_wall_corner"], (-1.5, 4.5, 0))
+	place(modules["prop_bed"], (0.6, 3.4, 0))
+	place(modules["prop_bed"], (2.1, 3.4, 0))
+	place(modules["prop_cabinet"], (1.35, 4.15, 0))
+	place(modules["prop_oxygen_cylinder"], (-0.9, 4.1, 0))
+	place(modules["prop_oxygen_cylinder"], (-0.6, 4.2, 0))
+	place(modules["prop_bench"], (-1.15, 1.8, 0), 90)
+	place(modules["prop_gurney"], (2.6, 0.2, 0), 90)
+
 	scene = bpy.context.scene
-	cam_data = bpy.data.cameras.new("PreviewCam")
-	cam_data.lens = 22
-	cam = bpy.data.objects.new("PreviewCam", cam_data)
+	world = bpy.data.worlds.new("PreviewWorld")
+	world.color = (0.35, 0.37, 0.4)
+	scene.world = world
+	sun = bpy.data.objects.new("Sun", bpy.data.lights.new("Sun", "SUN"))
+	sun.data.energy = 3.0
+	sun.rotation_euler = (math.radians(55), 0, math.radians(200))
+	scene.collection.objects.link(sun)
+	for i, loc in enumerate(((0.5, 1.5, 3.0), (2.5, 3.0, 3.0))):
+		lamp = bpy.data.objects.new(f"Lamp{i}", bpy.data.lights.new(f"Lamp{i}", "POINT"))
+		lamp.data.energy = 250
+		lamp.data.color = (0.95, 1.0, 0.96)
+		lamp.location = loc
+		scene.collection.objects.link(lamp)
+	cam = bpy.data.objects.new("PreviewCam", bpy.data.cameras.new("PreviewCam"))
+	cam.data.lens = 18
+	cam.location = (4.0, -1.0, 1.65)
+	cam.rotation_euler = (Vector((-0.6, 3.6, 1.1)) - cam.location).to_track_quat("-Z", "Y").to_euler()
 	scene.collection.objects.link(cam)
-	target = Vector((x / 2, 0, 1.2))
-	cam.location = target + Vector((0, -x * 0.55, x * 0.22))
-	cam.rotation_euler = (target - cam.location).to_track_quat("-Z", "Y").to_euler()
 	scene.camera = cam
-	scene.render.engine = "BLENDER_WORKBENCH"
-	scene.display.shading.light = "STUDIO"
-	scene.display.shading.color_type = "MATERIAL"
-	scene.display.shading.show_shadows = True
-	scene.render.resolution_x, scene.render.resolution_y = 1800, 700
+	scene.render.resolution_x, scene.render.resolution_y = 1600, 900
 	scene.render.filepath = path
+	for engine in ("BLENDER_EEVEE", "BLENDER_EEVEE_NEXT", "BLENDER_WORKBENCH"):
+		try:
+			scene.render.engine = engine
+			break
+		except TypeError:
+			continue
+	if scene.render.engine == "BLENDER_WORKBENCH":
+		scene.display.shading.color_type = "TEXTURE"
 	bpy.ops.render.render(write_still=True)
 
 
@@ -391,15 +515,17 @@ def main():
 	os.makedirs(out_dir, exist_ok=True)
 
 	bpy.ops.wm.read_factory_settings(use_empty=True)
-	groups = []
+	modules = {}
 	for name, builder in MODULES.items():
 		objects = builder()
 		export(objects, os.path.join(out_dir, name + ".glb"))
-		groups.append(objects)
+		modules[name] = objects
 		print(f"[hospital_kit] {name}.glb")
+	write_godot_materials()
 
 	if preview:
-		render_preview(groups, preview)
+		apply_preview_textures()
+		render_preview(modules, preview)
 		print(f"[hospital_kit] превью: {preview}")
 
 

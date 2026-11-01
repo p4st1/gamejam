@@ -20,6 +20,14 @@ func _run() -> void:
 	await _wait(0.5)
 	_check(_player.is_on_floor(), "игрок стоит на полу коридора")
 
+	# Материалы: скрипт импорта подставил общие материалы библиотеки с текстурами.
+	var wall_mesh := _first_mesh(level.get_node("Walls/Wall4"))
+	var paint := wall_mesh.mesh.surface_get_material(0) as StandardMaterial3D if wall_mesh else null
+	_check(paint != null and paint.resource_path.begins_with("res://assets/materials/hospital/")
+		and paint.albedo_texture != null and paint.normal_texture != null,
+		"у стены общий материал с текстурами (%s)" % (paint.resource_path if paint else "нет"))
+	_check(level.get_node_or_null("Walls/Corner0") != null, "угловые колонны на месте")
+
 	# Стена держит: идём в глухую стену коридора — игрок остаётся в коридоре.
 	await _teleport(Vector3(0, 0.05, 0), 0.0)
 	await _walk(1.5)
@@ -60,6 +68,16 @@ func _walk(seconds: float) -> void:
 	await _wait(seconds)
 	Input.action_release("move_forward")
 	await _wait(0.3)
+
+
+func _first_mesh(node: Node) -> MeshInstance3D:
+	if node is MeshInstance3D:
+		return node
+	for child in node.get_children():
+		var found := _first_mesh(child)
+		if found:
+			return found
+	return null
 
 
 func _wait(seconds: float) -> void:
