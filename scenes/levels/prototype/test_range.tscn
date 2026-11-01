@@ -1,0 +1,203 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
+[ext_resource type="Script" path="res://scripts/debug/debug_overlay.gd" id="2_overlay"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat_overcast"]
+sky_top_color = Color(0.42, 0.46, 0.5, 1)
+sky_horizon_color = Color(0.62, 0.64, 0.66, 1)
+ground_bottom_color = Color(0.18, 0.19, 0.2, 1)
+ground_horizon_color = Color(0.62, 0.64, 0.66, 1)
+
+[sub_resource type="Sky" id="Sky_overcast"]
+sky_material = SubResource("SkyMat_overcast")
+
+[sub_resource type="Environment" id="Env_overcast"]
+background_mode = 2
+sky = SubResource("Sky_overcast")
+ambient_light_source = 3
+ambient_light_energy = 0.8
+tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(0.6, 0.63, 0.66, 1)
+fog_density = 0.012
+
+[sub_resource type="StandardMaterial3D" id="Mat_floor"]
+albedo_color = Color(0.36, 0.37, 0.38, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Mat_wall"]
+albedo_color = Color(0.55, 0.55, 0.53, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_accent"]
+albedo_color = Color(0.8, 0.45, 0.15, 1)
+roughness = 0.8
+
+[sub_resource type="BoxShape3D" id="Box_stair_ramp"]
+size = Vector3(2, 0.1, 2.885)
+
+[node name="TestRange" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_overcast")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-50, -30, 0)
+light_color = Color(0.92, 0.94, 1, 1)
+light_energy = 0.8
+shadow_enabled = true
+
+[node name="Geometry" type="Node3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="Geometry"]
+position = Vector3(0, -0.5, 0)
+use_collision = true
+size = Vector3(60, 1, 60)
+material = SubResource("Mat_floor")
+
+[node name="WallNorth" type="CSGBox3D" parent="Geometry"]
+position = Vector3(0, 1.5, -30)
+use_collision = true
+size = Vector3(60, 3, 0.5)
+material = SubResource("Mat_wall")
+
+[node name="WallSouth" type="CSGBox3D" parent="Geometry"]
+position = Vector3(0, 1.5, 30)
+use_collision = true
+size = Vector3(60, 3, 0.5)
+material = SubResource("Mat_wall")
+
+[node name="WallWest" type="CSGBox3D" parent="Geometry"]
+position = Vector3(-30, 1.5, 0)
+use_collision = true
+size = Vector3(0.5, 3, 60)
+material = SubResource("Mat_wall")
+
+[node name="WallEast" type="CSGBox3D" parent="Geometry"]
+position = Vector3(30, 1.5, 0)
+use_collision = true
+size = Vector3(0.5, 3, 60)
+material = SubResource("Mat_wall")
+
+[node name="Stairs" type="Node3D" parent="Geometry"]
+
+[node name="Step1" type="CSGBox3D" parent="Geometry/Stairs"]
+position = Vector3(0, 0.1, -0.15)
+size = Vector3(2, 0.2, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="Step2" type="CSGBox3D" parent="Geometry/Stairs"]
+position = Vector3(0, 0.2, -0.45)
+size = Vector3(2, 0.4, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="Step3" type="CSGBox3D" parent="Geometry/Stairs"]
+position = Vector3(0, 0.3, -0.75)
+size = Vector3(2, 0.6, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="Step4" type="CSGBox3D" parent="Geometry/Stairs"]
+position = Vector3(0, 0.4, -1.05)
+size = Vector3(2, 0.8, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="Step5" type="CSGBox3D" parent="Geometry/Stairs"]
+position = Vector3(0, 0.5, -1.35)
+size = Vector3(2, 1, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="Step6" type="CSGBox3D" parent="Geometry/Stairs"]
+position = Vector3(0, 0.6, -1.65)
+size = Vector3(2, 1.2, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="Step7" type="CSGBox3D" parent="Geometry/Stairs"]
+position = Vector3(0, 0.7, -1.95)
+size = Vector3(2, 1.4, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="Step8" type="CSGBox3D" parent="Geometry/Stairs"]
+position = Vector3(0, 0.8, -2.25)
+size = Vector3(2, 1.6, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="Landing" type="CSGBox3D" parent="Geometry/Stairs"]
+position = Vector3(0, 0.8, -3.9)
+use_collision = true
+size = Vector3(2, 1.6, 3)
+material = SubResource("Mat_wall")
+
+[node name="StairCollision" type="StaticBody3D" parent="Geometry/Stairs"]
+
+[node name="Ramp" type="CollisionShape3D" parent="Geometry/Stairs/StairCollision"]
+position = Vector3(0, 0.758, -1.228)
+rotation_degrees = Vector3(33.69, 0, 0)
+shape = SubResource("Box_stair_ramp")
+
+[node name="Ramp" type="CSGBox3D" parent="Geometry"]
+position = Vector3(-6, 0.89, 0)
+rotation_degrees = Vector3(15, 0, 0)
+use_collision = true
+size = Vector3(3, 0.3, 8)
+material = SubResource("Mat_wall")
+
+[node name="CrouchTunnel" type="Node3D" parent="Geometry"]
+
+[node name="Roof" type="CSGBox3D" parent="Geometry/CrouchTunnel"]
+position = Vector3(6, 1.45, 0)
+use_collision = true
+size = Vector3(2.6, 0.3, 4)
+material = SubResource("Mat_accent")
+
+[node name="WallLeft" type="CSGBox3D" parent="Geometry/CrouchTunnel"]
+position = Vector3(4.85, 0.65, 0)
+use_collision = true
+size = Vector3(0.3, 1.3, 4)
+material = SubResource("Mat_wall")
+
+[node name="WallRight" type="CSGBox3D" parent="Geometry/CrouchTunnel"]
+position = Vector3(7.15, 0.65, 0)
+use_collision = true
+size = Vector3(0.3, 1.3, 4)
+material = SubResource("Mat_wall")
+
+[node name="Cover" type="Node3D" parent="Geometry"]
+
+[node name="Block1" type="CSGBox3D" parent="Geometry/Cover"]
+position = Vector3(-3, 0.5, -10)
+use_collision = true
+size = Vector3(1.8, 1, 0.6)
+material = SubResource("Mat_wall")
+
+[node name="Block2" type="CSGBox3D" parent="Geometry/Cover"]
+position = Vector3(2, 0.5, -12)
+rotation_degrees = Vector3(0, 20, 0)
+use_collision = true
+size = Vector3(1.8, 1, 0.6)
+material = SubResource("Mat_wall")
+
+[node name="Block3" type="CSGBox3D" parent="Geometry/Cover"]
+position = Vector3(6, 0.5, -15)
+use_collision = true
+size = Vector3(1.8, 1, 0.6)
+material = SubResource("Mat_wall")
+
+[node name="Pillar" type="CSGBox3D" parent="Geometry/Cover"]
+position = Vector3(-1, 1.5, -18)
+use_collision = true
+size = Vector3(0.8, 3, 0.8)
+material = SubResource("Mat_wall")
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+position = Vector3(0, 0.05, 6)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="DebugOverlay" type="Label" parent="HUD" node_paths=PackedStringArray("player")]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 520.0
+offset_bottom = 200.0
+script = ExtResource("2_overlay")
+player = NodePath("../../Player")
