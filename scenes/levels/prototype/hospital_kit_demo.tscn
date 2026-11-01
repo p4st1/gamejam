@@ -1,0 +1,276 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
+[ext_resource type="Script" path="res://scripts/debug/debug_overlay.gd" id="2_overlay"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_floor.glb" id="3_hosp_floor"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall.glb" id="4_hosp_wall"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_door.glb" id="5_hosp_wall_door"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_window.glb" id="6_hosp_wall_window"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_door.glb" id="7_hosp_door"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_stairs_flight.glb" id="8_hosp_stairs_flight"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_stairs_landing.glb" id="9_hosp_stairs_landing"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_bed.glb" id="10_prop_bed"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_cabinet.glb" id="11_prop_cabinet"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_oxygen_cylinder.glb" id="12_prop_oxygen_cylinder"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_gurney.glb" id="13_prop_gurney"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_bench.glb" id="14_prop_bench"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat_overcast"]
+sky_top_color = Color(0.42, 0.46, 0.5, 1)
+sky_horizon_color = Color(0.62, 0.64, 0.66, 1)
+ground_bottom_color = Color(0.18, 0.19, 0.2, 1)
+ground_horizon_color = Color(0.62, 0.64, 0.66, 1)
+
+[sub_resource type="Sky" id="Sky_overcast"]
+sky_material = SubResource("SkyMat_overcast")
+
+[sub_resource type="Environment" id="Env_hospital"]
+background_mode = 2
+sky = SubResource("Sky_overcast")
+ambient_light_source = 3
+ambient_light_energy = 0.35
+tonemap_mode = 2
+
+[node name="HospitalKitDemo" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_hospital")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-35, -150, 0)
+light_color = Color(0.92, 0.94, 1, 1)
+light_energy = 0.7
+shadow_enabled = true
+
+[node name="Floors" type="Node3D" parent="."]
+
+[node name="Ceilings" type="Node3D" parent="."]
+
+[node name="Walls" type="Node3D" parent="."]
+
+[node name="Stairs" type="Node3D" parent="."]
+
+[node name="Props" type="Node3D" parent="."]
+
+[node name="Lights" type="Node3D" parent="."]
+
+[node name="Floor0" parent="Floors" instance=ExtResource("3_hosp_floor")]
+position = Vector3(0, 0, 0)
+
+[node name="Floor1" parent="Floors" instance=ExtResource("3_hosp_floor")]
+position = Vector3(3, 0, 0)
+
+[node name="Floor2" parent="Floors" instance=ExtResource("3_hosp_floor")]
+position = Vector3(6, 0, 0)
+
+[node name="Floor3" parent="Floors" instance=ExtResource("3_hosp_floor")]
+position = Vector3(9, 0, 0)
+
+[node name="Floor4" parent="Floors" instance=ExtResource("3_hosp_floor")]
+position = Vector3(3, 0, -3)
+
+[node name="Floor5" parent="Floors" instance=ExtResource("3_hosp_floor")]
+position = Vector3(6, 0, -3)
+
+[node name="Floor6" parent="Floors" instance=ExtResource("3_hosp_floor")]
+position = Vector3(12, 0, 0)
+
+[node name="Floor7" parent="Floors" instance=ExtResource("3_hosp_floor")]
+position = Vector3(15, 0, 0)
+
+[node name="Ceiling0" parent="Ceilings" instance=ExtResource("3_hosp_floor")]
+position = Vector3(0, 3.3, 0)
+
+[node name="Ceiling1" parent="Ceilings" instance=ExtResource("3_hosp_floor")]
+position = Vector3(3, 3.3, 0)
+
+[node name="Ceiling2" parent="Ceilings" instance=ExtResource("3_hosp_floor")]
+position = Vector3(6, 3.3, 0)
+
+[node name="Ceiling3" parent="Ceilings" instance=ExtResource("3_hosp_floor")]
+position = Vector3(9, 3.3, 0)
+
+[node name="Ceiling4" parent="Ceilings" instance=ExtResource("3_hosp_floor")]
+position = Vector3(3, 3.3, -3)
+
+[node name="Ceiling5" parent="Ceilings" instance=ExtResource("3_hosp_floor")]
+position = Vector3(6, 3.3, -3)
+
+[node name="Wall0" parent="Walls" instance=ExtResource("6_hosp_wall_window")]
+position = Vector3(0, 0, 1.5)
+
+[node name="Wall1" parent="Walls" instance=ExtResource("6_hosp_wall_window")]
+position = Vector3(3, 0, 1.5)
+
+[node name="Wall2" parent="Walls" instance=ExtResource("6_hosp_wall_window")]
+position = Vector3(6, 0, 1.5)
+
+[node name="Wall3" parent="Walls" instance=ExtResource("6_hosp_wall_window")]
+position = Vector3(9, 0, 1.5)
+
+[node name="Wall4" parent="Walls" instance=ExtResource("4_hosp_wall")]
+position = Vector3(0, 0, -1.5)
+
+[node name="Wall5" parent="Walls" instance=ExtResource("5_hosp_wall_door")]
+position = Vector3(3, 0, -1.5)
+
+[node name="Wall6" parent="Walls" instance=ExtResource("4_hosp_wall")]
+position = Vector3(6, 0, -1.5)
+
+[node name="Wall7" parent="Walls" instance=ExtResource("4_hosp_wall")]
+position = Vector3(9, 0, -1.5)
+
+[node name="Wall8" parent="Walls" instance=ExtResource("4_hosp_wall")]
+position = Vector3(-1.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="Wall9" parent="Walls" instance=ExtResource("6_hosp_wall_window")]
+position = Vector3(3, 0, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Wall10" parent="Walls" instance=ExtResource("6_hosp_wall_window")]
+position = Vector3(6, 0, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Wall11" parent="Walls" instance=ExtResource("4_hosp_wall")]
+position = Vector3(1.5, 0, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="Wall12" parent="Walls" instance=ExtResource("4_hosp_wall")]
+position = Vector3(7.5, 0, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="Wall13" parent="Walls" instance=ExtResource("6_hosp_wall_window")]
+position = Vector3(12, 0, 1.5)
+
+[node name="Wall14" parent="Walls" instance=ExtResource("6_hosp_wall_window")]
+position = Vector3(15, 0, 1.5)
+
+[node name="Wall15" parent="Walls" instance=ExtResource("4_hosp_wall")]
+position = Vector3(12, 0, -1.5)
+
+[node name="Wall16" parent="Walls" instance=ExtResource("4_hosp_wall")]
+position = Vector3(15, 0, -1.5)
+
+[node name="Wall17" parent="Walls" instance=ExtResource("4_hosp_wall")]
+position = Vector3(16.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="WardDoor" parent="Walls" instance=ExtResource("7_hosp_door")]
+position = Vector3(2.46, 0, -1.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="Flight1" parent="Stairs" instance=ExtResource("8_hosp_stairs_flight")]
+position = Vector3(12, 0, 0.7)
+
+[node name="MidLanding" parent="Stairs" instance=ExtResource("9_hosp_stairs_landing")]
+position = Vector3(15.7, 1.65, 0)
+
+[node name="Flight2" parent="Stairs" instance=ExtResource("8_hosp_stairs_flight")]
+position = Vector3(15, 1.65, -0.7)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="UpperLanding" parent="Stairs" instance=ExtResource("9_hosp_stairs_landing")]
+position = Vector3(11.3, 3.3, 0)
+
+[node name="Bed0" parent="Props" instance=ExtResource("10_prop_bed")]
+position = Vector3(2.4, 0, -3.4)
+
+[node name="Bed1" parent="Props" instance=ExtResource("10_prop_bed")]
+position = Vector3(3.9, 0, -3.4)
+
+[node name="Bed2" parent="Props" instance=ExtResource("10_prop_bed")]
+position = Vector3(5.4, 0, -3.4)
+
+[node name="Bed3" parent="Props" instance=ExtResource("10_prop_bed")]
+position = Vector3(6.9, 0, -3.4)
+
+[node name="Cabinet0" parent="Props" instance=ExtResource("11_prop_cabinet")]
+position = Vector3(3.15, 0, -4.15)
+
+[node name="Cabinet1" parent="Props" instance=ExtResource("11_prop_cabinet")]
+position = Vector3(6.15, 0, -4.15)
+
+[node name="Oxygen0" parent="Props" instance=ExtResource("12_prop_oxygen_cylinder")]
+position = Vector3(1.95, 0, -4.2)
+
+[node name="Oxygen1" parent="Props" instance=ExtResource("12_prop_oxygen_cylinder")]
+position = Vector3(4.65, 0, -4.2)
+
+[node name="Oxygen2" parent="Props" instance=ExtResource("12_prop_oxygen_cylinder")]
+position = Vector3(8.2, 0, -1.2)
+
+[node name="Oxygen3" parent="Props" instance=ExtResource("12_prop_oxygen_cylinder")]
+position = Vector3(8.5, 0, -1.15)
+
+[node name="Oxygen4" parent="Props" instance=ExtResource("12_prop_oxygen_cylinder")]
+position = Vector3(8.8, 0, -1.2)
+
+[node name="Gurney" parent="Props" instance=ExtResource("13_prop_gurney")]
+position = Vector3(5, 0, 0.8)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="Bench" parent="Props" instance=ExtResource("14_prop_bench")]
+position = Vector3(0.5, 0, -1.2)
+
+[node name="CorridorLight0" type="OmniLight3D" parent="Lights"]
+position = Vector3(0, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.1
+omni_range = 6.0
+
+[node name="CorridorLight1" type="OmniLight3D" parent="Lights"]
+position = Vector3(3, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.1
+omni_range = 6.0
+
+[node name="CorridorLight2" type="OmniLight3D" parent="Lights"]
+position = Vector3(6, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.1
+omni_range = 6.0
+
+[node name="CorridorLight3" type="OmniLight3D" parent="Lights"]
+position = Vector3(9, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.1
+omni_range = 6.0
+
+[node name="WardLight" type="OmniLight3D" parent="Lights"]
+position = Vector3(4.5, 2.9, -3)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.1
+omni_range = 6.0
+
+[node name="StairLight0" type="OmniLight3D" parent="Lights"]
+position = Vector3(12, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.1
+omni_range = 6.0
+
+[node name="StairLight1" type="OmniLight3D" parent="Lights"]
+position = Vector3(15, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.1
+omni_range = 6.0
+
+[node name="StairLight2" type="OmniLight3D" parent="Lights"]
+position = Vector3(13.5, 5.5, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.1
+omni_range = 6.0
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+position = Vector3(0, 0.05, 0)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="DebugOverlay" type="Label" parent="HUD" node_paths=PackedStringArray("player")]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 520.0
+offset_bottom = 200.0
+script = ExtResource("2_overlay")
+player = NodePath("../../Player")

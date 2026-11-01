@@ -344,3 +344,28 @@ P-040: Петрович остаётся у переправы с пулемёт
 `GAME_VISION.md`, `TIMELINE.md`, `WORLD_LORE.md`, `CURRENT_STATE.md`, `BACKLOG.md`, `DEVELOPMENT_LOG.md`.
 
 **Следующая задача:** утверждение P-039; оценка движения на тестовой площадке.
+
+---
+
+## 2026-11-01 — Сессия 19: модульный набор «Больница» v0.1
+
+**Выполнено:**
+- Обсуждение 3D-моделей: что делает ИИ-партнёр, что берём из библиотек/покупаем — P-043.
+- Техописание набора в TECHNICAL_DESIGN.md (сетка 3 м, этаж 3,3 м, покраска «краска/побелка»,
+  точки привязки, коллизии через суффиксы `-col`/`-colonly`, UV 1 м).
+- Скрипт `tools/blender/build_hospital_kit.py` (Blender 5.0.1, без окна): 12 модулей → `.glb` в
+  `assets/models/kits/hospital/`, превью `docs/art/hospital_kit_v01_preview.png`.
+- Демо-сцена `scenes/levels/prototype/hospital_kit_demo.tscn`: коридор, палата на 4 койки, лестничная
+  клетка на второй этаж, свет.
+- Автотест `tests/test_hospital_kit.gd` — 5/5; автотест контроллера — по-прежнему 7/7.
+- `docs/ASSETS_LICENSES.md` — учёт ассетов и лицензий. `.gdignore` в `docs/` и `tools/`.
+
+**Известные ограничения:** нет текстур, щели на углах стен, нет перил, дверь не открывается.
+
+**Изменённые файлы:** новые — `tools/blender/build_hospital_kit.py`, `assets/models/kits/hospital/*`,
+`scenes/levels/prototype/hospital_kit_demo.tscn`, `tests/test_hospital_kit.gd`,
+`docs/ASSETS_LICENSES.md`, `docs/art/hospital_kit_v01_preview.png`, `docs/.gdignore`,
+`tools/.gdignore`; изменены — `docs/TECHNICAL_DESIGN.md`, `DECISIONS.md`, `CURRENT_STATE.md`,
+`BACKLOG.md`, `DEVELOPMENT_LOG.md`.
+
+**Следующая задача:** оценка набора создателем; угловой модуль и текстуры.
