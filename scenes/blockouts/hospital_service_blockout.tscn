@@ -62,7 +62,7 @@ ambient_light_source = 3
 ambient_light_energy = 0.35
 tonemap_mode = 2
 
-[node name="HospitalServiceDemo" type="Node3D"]
+[node name="HospitalServiceBlockout" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env")

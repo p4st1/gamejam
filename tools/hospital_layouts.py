@@ -1,16 +1,90 @@
-"""Расстановки модулей набора «Больница» — общий источник для сцены Godot и превью Blender.
+"""Наброски уровней набора «Больница» — общий источник для сцен Godot и превью Blender.
+
+Запуск из корня проекта: python3 tools/hospital_layouts.py [--force]
+Пишет наброски в scenes/blockouts/. Набросок, который правили вручную, не перезаписывается
+(сверка с контрольной суммой из scenes/blockouts/.generated.json) — только с --force.
+Свою локацию создатель делает копией наброска в scenes/levels/<миссия>/ (D-037).
 
 Координаты — Godot: X вправо, Y вверх, Z к зрителю; поворот — градусы вокруг Y.
 Сетка 3 м; стены — на линиях сетки. У стен и настенных предметов «внутренняя» сторона (+Y модуля
 в Blender) при повороте 0 смотрит в −Z, при 180 — в +Z, при 90 — в −X, при −90 — в +X.
 """
 
+import hashlib
+import json
+import os
+import sys
+
 KIT = "res://assets/models/kits/hospital/"
+BLOCKOUTS = "scenes/blockouts"
+CHECKSUMS = os.path.join(BLOCKOUTS, ".generated.json")
 
 G = 0.0      # пол первого этажа
 B = -3.3     # пол подвала
 Y = -1.1     # двор (рампа поднята на 1,1 м)
 CEIL = 3.1   # потолок этажа (низ перекрытия)
+
+
+def ward_layout():
+	"""Палата и коридор: коридор с окнами, палата на 4 койки, лестничная клетка на второй этаж."""
+	p = []
+
+	def add(group, name, module, pos, rot=0):
+		p.append((group, name, module, pos, rot))
+
+	cells_floor = [(3 * i, 0) for i in range(4)] + [(3, -3), (6, -3)] + [(12, 0), (15, 0)]
+	for k, (x, z) in enumerate(cells_floor):
+		add("Floors", f"Floor{k}", "hosp_floor", (x, G, z))
+	for k, (x, z) in enumerate([(3 * i, 0) for i in range(4)] + [(3, -3), (6, -3)]):
+		add("Ceilings", f"Ceiling{k}", "hosp_floor", (x, G + 3.3, z))
+	w = []
+	w += [("hosp_wall_window", (x, G, 1.5), 0) for x in (0, 3, 6, 9)]  # коридор, юг
+	w += [("hosp_wall", (0, G, -1.5), 0), ("hosp_wall_door", (3, G, -1.5), 0),
+		("hosp_wall", (6, G, -1.5), 0), ("hosp_wall", (9, G, -1.5), 0)]
+	w += [("hosp_wall", (-1.5, G, 0), 90)]  # торец коридора
+	w += [("hosp_wall_window", (x, G, -4.5), 180) for x in (3, 6)]  # палата, север
+	w += [("hosp_wall", (1.5, G, -3), 90), ("hosp_wall", (7.5, G, -3), 90)]  # палата, бока
+	w += [("hosp_wall_window", (x, G, 1.5), 0) for x in (12, 15)]  # лестница, юг
+	w += [("hosp_wall", (x, G, -1.5), 0) for x in (12, 15)]  # лестница, север
+	w += [("hosp_wall", (16.5, G, 0), 90)]  # лестница, торец
+	for k, (m, pos, r) in enumerate(w):
+		add("Walls", f"Wall{k}", m, pos, r)
+	add("Walls", "WardDoor", "hosp_door", (2.46, G, -1.5), 90)
+	for k, (x, z) in enumerate([(-1.5, 1.5), (-1.5, -1.5), (1.5, -1.5), (1.5, -4.5), (7.5, -4.5),
+			(7.5, -1.5), (16.5, 1.5), (16.5, -1.5)]):
+		add("Walls", f"Corner{k}", "hosp_wall_corner", (x, G, z))
+	add("Stairs", "Flight1", "hosp_stairs_flight", (12.0, G, 0.7))
+	add("Stairs", "MidLanding", "hosp_stairs_landing", (15.7, 1.65, 0))
+	add("Stairs", "Flight2", "hosp_stairs_flight", (15.0, 1.65, -0.7), 180)
+	add("Stairs", "UpperLanding", "hosp_stairs_landing", (11.3, 3.3, 0))
+	add("Stairs", "Railing1", "hosp_stairs_railing", (12.0, G, 0.7))  # перила — как марши
+	add("Stairs", "Railing2", "hosp_stairs_railing", (15.0, 1.65, -0.7), 180)
+	add("Stairs", "LandingRailing", "hosp_railing_straight", (12.0, 3.3, 0.75), 90)  # край 2 этажа
+	for k, x in enumerate((2.4, 3.9, 5.4, 6.9)):
+		add("Props", f"Bed{k}", "prop_bed", (x, G, -3.4))
+	add("Props", "Cabinet0", "prop_cabinet", (3.15, G, -4.15))
+	add("Props", "Cabinet1", "prop_cabinet", (6.15, G, -4.15))
+	for k, pos in enumerate([(1.95, G, -4.2), (4.65, G, -4.2), (8.2, G, -1.2), (8.5, G, -1.15), (8.8, G, -1.2)]):
+		add("Props", f"Oxygen{k}", "prop_oxygen_cylinder", pos)
+	add("Props", "Gurney", "prop_gurney", (5.0, G, 0.8), 90)
+	add("Props", "Bench", "prop_bench", (0.5, G, -1.2))
+	for k, (x, z, r) in enumerate([(0, 1.5, 0), (3, 1.5, 0), (6, 1.5, 0), (9, 1.5, 0), (3, -4.5, 180), (6, -4.5, 180)]):
+		add("Props", f"Radiator{k}", "prop_radiator", (x, G, z), r)  # привязка как у окон над ними
+	for k, pos in enumerate([(0, CEIL, 0), (3, CEIL, 0), (6, CEIL, 0), (9, CEIL, 0), (3, CEIL, -3), (6, CEIL, -3)]):
+		add("Props", f"Lamp{k}", "prop_ceiling_lamp", pos)
+	add("Props", "StairLamp", "prop_ceiling_lamp", (11.3, CEIL, 0), 90)
+	add("Props", "Sink", "prop_sink", (1.5, G, -2.2), -90)
+	add("Props", "IVStand", "prop_iv_stand", (3.1, G, -2.9))
+	add("Props", "MedCabinet", "prop_med_cabinet", (7.5, G, -1.95), 90)
+	add("Props", "WardSign", "prop_sign_plate", (3.95, 1.6, -1.5), 180)
+
+	cool = (0.92, 1.0, 0.95)
+	lights = [(f"CorridorLight{i}", (3 * i, 2.9, 0), cool, 1.1, 6.0) for i in range(4)]
+	lights += [(name, pos, cool, 1.1, 6.0) for name, pos in (("WardLight0", (3, 2.9, -3)),
+		("WardLight1", (6, 2.9, -3)), ("StairLight0", (12, 2.9, 0)), ("StairLight1", (15, 2.9, 0)),
+		("StairLight2", (13.5, 5.5, 0)))]
+	labels = [("WardSignText", (3.95, 1.6, -1.385), 0, "Палата № 214", 36, (0.12, 0.12, 0.12))]
+	return {"placements": p, "lights": lights, "labels": labels, "player": ((0, 0.05, 0), -90)}
 
 
 def service_layout():
@@ -153,8 +227,9 @@ def service_layout():
 	}
 
 
-def write_tscn(layout, path, root_name):
-	"""Пишет сцену Godot из расстановки: модули — экземпляры .glb, свет — OmniLight3D, надписи — Label3D."""
+def write_tscn(layout, path, root_name, force=False):
+	"""Пишет сцену Godot из расстановки: модули — экземпляры .glb, свет — OmniLight3D, надписи — Label3D.
+	Не перезаписывает файл, если его правили после генерации (если не force). Возвращает True, если записал."""
 	modules = sorted({m for _, _, m, _, _ in layout["placements"]})
 	ids = {m: f"{i + 3}_{m}" for i, m in enumerate(modules)}
 	groups = list(dict.fromkeys(g for g, _, _, _, _ in layout["placements"]))
@@ -201,11 +276,31 @@ def write_tscn(layout, path, root_name):
 		'[node name="DebugOverlay" type="Label" parent="HUD" node_paths=PackedStringArray("player")]',
 		"offset_left = 16.0", "offset_top = 16.0", "offset_right = 520.0", "offset_bottom = 200.0",
 		'script = ExtResource("2_overlay")', 'player = NodePath("../../Player")', ""]
+	text = "\n".join(out)
+	checksums = json.load(open(CHECKSUMS)) if os.path.exists(CHECKSUMS) else {}
+	if os.path.exists(path) and not force:
+		current = hashlib.sha256(open(path, "rb").read()).hexdigest()
+		if checksums.get(path) != current:
+			print(f"[blockouts] ПРОПУЩЕН {path}: его правили вручную (или он не из генератора). "
+				"Перезаписать — с флагом --force.")
+			return False
+	os.makedirs(os.path.dirname(path), exist_ok=True)
 	with open(path, "w") as f:
-		f.write("\n".join(out))
-	return len(layout["placements"])
+		f.write(text)
+	checksums[path] = hashlib.sha256(text.encode()).hexdigest()
+	with open(CHECKSUMS, "w") as f:
+		json.dump(checksums, f, indent=1, ensure_ascii=False, sort_keys=True)
+	print(f"[blockouts] {path}: {len(layout['placements'])} модулей")
+	return True
+
+
+BLOCKOUT_SCENES = (
+	(ward_layout, "hospital_ward_blockout.tscn", "HospitalWardBlockout"),
+	(service_layout, "hospital_service_blockout.tscn", "HospitalServiceBlockout"),
+)
 
 
 if __name__ == "__main__":
-	count = write_tscn(service_layout(), "scenes/levels/prototype/hospital_service_demo.tscn", "HospitalServiceDemo")
-	print(count, "модулей → scenes/levels/prototype/hospital_service_demo.tscn")
+	force = "--force" in sys.argv
+	for layout, name, root in BLOCKOUT_SCENES:
+		write_tscn(layout(), os.path.join(BLOCKOUTS, name), root, force)

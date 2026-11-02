@@ -2,7 +2,7 @@ extends SceneTree
 ## Автотест модульного набора «Больница» в демо-сцене.
 ## Запуск: godot --headless --path . --script res://tests/test_hospital_kit.gd
 
-const DEMO := preload("res://scenes/levels/prototype/hospital_kit_demo.tscn")
+const DEMO := preload("res://scenes/blockouts/hospital_ward_blockout.tscn")
 
 var _failures := 0
 var _player: Player

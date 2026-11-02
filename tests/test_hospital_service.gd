@@ -2,7 +2,7 @@ extends SceneTree
 ## Автотест служебного блока набора «Больница»: шлюз, рампа, приёмка, подвал, склад.
 ## Запуск: godot --headless --path . --script res://tests/test_hospital_service.gd
 
-const DEMO := preload("res://scenes/levels/prototype/hospital_service_demo.tscn")
+const DEMO := preload("res://scenes/blockouts/hospital_service_blockout.tscn")
 
 var _failures := 0
 var _player: Player

@@ -6,7 +6,9 @@
 Техописание — docs/TECHNICAL_DESIGN.md, «Модульный набор „Больница“ v0.1».
 
 Запуск (из корня проекта):
-    Blender -b --factory-startup --python tools/blender/build_hospital_kit.py -- <папка> [превью.png]
+    Blender -b --factory-startup --python tools/blender/build_hospital_kit.py -- <папка> [превью.png] [--overwrite-materials]
+
+Модели .glb пересобираются всегда; материалы .tres — только недостающие (D-037).
 
 Оси Blender: X — вдоль стены/марша, Y — толщина, Z — вверх. При экспорте glTF Z становится Y.
 Суффиксы имён для импорта в Godot: «-col» — модель с коллизией, «-colonly» — только коллизия.
@@ -881,11 +883,16 @@ TEXTURE_DIR = "assets/textures/hospital"
 MATERIAL_DIR = "assets/materials/hospital"
 
 
-def write_godot_materials():
+def write_godot_materials(overwrite=False):
 	"""Пишет библиотеку StandardMaterial3D (.tres) для Godot — по одному файлу на материал палитры.
-	Скрипт импорта scripts/editor/kit_material_import.gd подставляет их в модели по имени материала."""
+	Скрипт импорта scripts/editor/kit_material_import.gd подставляет их в модели по имени материала.
+	Существующие файлы не трогает (их мог доработать создатель, D-037) — только при overwrite."""
 	os.makedirs(MATERIAL_DIR, exist_ok=True)
+	created = 0
 	for name, (rgb, roughness, metallic, alpha) in PALETTE.items():
+		target = os.path.join(MATERIAL_DIR, name + ".tres")
+		if os.path.exists(target) and not overwrite:
+			continue
 		lines, resources = [], []
 		color = (*rgb, alpha)
 		if name in TEXTURED:
@@ -912,9 +919,11 @@ def write_godot_materials():
 		if resources:
 			text += "\n".join(resources) + "\n\n"
 		text += f'[resource]\nresource_name = "{name}"\n' + "\n".join(lines) + "\n"
-		with open(os.path.join(MATERIAL_DIR, name + ".tres"), "w") as f:
+		with open(target, "w") as f:
 			f.write(text)
-	print(f"[hospital_kit] материалы Godot: {MATERIAL_DIR}")
+		created += 1
+	print(f"[hospital_kit] материалы Godot: записано {created} в {MATERIAL_DIR}"
+		+ ("" if overwrite else " (существующие не тронуты; перезаписать — --overwrite-materials)"))
 
 
 def apply_preview_textures():
@@ -1075,7 +1084,8 @@ def render_preview(modules, path):
 
 
 def main():
-	args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+	all_args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+	args = [a for a in all_args if not a.startswith("--")]
 	out_dir = os.path.abspath(args[0] if args else "assets/models/kits/hospital")
 	preview = os.path.abspath(args[1]) if len(args) > 1 else None
 	os.makedirs(out_dir, exist_ok=True)
@@ -1087,7 +1097,7 @@ def main():
 		export(objects, os.path.join(out_dir, name + ".glb"))
 		modules[name] = objects
 		print(f"[hospital_kit] {name}.glb")
-	write_godot_materials()
+	write_godot_materials("--overwrite-materials" in all_args)
 
 	if preview:
 		apply_preview_textures()

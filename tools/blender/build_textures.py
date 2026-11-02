@@ -4,7 +4,9 @@
 шероховатость (_roughness). Ничего не скачивает — текстуры полностью собственные.
 
 Запуск (из корня проекта):
-    Blender -b --factory-startup --python tools/blender/build_textures.py -- assets/textures/hospital
+    Blender -b --factory-startup --python tools/blender/build_textures.py -- assets/textures/hospital [--overwrite]
+
+Существующие текстуры не перезаписываются без --overwrite (их мог заменить создатель, D-037).
 """
 
 import os
@@ -235,11 +237,19 @@ TEXTURES = {
 
 
 def main():
-	args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+	all_args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+	args = [a for a in all_args if not a.startswith("--")]
+	overwrite = "--overwrite" in all_args
 	out_dir = os.path.abspath(args[0] if args else "assets/textures/hospital")
 	os.makedirs(out_dir, exist_ok=True)
 	for name, builder in TEXTURES.items():
+		# Считаем всегда (общее зерно случайностей — иначе сдвинутся следующие текстуры),
+		# а пишем только недостающие: готовые мог заменить или доработать создатель (D-037).
 		albedo, height, roughness, strength = builder()
+		files = [os.path.join(out_dir, f"{name}_{kind}.png") for kind in ("albedo", "normal", "roughness")]
+		if all(os.path.exists(f) for f in files) and not overwrite:
+			print(f"[textures] {name}: уже есть, не трогаю (перезаписать — --overwrite)")
+			continue
 		write_set(out_dir, name, albedo, height, roughness, strength)
 
 

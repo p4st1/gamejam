@@ -451,3 +451,27 @@ P-040: Петрович остаётся у переправы с пулемёт
 `CURRENT_STATE.md`, `BACKLOG.md`, `DEVELOPMENT_LOG.md`.
 
 **Следующая задача:** оценка создателем; сборка уровня миссии 3 из набора или система взаимодействия.
+
+---
+
+## 2026-11-02 — Сессия 23: наброски и разделение работы
+
+**Выполнено:**
+- Решение D-037: ИИ-партнёр делает модульные наборы и наброски уровней с автотестом проходимости,
+  создатель расставляет и доводит локацию визуально.
+- Наброски перенесены в `scenes/blockouts/` (`hospital_ward_blockout.tscn`,
+  `hospital_service_blockout.tscn`); расстановка палаты перенесена в `tools/hospital_layouts.py`
+  (сверено: те же 78 объектов), `tools/gen_hospital_demo.py` удалён.
+- Защита от перезаписи: наброски сверяются с контрольными суммами (`--force`), материалы `.tres` и
+  текстуры создаются только если их нет (`--overwrite-materials`, `--overwrite`). Проверено: правленный
+  набросок пропускается; повторная сборка не меняет ни одного файла.
+- Инструкция для создателя `docs/LEVEL_PIPELINE.md`; правила — в `CLAUDE.md`.
+- Автотесты: 9/9, 8/8, 7/7.
+
+**Изменённые файлы:** `tools/hospital_layouts.py`, `tools/blender/build_hospital_kit.py`,
+`tools/blender/build_textures.py`, `tests/test_hospital_kit.gd`, `tests/test_hospital_service.gd`,
+`CLAUDE.md`; новые — `scenes/blockouts/*`, `docs/LEVEL_PIPELINE.md`; удалены —
+`scenes/levels/prototype/hospital_*_demo.tscn`, `tools/gen_hospital_demo.py`; `docs/DECISIONS.md`,
+`TECHNICAL_DESIGN.md`, `CURRENT_STATE.md`, `BACKLOG.md`, `DEVELOPMENT_LOG.md`.
+
+**Следующая задача:** набросок уровня миссии 3 целиком или система взаимодействия.

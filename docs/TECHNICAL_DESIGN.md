@@ -128,8 +128,7 @@ Player отвечает за физику и ввод; CameraEffects — тол�
 B=/Applications/Blender.app/Contents/MacOS/Blender
 $B -b --factory-startup --python tools/blender/build_textures.py -- assets/textures/hospital
 $B -b --factory-startup --python tools/blender/build_hospital_kit.py -- assets/models/kits/hospital docs/art/hospital_kit_v04.png
-python3 tools/gen_hospital_demo.py          # палата и коридор
-python3 tools/hospital_layouts.py           # служебный блок: шлюз, приёмка, подвал, рампа
+python3 tools/hospital_layouts.py           # наброски: палата и служебный блок → scenes/blockouts/
 "<Godot>" --headless --path . --import      # импорт новых файлов
 python3 tools/fix_texture_imports.py        # настройки 3D-текстур, затем ещё раз --import
 ```
@@ -137,9 +136,15 @@ python3 tools/fix_texture_imports.py        # настройки 3D-тексту
    `assets/textures/hospital/`. Ничего не скачивается: текстуры собственные.
 2. `build_hospital_kit.py` — модели `.glb` (без текстур внутри) + библиотека материалов Godot
    `assets/materials/hospital/*.tres` + превью с текстурами (EEVEE).
-3. `gen_hospital_demo.py` — демо-сцена палаты; `hospital_layouts.py` — **общая расстановка**
-   служебного блока: по ней пишется сцена Godot и рендерятся превью в Blender (_airlock, _dock,
-   _basement), поэтому превью всегда совпадает со сценой.
+3. `hospital_layouts.py` — **наброски** (общие расстановки): палата (`ward_layout`) и служебный блок
+   (`service_layout`). По ним пишутся сцены `scenes/blockouts/*_blockout.tscn` и рендерятся превью в
+   Blender (_airlock, _dock, _basement), поэтому превью всегда совпадает со сценой.
+
+**Защита ручной работы создателя (D-037):** генераторы не перезаписывают то, что мог доработать
+создатель: наброски, правленные вручную (контрольные суммы в `scenes/blockouts/.generated.json`;
+флаг `--force`), материалы `.tres` (флаг `--overwrite-materials`), текстуры (флаг `--overwrite`).
+Модели `.glb` пересобираются всегда — поэтому модули нельзя переименовывать и менять их привязку.
+Инструкция для создателя — `docs/LEVEL_PIPELINE.md`.
 4. `fix_texture_imports.py` — VRAM-сжатие, мипмапы и режим нормалей для всех текстур в `assets/textures/`.
 
 **Материалы:** скрипт импорта `scripts/editor/kit_material_import.gd` заменяет материалы модели на
@@ -189,9 +194,9 @@ v0.4 — **отделка стен** задаётся отдельно для в
 **UV:** проекция по осям в мировом масштабе, 1 единица UV = 1 м — бесшовные текстуры лягут без
 растяжений.
 
-**Проверка:** демо-сцена `scenes/levels/prototype/hospital_kit_demo.tscn` (коридор, палата, лестница
-на второй этаж) и автотест `tests/test_hospital_kit.gd`: проход через дверь в палату, подъём по двум
-маршам. Служебный блок — `scenes/levels/prototype/hospital_service_demo.tscn` и
+**Проверка:** набросок `scenes/blockouts/hospital_ward_blockout.tscn` (коридор, палата, лестница на
+второй этаж) и автотест `tests/test_hospital_kit.gd`: проход через дверь в палату, подъём по двум
+маршам. Служебный блок — `scenes/blockouts/hospital_service_blockout.tscn` и
 `tests/test_hospital_service.gd`.
 
 **Статус:**
