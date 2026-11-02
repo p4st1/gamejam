@@ -5,6 +5,8 @@ extends CharacterBody3D
 
 ## Испускается в момент касания земли. fall_speed — скорость падения (м/с, положительная).
 signal landed(fall_speed: float)
+## Испускается в момент отрыва от земли прыжком.
+signal jumped
 
 @export_group("Скорость")
 @export var walk_speed := 3.0
@@ -73,6 +75,7 @@ func _physics_process(delta: float) -> void:
 		_fall_speed = maxf(_fall_speed, -velocity.y)
 	elif Input.is_action_just_pressed("jump") and not is_crouching:
 		velocity.y = jump_velocity
+		jumped.emit()
 
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	var direction := (transform.basis * Vector3(input.x, 0.0, input.y)).normalized()

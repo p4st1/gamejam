@@ -80,6 +80,9 @@ func _run() -> void:
 	_check(_pos().x < 31.0, "боковое крыльцо → коридор %s" % _fmt())
 
 	print("\nИТОГ: %s" % ("все проверки пройдены" if _failures == 0 else "провалено: %d" % _failures))
+	# Остановить звук до выхода: иначе воспроизведения остаются в AudioServer — «утечка».
+	root.propagate_call(&"stop")
+	await create_timer(0.1).timeout
 	quit(_failures)
 
 

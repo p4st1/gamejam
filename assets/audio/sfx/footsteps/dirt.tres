@@ -1,0 +1,22 @@
+[gd_resource type="AudioStreamRandomizer" format=3]
+
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/footsteps/dirt_1.wav" id="1"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/footsteps/dirt_2.wav" id="2"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/footsteps/dirt_3.wav" id="3"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/footsteps/dirt_4.wav" id="4"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/footsteps/dirt_5.wav" id="5"]
+
+[resource]
+random_pitch = 1.06
+random_volume_offset_db = 1.5
+streams_count = 5
+stream_0/stream = ExtResource("1")
+stream_0/weight = 1.0
+stream_1/stream = ExtResource("2")
+stream_1/weight = 1.0
+stream_2/stream = ExtResource("3")
+stream_2/weight = 1.0
+stream_3/stream = ExtResource("4")
+stream_3/weight = 1.0
+stream_4/stream = ExtResource("5")
+stream_4/weight = 1.0

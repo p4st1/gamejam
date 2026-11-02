@@ -739,8 +739,18 @@ def m03_layout():
 		("S10_Ershov", (33.5, 1.2, 3.0), "Сц.10: Ершов за углом"),
 		("S10_Exit", (30.0, 2.0, -25.5), "Сц.10: прачечная → задний двор → скорая"),
 	]
+	# Звуковые зоны (звук v0.1, D-040): имя, центр, размер, фон, громкость фона (дБ), priority,
+	# шина реверберации, доля реверберации. Зоны этажей — от пола +0,2 до потолка −0,2 м, чтобы
+	# капсула игрока не касалась зоны соседнего этажа.
+	audio_zones = [
+		("Territory", (15, 5, -5), (140, 40, 120), "outdoor_wind", -4.0, 0, None, 0.0),
+		("Floor1", (15, G + 1.65, -3), (33, 2.9, 9), "indoor_hum", -6.0, 1, "ReverbRoom", 0.3),
+		("Floor2", (21, H2 + 1.65, -3), (21, 2.9, 9), "indoor_hum", -6.0, 1, "ReverbRoom", 0.3),
+		("Basement", (15, B + 1.65, -3), (21, 2.9, 9), "basement", -3.0, 2, "ReverbBasement", 0.45),
+		("Stairwell", (13.5, (B + ROOF) / 2, 0), (6, ROOF - B, 3), "indoor_hum", -6.0, 3, "ReverbHall", 0.5),
+	]
 	return {"placements": p, "lights": lights, "labels": labels, "markers": markers,
-		"player": ((4.2, -1.05, 19.5), 0)}
+		"audio_zones": audio_zones, "player": ((4.2, -1.05, 19.5), 0)}
 
 
 RAMP_HALF = 0.275  # половина подъёма секции грузового спуска ext_ramp_down (0,55 м на 3 м)
@@ -760,18 +770,27 @@ def write_tscn(layout, path, root_name, force=False):
 		'[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]',
 		'[ext_resource type="Script" path="res://scripts/debug/debug_overlay.gd" id="2_overlay"]']
 	out += [f'[ext_resource type="PackedScene" path="{KIT}{m}.glb" id="{ids[m]}"]' for m in modules]
+	zones = layout.get("audio_zones", [])
+	ambiences = sorted({z[3] for z in zones})
+	if zones:
+		out.append('[ext_resource type="Script" path="res://scripts/audio/audio_zone.gd" id="2_audio_zone"]')
+		out += [f'[ext_resource type="AudioStream" path="res://assets/audio/ambience/{a}.wav" id="2_amb_{a}"]'
+			for a in ambiences]
 	out += ["",
 		'[sub_resource type="ProceduralSkyMaterial" id="SkyMat_overcast"]',
 		"sky_top_color = Color(0.42, 0.46, 0.5, 1)", "sky_horizon_color = Color(0.62, 0.64, 0.66, 1)",
 		"ground_bottom_color = Color(0.18, 0.19, 0.2, 1)", "ground_horizon_color = Color(0.62, 0.64, 0.66, 1)", "",
 		'[sub_resource type="Sky" id="Sky_overcast"]', 'sky_material = SubResource("SkyMat_overcast")', "",
 		'[sub_resource type="Environment" id="Env"]', "background_mode = 2", 'sky = SubResource("Sky_overcast")',
-		"ambient_light_source = 3", "ambient_light_energy = 0.35", "tonemap_mode = 2", "",
+		"ambient_light_source = 3", "ambient_light_energy = 0.35", "tonemap_mode = 2", ""]
+	for name, _, size, *_ in zones:
+		out += [f'[sub_resource type="BoxShape3D" id="Box_{name}"]', f"size = Vector3({fmt(size)})", ""]
+	out += [
 		f'[node name="{root_name}" type="Node3D"]', "",
 		'[node name="WorldEnvironment" type="WorldEnvironment" parent="."]', 'environment = SubResource("Env")', "",
 		'[node name="Sun" type="DirectionalLight3D" parent="."]', "rotation_degrees = Vector3(-35, -150, 0)",
 		"light_color = Color(0.92, 0.94, 1, 1)", "light_energy = 0.7", "shadow_enabled = true", ""]
-	extra = ["Lights", "Labels"] + (["Markers"] if layout.get("markers") else [])
+	extra = ["Lights", "Labels"] + (["Markers"] if layout.get("markers") else []) + (["AudioZones"] if zones else [])
 	for g in groups + extra:
 		out += [f'[node name="{g}" type="Node3D" parent="."]', ""]
 	for g, name, m, pos, rot in layout["placements"]:
@@ -789,6 +808,16 @@ def write_tscn(layout, path, root_name, force=False):
 			out.append(f"rotation_degrees = Vector3(0, {rot}, 0)")
 		out += ["pixel_size = 0.001", f"modulate = Color({fmt(color)}, 1)", "outline_size = 0",
 			f'text = "{text}"', f"font_size = {size}", ""]
+	for name, pos, size, ambience, volume, priority, reverb_bus, reverb_amount in zones:
+		out += [f'[node name="{name}" type="Area3D" parent="AudioZones"]', f"position = Vector3({fmt(pos)})",
+			f"priority = {priority}"]
+		if reverb_bus:
+			out += ["reverb_bus_enabled = true", f'reverb_bus_name = &"{reverb_bus}"',
+				f"reverb_bus_amount = {reverb_amount}", "reverb_bus_uniformity = 0.6"]
+		out += ['script = ExtResource("2_audio_zone")', f'ambience = ExtResource("2_amb_{ambience}")',
+			f"ambience_volume_db = {volume}", "",
+			f'[node name="Shape" type="CollisionShape3D" parent="AudioZones/{name}"]',
+			f'shape = SubResource("Box_{name}")', ""]
 	for name, pos, text in layout.get("markers", []):
 		# Подписи сцен сценария — для создателя; в финальной локации их удаляют.
 		out += [f'[node name="{name}" type="Marker3D" parent="Markers"]', f"position = Vector3({fmt(pos)})", "",

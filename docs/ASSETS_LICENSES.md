@@ -11,6 +11,7 @@
 | Модульный набор «Больница» v0.6 (101 модель) | `assets/models/kits/hospital/` | Скрипт `tools/blender/build_hospital_kit.py` | Собственность проекта |
 | Процедурные текстуры набора «Больница» (11 наборов × 3 карты) | `assets/textures/hospital/` | Скрипт `tools/blender/build_textures.py` | Собственность проекта |
 | Библиотека материалов «Больница» (47 материалов) | `assets/materials/hospital/` | Скрипт `tools/blender/build_hospital_kit.py` | Собственность проекта |
+| Звуки v0.1: шаги (6 поверхностей × 5), прыжок, приземление, 3 фоновые петли, 2 звука меню | `assets/audio/` | Синтез скриптом `tools/audio/build_sounds.py` | Собственность проекта |
 
 ## Сторонние ассеты
 

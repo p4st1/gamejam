@@ -88,6 +88,10 @@
 [ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_sign_plate_red.glb" id="86_prop_sign_plate_red"]
 [ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_sink.glb" id="87_prop_sink"]
 [ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_washer.glb" id="88_prop_washer"]
+[ext_resource type="Script" path="res://scripts/audio/audio_zone.gd" id="2_audio_zone"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/basement.wav" id="2_amb_basement"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/indoor_hum.wav" id="2_amb_indoor_hum"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/outdoor_wind.wav" id="2_amb_outdoor_wind"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat_overcast"]
 sky_top_color = Color(0.42, 0.46, 0.5, 1)
@@ -104,6 +108,21 @@ sky = SubResource("Sky_overcast")
 ambient_light_source = 3
 ambient_light_energy = 0.35
 tonemap_mode = 2
+
+[sub_resource type="BoxShape3D" id="Box_Territory"]
+size = Vector3(140, 40, 120)
+
+[sub_resource type="BoxShape3D" id="Box_Floor1"]
+size = Vector3(33, 2.9, 9)
+
+[sub_resource type="BoxShape3D" id="Box_Floor2"]
+size = Vector3(21, 2.9, 9)
+
+[sub_resource type="BoxShape3D" id="Box_Basement"]
+size = Vector3(21, 2.9, 9)
+
+[sub_resource type="BoxShape3D" id="Box_Stairwell"]
+size = Vector3(6, 9.9, 3)
 
 [node name="M03RedZoneBlockout" type="Node3D"]
 
@@ -149,6 +168,8 @@ shadow_enabled = true
 [node name="Labels" type="Node3D" parent="."]
 
 [node name="Markers" type="Node3D" parent="."]
+
+[node name="AudioZones" type="Node3D" parent="."]
 
 [node name="hosp_wall_tile_ext_1" parent="Floor1" instance=ExtResource("56_hosp_wall_tile_ext")]
 position = Vector3(0, 0, 1.5)
@@ -3374,6 +3395,72 @@ modulate = Color(0.12, 0.12, 0.12, 1)
 outline_size = 0
 text = "АПТЕКА"
 font_size = 36
+
+[node name="Territory" type="Area3D" parent="AudioZones"]
+position = Vector3(15, 5, -5)
+priority = 0
+script = ExtResource("2_audio_zone")
+ambience = ExtResource("2_amb_outdoor_wind")
+ambience_volume_db = -4.0
+
+[node name="Shape" type="CollisionShape3D" parent="AudioZones/Territory"]
+shape = SubResource("Box_Territory")
+
+[node name="Floor1" type="Area3D" parent="AudioZones"]
+position = Vector3(15, 1.65, -3)
+priority = 1
+reverb_bus_enabled = true
+reverb_bus_name = &"ReverbRoom"
+reverb_bus_amount = 0.3
+reverb_bus_uniformity = 0.6
+script = ExtResource("2_audio_zone")
+ambience = ExtResource("2_amb_indoor_hum")
+ambience_volume_db = -6.0
+
+[node name="Shape" type="CollisionShape3D" parent="AudioZones/Floor1"]
+shape = SubResource("Box_Floor1")
+
+[node name="Floor2" type="Area3D" parent="AudioZones"]
+position = Vector3(21, 4.95, -3)
+priority = 1
+reverb_bus_enabled = true
+reverb_bus_name = &"ReverbRoom"
+reverb_bus_amount = 0.3
+reverb_bus_uniformity = 0.6
+script = ExtResource("2_audio_zone")
+ambience = ExtResource("2_amb_indoor_hum")
+ambience_volume_db = -6.0
+
+[node name="Shape" type="CollisionShape3D" parent="AudioZones/Floor2"]
+shape = SubResource("Box_Floor2")
+
+[node name="Basement" type="Area3D" parent="AudioZones"]
+position = Vector3(15, -1.65, -3)
+priority = 2
+reverb_bus_enabled = true
+reverb_bus_name = &"ReverbBasement"
+reverb_bus_amount = 0.45
+reverb_bus_uniformity = 0.6
+script = ExtResource("2_audio_zone")
+ambience = ExtResource("2_amb_basement")
+ambience_volume_db = -3.0
+
+[node name="Shape" type="CollisionShape3D" parent="AudioZones/Basement"]
+shape = SubResource("Box_Basement")
+
+[node name="Stairwell" type="Area3D" parent="AudioZones"]
+position = Vector3(13.5, 1.65, 0)
+priority = 3
+reverb_bus_enabled = true
+reverb_bus_name = &"ReverbHall"
+reverb_bus_amount = 0.5
+reverb_bus_uniformity = 0.6
+script = ExtResource("2_audio_zone")
+ambience = ExtResource("2_amb_indoor_hum")
+ambience_volume_db = -6.0
+
+[node name="Shape" type="CollisionShape3D" parent="AudioZones/Stairwell"]
+shape = SubResource("Box_Stairwell")
 
 [node name="S01_Gate" type="Marker3D" parent="Markers"]
 position = Vector3(1.5, 1.6, 19)
