@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "container_green"
+albedo_color = Color(0.200, 0.350, 0.250, 1.0)
+roughness = 0.5
+metallic = 0.4

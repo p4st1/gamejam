@@ -1,4 +1,4 @@
-"""Модульный набор «Больница» v0.5 — генератор для Blender.
+"""Модульный набор «Больница» v0.6 — генератор для Blender.
 
 Строит модули (стены, углы, перекрытия, двери, лестницы, реквизит) и выгружает каждый в отдельный
 .glb. Пишет библиотеку материалов Godot (assets/materials/hospital/*.tres), которые ссылаются на
@@ -87,6 +87,14 @@ PALETTE = {
 	# v0.5 — болванки наброска (заменить готовыми моделями)
 	"blockout_orange": ((0.95, 0.50, 0.10), 0.6, 0.0, 1.0),
 	"blockout_white": ((0.92, 0.92, 0.90), 0.6, 0.0, 1.0),
+	# v0.6 — больничный городок
+	"canvas_olive": ((0.33, 0.36, 0.24), 0.9, 0.0, 1.0),
+	"foliage": ((0.25, 0.38, 0.18), 0.9, 0.0, 1.0),
+	"bark": ((0.35, 0.30, 0.25), 0.9, 0.0, 1.0),
+	"soil": ((0.25, 0.18, 0.12), 0.95, 0.0, 1.0),
+	"ground_dirt": ((0.32, 0.30, 0.22), 0.95, 0.0, 1.0),
+	"container_green": ((0.20, 0.35, 0.25), 0.5, 0.4, 1.0),
+	"glass_dark": ((0.12, 0.14, 0.16), 0.1, 0.0, 1.0),
 }
 
 # Светящиеся материалы: сила свечения.
@@ -168,6 +176,12 @@ class MeshBuilder:
 		axis = (transform.to_3x3() @ Vector((0, 0, 1))).normalized()
 		for face in {f for v in verts for f in v.link_faces}:
 			face.smooth = abs(face.normal.dot(axis)) < 0.5
+
+	def sphere(self, center, radius, mat, subdivisions=1, scale=(1, 1, 1)):
+		"""Грубая сфера (икосфера) — кроны деревьев-болванок."""
+		m = Matrix.Translation(center) @ Matrix.Diagonal((*scale, 1.0))
+		verts = bmesh.ops.create_icosphere(self.bm, subdivisions=subdivisions, radius=radius, matrix=m)["verts"]
+		self._assign(verts, mat)
 
 	def _assign(self, verts, mat, faces=None):
 		self.bm.normal_update()
@@ -926,6 +940,219 @@ def build_washer():
 	return [mb.build("prop_washer-col")]
 
 
+# --- v0.6: набросок миссии 3, версия 2 — подвальный спуск, площадь, больничный городок ----------------
+
+RAMP_RISE = 0.55  # подъём грузового спуска на секцию 3 м (≈10°)
+
+
+def build_ramp_down():
+	"""Секция грузового спуска 3 × 3 м: асфальт, подъём 0,55 м вдоль +X. Центр; верх в центре — на нуле."""
+	mb = MeshBuilder()
+	angle, length = math.atan2(RAMP_RISE, CELL), math.hypot(RAMP_RISE, CELL)
+	m = Matrix.Rotation(-angle, 4, "Y")
+	mb.box((-length / 2, -CELL / 2, -0.3), (length / 2, CELL / 2, 0), "concrete", top="asphalt", matrix=m)
+	return [mb.build("ext_ramp_down-col")]
+
+
+def build_heat_unit():
+	"""Тепловой узел: горизонтальный бак, насосы, трубы, вентили. Центр низа, 2,8 × 1,4 м."""
+	mb = MeshBuilder()
+	along_x = Matrix.Rotation(math.radians(90), 4, "Y")
+	mb.cylinder((-0.9, 0, -1.3), 0.45, 2.6, "metal_grey", segments=16, matrix=along_x)
+	for x in (-1.0, 1.0):
+		mb.box((x - 0.05, -0.4, 0), (x + 0.05, 0.4, 0.45), "metal_dark")  # опоры
+	for x, y in ((-0.6, 0.55), (0.0, 0.55), (0.6, 0.55)):
+		mb.cylinder((x, y, 0), 0.06, 2.6, "pipe_rust", segments=8)
+		mb.box((x - 0.12, y - 0.02, 1.3), (x + 0.12, y + 0.02, 1.34), "warning_red")  # вентиль
+	mb.box((1.1, -0.3, 0), (1.4, 0.3, 0.6), "container_green")  # насос
+	mb.box((-1.4, -0.3, 0), (-1.15, 0.3, 0.5), "container_green")
+	col = MeshBuilder()
+	col.box((-1.4, -0.7, 0), (1.4, 0.7, 1.4), "concrete")
+	return [mb.build("prop_heat_unit"), col.build("prop_heat_unit_col-colonly")]
+
+
+def build_barrel():
+	"""Металлическая бочка 200 л."""
+	mb = MeshBuilder()
+	mb.cylinder((0, 0, 0), 0.29, 0.88, "metal_grey", segments=14)
+	for z in (0.28, 0.6):
+		mb.cylinder((0, 0, z), 0.3, 0.025, "metal_dark", segments=14)
+	col = MeshBuilder()
+	col.box((-0.29, -0.29, 0), (0.29, 0.29, 0.88), "concrete")
+	return [mb.build("prop_barrel"), col.build("prop_barrel_col-colonly")]
+
+
+def build_container():
+	"""Мусорный контейнер 1,8 × 1,2 × 1,3 м на колёсах."""
+	mb = MeshBuilder()
+	mb.box((-0.9, -0.6, 0.15), (0.9, 0.6, 1.2), "container_green")
+	mb.box((-0.92, -0.62, 1.2), (0.92, 0.62, 1.28), "container_green")
+	for x in (-0.75, 0.6):
+		for y in (-0.5, 0.4):
+			mb.box((x, y, 0), (x + 0.15, y + 0.1, 0.15), "rubber_black")
+	return [mb.build("prop_container-col")]
+
+
+def build_tent():
+	"""Армейская палатка полевого госпиталя 5 × 6 м, конёк вдоль Y. Вход на стороне −Y."""
+	mb = MeshBuilder()
+	w, d, wall, ridge = 2.5, 3.0, 1.6, 3.0
+	mb.box((-w, -d, 0), (w, d, wall), "canvas_olive")
+	angle, plane = math.atan2(ridge - wall, w), math.hypot(w, ridge - wall)
+	for side in (-1, 1):
+		m = Matrix.Translation((side * w / 2, 0, (wall + ridge) / 2)) @ Matrix.Rotation(side * angle, 4, "Y")
+		mb.box((-plane / 2 - 0.1, -d - 0.1, -0.03), (plane / 2 + 0.1, d + 0.1, 0.03), "canvas_olive", matrix=m)
+	for i in range(6):  # фронтоны ступеньками
+		h0 = wall + (ridge - wall) * i / 6
+		half = w * (1 - i / 6)
+		for y in (-d, d - 0.02):
+			mb.box((-half, y, h0), (half, y + 0.02, h0 + (ridge - wall) / 6), "canvas_olive")
+	mb.box((-0.6, -d - 0.03, 0), (0.6, -d - 0.01, 1.5), "glass_dark")  # вход
+	col = MeshBuilder()
+	col.box((-w, -d, 0), (w, d, wall), "concrete")
+	return [mb.build("ext_tent"), col.build("ext_tent_col-colonly")]
+
+
+def build_flowerbed():
+	"""Бетонная клумба 2 × 2 × 0,5 м с землёй — низкое укрытие."""
+	mb = MeshBuilder()
+	for (x0, y0, x1, y1) in ((-1, -1, 1, -0.88), (-1, 0.88, 1, 1), (-1, -1, -0.88, 1), (0.88, -1, 1, 1)):
+		mb.box((x0, y0, 0), (x1, y1, 0.5), "concrete")
+	mb.box((-0.88, -0.88, 0), (0.88, 0.88, 0.42), "soil")
+	return [mb.build("ext_flowerbed-col")]
+
+
+def build_booth():
+	"""Будка проходной 2,5 × 2,5 × 2,6 м с остеклением."""
+	mb = MeshBuilder()
+	h = 1.25
+	mb.box((-h, -h, 0), (h, h, 1.0), "metal_grey")
+	mb.box((-h, -h, 1.0), (h, h, 2.0), "glass_dark")
+	mb.box((-h, -h, 2.0), (h, h, 2.5), "metal_grey")
+	mb.box((-h - 0.15, -h - 0.15, 2.5), (h + 0.15, h + 0.15, 2.6), "roof_metal")
+	return [mb.build("ext_booth-col")]
+
+
+def build_block_fdb():
+	"""Бетонный блок оцепления 2,0 × 0,6 × 0,9 м — укрытие."""
+	mb = MeshBuilder()
+	mb.box((-1.0, -0.3, 0), (1.0, 0.3, 0.9), "concrete")
+	return [mb.build("ext_block_fdb-col")]
+
+
+def build_lamp_post():
+	"""Фонарный столб 6 м с плафоном."""
+	mb = MeshBuilder()
+	mb.cylinder((0, 0, 0), 0.07, 6.0, "metal_grey", segments=8)
+	mb.box((0, -0.03, 5.85), (0.9, 0.03, 5.92), "metal_grey")
+	mb.box((0.75, -0.12, 5.7), (1.05, 0.12, 5.85), "lamp_warm")
+	col = MeshBuilder()
+	col.box((-0.1, -0.1, 0), (0.1, 0.1, 3.0), "concrete")
+	return [mb.build("ext_lamp_post"), col.build("ext_lamp_post_col-colonly")]
+
+
+def build_tree():
+	"""Дерево-болванка (тополь/берёза): ствол и крона из грубых сфер. Заменить готовой моделью."""
+	mb = MeshBuilder()
+	mb.cylinder((0, 0, 0), 0.18, 4.5, "bark", segments=8)
+	mb.sphere((0, 0, 5.2), 1.9, "foliage", scale=(1, 1, 1.3))
+	mb.sphere((0.4, 0.2, 7.2), 1.4, "foliage", scale=(1, 1, 1.3))
+	col = MeshBuilder()
+	col.box((-0.2, -0.2, 0), (0.2, 0.2, 3.0), "concrete")
+	return [mb.build("blk_tree"), col.build("blk_tree_col-colonly")]
+
+
+def _building_box(mb, w, d, floors, door=None):
+	"""Кирпичная коробка w × d с окнами по этажам (3,3 м) и плоской кровлей."""
+	height = floors * FLOOR_HEIGHT
+	mb.box((-w / 2, -d / 2, 0), (w / 2, d / 2, height), "brick")
+	mb.box((-w / 2 - 0.1, -d / 2 - 0.1, height), (w / 2 + 0.1, d / 2 + 0.1, height + 0.4), "concrete",
+		top="asphalt")
+	for f in range(floors):
+		z = f * FLOOR_HEIGHT + 0.9
+		n = int(w // 3)
+		for k in range(n):
+			x = -w / 2 + 1.5 + k * 3 - 0.7
+			for y in (-d / 2 - 0.02, d / 2 - 0.02):
+				mb.box((x, y, z), (x + 1.4, y + 0.04, z + 1.5), "glass_dark")
+	if door:
+		mb.box((door - 0.7, -d / 2 - 0.03, 0), (door + 0.7, -d / 2 + 0.01, 2.3), "metal_grey")
+
+
+def build_building_corps():
+	"""Соседний корпус-фон 30 × 12 м, 2 этажа. Только снаружи (внутрь не войти)."""
+	mb = MeshBuilder()
+	_building_box(mb, 30, 12, 2, door=0)
+	return [mb.build("blk_building_corps-col")]
+
+
+def build_boiler_house():
+	"""Котельная 9 × 9 × 5 м с воротами."""
+	mb = MeshBuilder()
+	mb.box((-4.5, -4.5, 0), (4.5, 4.5, 5.0), "brick")
+	mb.box((-4.6, -4.6, 5.0), (4.6, 4.6, 5.3), "concrete", top="asphalt")
+	mb.box((-1.5, -4.53, 0), (1.5, -4.49, 3.2), "metal_grey")
+	for x in (-3.2, 2.0):
+		mb.box((x, -4.52, 3.4), (x + 1.2, -4.48, 4.4), "glass_dark")
+	return [mb.build("blk_boiler_house-col")]
+
+
+def build_chimney():
+	"""Кирпичная труба котельной 30 м — ориентир, виден со всей территории."""
+	mb = MeshBuilder()
+	mb.cylinder((0, 0, 0), 1.0, 30.0, "brick", segments=16)
+	mb.cylinder((0, 0, 29.4), 1.08, 0.6, "concrete", segments=16)
+	col = MeshBuilder()
+	col.box((-1, -1, 0), (1, 1, 30), "concrete")
+	return [mb.build("ext_chimney"), col.build("ext_chimney_col-colonly")]
+
+
+def build_building_small():
+	"""Небольшое одноэтажное здание 6 × 9 м (морг) с дверью на −Y."""
+	mb = MeshBuilder()
+	mb.box((-3, -4.5, 0), (3, 4.5, 3.5), "brick")
+	mb.box((-3.1, -4.6, 3.5), (3.1, 4.6, 3.8), "concrete", top="asphalt")
+	mb.box((-0.7, -4.53, 0), (0.7, -4.49, 2.3), "metal_grey")
+	for y in (-2.5, 0.5, 3.0):
+		mb.box((2.98, y - 0.5, 2.3), (3.02, y + 0.5, 2.9), "glass_dark")
+	return [mb.build("blk_building_small-col")]
+
+
+def build_screen():
+	"""Медицинская ширма: три створки зигзагом."""
+	mb = MeshBuilder()
+	for k, angle in enumerate((20, -20, 20)):
+		m = Matrix.Translation((-0.6 + k * 0.58, 0, 0)) @ Matrix.Rotation(math.radians(angle), 4, "Z")
+		mb.box((-0.3, -0.015, 0.02), (0.3, 0.015, 1.7), "metal_white", matrix=m)
+		mb.box((-0.27, -0.02, 0.25), (0.27, 0.02, 1.6), "linen", matrix=m)
+	col = MeshBuilder()
+	col.box((-0.95, -0.2, 0), (0.95, 0.2, 1.7), "concrete")
+	return [mb.build("prop_screen"), col.build("prop_screen_col-colonly")]
+
+
+def build_bag():
+	"""Сумка с вещами у койки."""
+	mb = MeshBuilder()
+	mb.box((-0.3, -0.15, 0), (0.3, 0.15, 0.28), "canvas_olive")
+	mb.box((-0.1, -0.01, 0.28), (0.1, 0.01, 0.36), "metal_dark")
+	return [mb.build("prop_bag-col")]
+
+
+def build_mattress_floor():
+	"""Матрас на полу с подушкой — больных кладут в коридорах."""
+	mb = MeshBuilder()
+	mb.box((-0.4, -0.95, 0), (0.4, 0.95, 0.12), "mattress", top="linen")
+	mb.box((-0.3, 0.6, 0.12), (0.3, 0.9, 0.2), "linen")
+	return [mb.build("prop_mattress_floor-col")]
+
+
+def build_ground_dirt():
+	"""Земля за забором 30 × 30 м. Центр, верх на нуле."""
+	mb = MeshBuilder()
+	mb.box((-15, -15, -0.3), (15, 15, 0), "ground_dirt")
+	return [mb.build("ext_ground_dirt-col")]
+
+
 MODULES = {
 	"hosp_floor": build_floor,
 	"hosp_wall": build_wall,
@@ -1020,6 +1247,33 @@ MODULES = {
 	"prop_desk": build_desk,
 	"prop_chair": build_chair,
 	"prop_washer": build_washer,
+	# v0.6 — набросок миссии 3, версия 2
+	"hosp_wall_door_double_ext": make_wall_opening("hosp_wall_door_double_ext", 2.0, DOOR_HEIGHT, "paint", "brick"),
+	"hosp_door_double_leaf": make_door_leaf("hosp_door_double_leaf", "door_paint", 0.94 + 2 * FRAME + 0.02),
+	"hosp_wall_gate_bsmt_ground": make_wall_opening("hosp_wall_gate_bsmt_ground", 2.4, 2.4, "basement", "concrete",
+		frame="metal_grey"),
+	"ext_retaining_wall": make_wall("ext_retaining_wall", "concrete"),
+	"ext_ramp_down": build_ramp_down,
+	"prop_heat_unit": build_heat_unit,
+	"prop_barrel": build_barrel,
+	"prop_container": build_container,
+	"ext_tent": build_tent,
+	"blk_vehicle_car": make_vehicle("blk_vehicle_car", [
+		((-2.25, -0.9, 0.35), (2.25, 0.9, 1.0), "blockout_orange"),
+		((-1.0, -0.85, 1.0), (1.0, 0.85, 1.5), "blockout_orange")], (-1.4, 1.4)),
+	"ext_flowerbed": build_flowerbed,
+	"ext_booth": build_booth,
+	"ext_block_fdb": build_block_fdb,
+	"ext_lamp_post": build_lamp_post,
+	"blk_tree": build_tree,
+	"blk_building_corps": build_building_corps,
+	"blk_boiler_house": build_boiler_house,
+	"ext_chimney": build_chimney,
+	"blk_building_small": build_building_small,
+	"prop_screen": build_screen,
+	"prop_bag": build_bag,
+	"prop_mattress_floor": build_mattress_floor,
+	"ext_ground_dirt": build_ground_dirt,
 }
 
 
@@ -1158,10 +1412,12 @@ PREVIEWS = (
 		("dock", (10.5, 0.9, 9.5), (1.5, 0.6, 2.0), True),
 		("basement", (-1.0, -1.65, -0.3), (10.0, -2.3, -0.9), False))),
 	("m03_layout", "m03_blockout", (
-		("front", (26.0, 9.0, 24.0), (10.0, 0.5, 0.0), True),
-		("back", (-2.0, 8.0, -26.0), (14.0, 0.5, -8.0), True),
-		("corridor2", (11.4, 4.95, -3.0), (31.0, 4.6, -3.2), False),
-		("ward214", (21.2, 4.95, -1.1), (30.5, 4.2, 0.9), False))),
+		("front", (34.0, 14.0, 34.0), (10.0, -1.0, 2.0), True),
+		("back", (-6.0, 12.0, -40.0), (14.0, -1.0, -10.0), True),
+		("ramp", (9.5, 0.6, -26.0), (6.5, -2.6, -8.0), True),
+		("basement", (5.3, -1.65, -2.6), (24.0, -2.3, -3.4), False),
+		("corridor2", (12.5, 4.95, -3.0), (31.0, 4.6, -3.2), False),
+		("ward214", (31.0, 4.95, 0.3), (20.5, 4.0, -0.3), False))),
 )
 
 
