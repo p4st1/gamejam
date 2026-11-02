@@ -1,0 +1,2980 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
+[ext_resource type="Script" path="res://scripts/debug/debug_overlay.gd" id="2_overlay"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/blk_vehicle_ambulance.glb" id="3_blk_vehicle_ambulance"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/blk_vehicle_truck.glb" id="4_blk_vehicle_truck"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/blk_vehicle_uaz.glb" id="5_blk_vehicle_uaz"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/blk_vehicle_van.glb" id="6_blk_vehicle_van"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/ext_fence.glb" id="7_ext_fence"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/ext_ground_asphalt.glb" id="8_ext_ground_asphalt"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/ext_ground_asphalt_small.glb" id="9_ext_ground_asphalt_small"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_band.glb" id="10_hosp_band"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_dock_canopy.glb" id="11_hosp_dock_canopy"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_dock_platform.glb" id="12_hosp_dock_platform"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_dock_steps.glb" id="13_hosp_dock_steps"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_door.glb" id="14_hosp_door"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_door_metal.glb" id="15_hosp_door_metal"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_floor.glb" id="16_hosp_floor"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_floor_concrete.glb" id="17_hosp_floor_concrete"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_floor_half.glb" id="18_hosp_floor_half"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_gate_leaf.glb" id="19_hosp_gate_leaf"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_plinth.glb" id="20_hosp_plinth"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_porch.glb" id="21_hosp_porch"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_railing_straight.glb" id="22_hosp_railing_straight"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_roof.glb" id="23_hosp_roof"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_stairs_flight.glb" id="24_hosp_stairs_flight"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_stairs_landing.glb" id="25_hosp_stairs_landing"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_stairs_railing.glb" id="26_hosp_stairs_railing"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall.glb" id="27_hosp_wall"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_bsmt.glb" id="28_hosp_wall_bsmt"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_bsmt_ext.glb" id="29_hosp_wall_bsmt_ext"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_bsmt_ground.glb" id="30_hosp_wall_bsmt_ground"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_bsmt_paint.glb" id="31_hosp_wall_bsmt_paint"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_corner_brick.glb" id="32_hosp_wall_corner_brick"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_corner_bsmt.glb" id="33_hosp_wall_corner_bsmt"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_door.glb" id="34_hosp_wall_door"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_door_bsmt.glb" id="35_hosp_wall_door_bsmt"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_door_bsmt_paint.glb" id="36_hosp_wall_door_bsmt_paint"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_door_ext.glb" id="37_hosp_wall_door_ext"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_door_tile_ext.glb" id="38_hosp_wall_door_tile_ext"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_door_tile_paint.glb" id="39_hosp_wall_door_tile_paint"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_ext.glb" id="40_hosp_wall_ext"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_gate_bsmt_ext.glb" id="41_hosp_wall_gate_bsmt_ext"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_glass.glb" id="42_hosp_wall_glass"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_glass_door.glb" id="43_hosp_wall_glass_door"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_tile_ext.glb" id="44_hosp_wall_tile_ext"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_tile_paint.glb" id="45_hosp_wall_tile_paint"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_window_ext.glb" id="46_hosp_wall_window_ext"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_window_tile_ext.glb" id="47_hosp_wall_window_tile_ext"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_bed.glb" id="48_prop_bed"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_bench.glb" id="49_prop_bench"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_bin_hazard.glb" id="50_prop_bin_hazard"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_box.glb" id="51_prop_box"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_bulkhead_lamp.glb" id="52_prop_bulkhead_lamp"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_ceiling_lamp.glb" id="53_prop_ceiling_lamp"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_chair.glb" id="54_prop_chair"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_coat_rack_suits.glb" id="55_prop_coat_rack_suits"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_desk.glb" id="56_prop_desk"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_floor_line.glb" id="57_prop_floor_line"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_gurney.glb" id="58_prop_gurney"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_iv_stand.glb" id="59_prop_iv_stand"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_med_cabinet.glb" id="60_prop_med_cabinet"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_oxygen_cylinder.glb" id="61_prop_oxygen_cylinder"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_pallet_boxes.glb" id="62_prop_pallet_boxes"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_pipe_run.glb" id="63_prop_pipe_run"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_radiator.glb" id="64_prop_radiator"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_shelf_rack.glb" id="65_prop_shelf_rack"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_sign_plate.glb" id="66_prop_sign_plate"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_sign_plate_red.glb" id="67_prop_sign_plate_red"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_sink.glb" id="68_prop_sink"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_washer.glb" id="69_prop_washer"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat_overcast"]
+sky_top_color = Color(0.42, 0.46, 0.5, 1)
+sky_horizon_color = Color(0.62, 0.64, 0.66, 1)
+ground_bottom_color = Color(0.18, 0.19, 0.2, 1)
+ground_horizon_color = Color(0.62, 0.64, 0.66, 1)
+
+[sub_resource type="Sky" id="Sky_overcast"]
+sky_material = SubResource("SkyMat_overcast")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky_overcast")
+ambient_light_source = 3
+ambient_light_energy = 0.35
+tonemap_mode = 2
+
+[node name="M03RedZoneBlockout" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-35, -150, 0)
+light_color = Color(0.92, 0.94, 1, 1)
+light_energy = 0.7
+shadow_enabled = true
+
+[node name="Floor1" type="Node3D" parent="."]
+
+[node name="Roof" type="Node3D" parent="."]
+
+[node name="Walls1" type="Node3D" parent="."]
+
+[node name="Exterior" type="Node3D" parent="."]
+
+[node name="Doors1" type="Node3D" parent="."]
+
+[node name="Stairs" type="Node3D" parent="."]
+
+[node name="Floor2" type="Node3D" parent="."]
+
+[node name="Walls2" type="Node3D" parent="."]
+
+[node name="Doors2" type="Node3D" parent="."]
+
+[node name="Basement" type="Node3D" parent="."]
+
+[node name="PropsB" type="Node3D" parent="."]
+
+[node name="Props1" type="Node3D" parent="."]
+
+[node name="Props2" type="Node3D" parent="."]
+
+[node name="Vehicles" type="Node3D" parent="."]
+
+[node name="Lights" type="Node3D" parent="."]
+
+[node name="Labels" type="Node3D" parent="."]
+
+[node name="Markers" type="Node3D" parent="."]
+
+[node name="hosp_floor_1" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(0, 0, 0)
+
+[node name="hosp_roof_1" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(0, 3.3, 0)
+
+[node name="hosp_floor_2" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(0, 0, -3)
+
+[node name="hosp_roof_2" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(0, 3.3, -3)
+
+[node name="hosp_floor_3" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(0, 0, -6)
+
+[node name="hosp_roof_3" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(0, 3.3, -6)
+
+[node name="hosp_floor_4" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(3, 0, 0)
+
+[node name="hosp_roof_4" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(3, 3.3, 0)
+
+[node name="hosp_floor_5" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(3, 0, -3)
+
+[node name="hosp_roof_5" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(3, 3.3, -3)
+
+[node name="hosp_floor_6" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(3, 0, -6)
+
+[node name="hosp_roof_6" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(3, 3.3, -6)
+
+[node name="hosp_floor_7" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(6, 0, 0)
+
+[node name="hosp_roof_7" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(6, 3.3, 0)
+
+[node name="hosp_floor_8" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(6, 0, -3)
+
+[node name="hosp_roof_8" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(6, 3.3, -3)
+
+[node name="hosp_floor_concrete_1" parent="Floor1" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(6, 0, -6)
+
+[node name="hosp_roof_9" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(6, 3.3, -6)
+
+[node name="hosp_floor_9" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(9, 0, 0)
+
+[node name="hosp_roof_10" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(9, 3.3, 0)
+
+[node name="hosp_floor_10" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(9, 0, -3)
+
+[node name="hosp_roof_11" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(9, 3.3, -3)
+
+[node name="hosp_floor_concrete_2" parent="Floor1" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(9, 0, -6)
+
+[node name="hosp_roof_12" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(9, 3.3, -6)
+
+[node name="hosp_floor_11" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(12, 0, 0)
+
+[node name="hosp_floor_12" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(12, 0, -3)
+
+[node name="hosp_floor_13" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(12, 0, -6)
+
+[node name="hosp_floor_14" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(15, 0, -3)
+
+[node name="hosp_floor_15" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(15, 0, -6)
+
+[node name="hosp_floor_16" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(18, 0, -3)
+
+[node name="hosp_floor_17" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(18, 0, -6)
+
+[node name="hosp_floor_18" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(21, 0, 0)
+
+[node name="hosp_floor_19" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(21, 0, -3)
+
+[node name="hosp_floor_20" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(21, 0, -6)
+
+[node name="hosp_floor_21" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(24, 0, 0)
+
+[node name="hosp_floor_22" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(24, 0, -3)
+
+[node name="hosp_floor_23" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(24, 0, -6)
+
+[node name="hosp_floor_24" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(27, 0, 0)
+
+[node name="hosp_floor_25" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(27, 0, -3)
+
+[node name="hosp_floor_26" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(27, 0, -6)
+
+[node name="hosp_floor_27" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(30, 0, 0)
+
+[node name="hosp_floor_28" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(30, 0, -3)
+
+[node name="hosp_floor_29" parent="Floor1" instance=ExtResource("16_hosp_floor")]
+position = Vector3(30, 0, -6)
+
+[node name="hosp_floor_half_1" parent="Floor1" instance=ExtResource("18_hosp_floor_half")]
+position = Vector3(14.25, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_tile_ext_1" parent="Walls1" instance=ExtResource("44_hosp_wall_tile_ext")]
+position = Vector3(0, 0, 1.5)
+
+[node name="hosp_wall_window_ext_1" parent="Walls1" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(0, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_plinth_1" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(0, 0, 1.5)
+
+[node name="hosp_plinth_2" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(0, 0, -7.5)
+
+[node name="hosp_wall_tile_ext_2" parent="Walls1" instance=ExtResource("44_hosp_wall_tile_ext")]
+position = Vector3(3, 0, 1.5)
+
+[node name="hosp_wall_window_ext_2" parent="Walls1" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(3, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_plinth_3" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(3, 0, 1.5)
+
+[node name="hosp_plinth_4" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(3, 0, -7.5)
+
+[node name="hosp_wall_door_ext_1" parent="Walls1" instance=ExtResource("37_hosp_wall_door_ext")]
+position = Vector3(6, 0, 1.5)
+
+[node name="hosp_wall_gate_bsmt_ext_1" parent="Walls1" instance=ExtResource("41_hosp_wall_gate_bsmt_ext")]
+position = Vector3(6, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_plinth_5" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(6, 0, 1.5)
+
+[node name="hosp_plinth_6" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(6, 0, -7.5)
+
+[node name="hosp_wall_window_ext_3" parent="Walls1" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(9, 0, 1.5)
+
+[node name="hosp_wall_bsmt_ext_1" parent="Walls1" instance=ExtResource("29_hosp_wall_bsmt_ext")]
+position = Vector3(9, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_plinth_7" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(9, 0, 1.5)
+
+[node name="hosp_plinth_8" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(9, 0, -7.5)
+
+[node name="hosp_wall_window_ext_4" parent="Walls1" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(12, 0, 1.5)
+
+[node name="hosp_wall_window_ext_5" parent="Walls1" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(12, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_plinth_9" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(12, 0, 1.5)
+
+[node name="hosp_plinth_10" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(12, 0, -7.5)
+
+[node name="hosp_wall_ext_1" parent="Walls1" instance=ExtResource("40_hosp_wall_ext")]
+position = Vector3(15, 0, 1.5)
+
+[node name="hosp_wall_window_ext_6" parent="Walls1" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(15, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_plinth_11" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(15, 0, 1.5)
+
+[node name="hosp_plinth_12" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(15, 0, -7.5)
+
+[node name="hosp_wall_ext_2" parent="Walls1" instance=ExtResource("40_hosp_wall_ext")]
+position = Vector3(18, 0, 1.5)
+
+[node name="hosp_wall_window_ext_7" parent="Walls1" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(18, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_plinth_13" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(18, 0, 1.5)
+
+[node name="hosp_plinth_14" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(18, 0, -7.5)
+
+[node name="hosp_wall_window_ext_8" parent="Walls1" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(21, 0, 1.5)
+
+[node name="hosp_wall_window_ext_9" parent="Walls1" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(21, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_plinth_15" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(21, 0, 1.5)
+
+[node name="hosp_plinth_16" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(21, 0, -7.5)
+
+[node name="hosp_wall_window_ext_10" parent="Walls1" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(24, 0, 1.5)
+
+[node name="hosp_wall_ext_3" parent="Walls1" instance=ExtResource("40_hosp_wall_ext")]
+position = Vector3(24, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_plinth_17" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(24, 0, 1.5)
+
+[node name="hosp_plinth_18" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(24, 0, -7.5)
+
+[node name="hosp_wall_window_ext_11" parent="Walls1" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(27, 0, 1.5)
+
+[node name="hosp_wall_door_tile_ext_1" parent="Walls1" instance=ExtResource("38_hosp_wall_door_tile_ext")]
+position = Vector3(27, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_plinth_19" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(27, 0, 1.5)
+
+[node name="hosp_plinth_20" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(27, 0, -7.5)
+
+[node name="hosp_wall_ext_4" parent="Walls1" instance=ExtResource("40_hosp_wall_ext")]
+position = Vector3(30, 0, 1.5)
+
+[node name="hosp_wall_window_tile_ext_1" parent="Walls1" instance=ExtResource("47_hosp_wall_window_tile_ext")]
+position = Vector3(30, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_plinth_21" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(30, 0, 1.5)
+
+[node name="hosp_plinth_22" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(30, 0, -7.5)
+
+[node name="hosp_wall_door_tile_ext_2" parent="Walls1" instance=ExtResource("38_hosp_wall_door_tile_ext")]
+position = Vector3(-1.5, 0, 0)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_wall_ext_5" parent="Walls1" instance=ExtResource("40_hosp_wall_ext")]
+position = Vector3(31.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_plinth_23" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(-1.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_plinth_24" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(31.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_window_ext_12" parent="Walls1" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(-1.5, 0, -3)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_wall_door_ext_2" parent="Walls1" instance=ExtResource("37_hosp_wall_door_ext")]
+position = Vector3(31.5, 0, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_plinth_25" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(-1.5, 0, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_plinth_26" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(31.5, 0, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_ext_6" parent="Walls1" instance=ExtResource("40_hosp_wall_ext")]
+position = Vector3(-1.5, 0, -6)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_wall_door_tile_ext_3" parent="Walls1" instance=ExtResource("38_hosp_wall_door_tile_ext")]
+position = Vector3(31.5, 0, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_plinth_27" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(-1.5, 0, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_plinth_28" parent="Exterior" instance=ExtResource("20_hosp_plinth")]
+position = Vector3(31.5, 0, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_tile_paint_1" parent="Walls1" instance=ExtResource("45_hosp_wall_tile_paint")]
+position = Vector3(0, 0, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_wall_door_1" parent="Walls1" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(0, 0, -4.5)
+
+[node name="hosp_wall_door_tile_paint_1" parent="Walls1" instance=ExtResource("39_hosp_wall_door_tile_paint")]
+position = Vector3(3, 0, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_wall_1" parent="Walls1" instance=ExtResource("27_hosp_wall")]
+position = Vector3(3, 0, -4.5)
+
+[node name="hosp_wall_glass_door_1" parent="Walls1" instance=ExtResource("43_hosp_wall_glass_door")]
+position = Vector3(6, 0, -1.5)
+
+[node name="hosp_wall_door_bsmt_paint_1" parent="Walls1" instance=ExtResource("36_hosp_wall_door_bsmt_paint")]
+position = Vector3(6, 0, -4.5)
+
+[node name="hosp_wall_glass_1" parent="Walls1" instance=ExtResource("42_hosp_wall_glass")]
+position = Vector3(9, 0, -1.5)
+
+[node name="hosp_wall_bsmt_paint_1" parent="Walls1" instance=ExtResource("31_hosp_wall_bsmt_paint")]
+position = Vector3(9, 0, -4.5)
+
+[node name="hosp_wall_door_2" parent="Walls1" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(12, 0, -1.5)
+
+[node name="hosp_wall_door_3" parent="Walls1" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(12, 0, -4.5)
+
+[node name="hosp_wall_door_4" parent="Walls1" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(15, 0, -1.5)
+
+[node name="hosp_wall_2" parent="Walls1" instance=ExtResource("27_hosp_wall")]
+position = Vector3(15, 0, -4.5)
+
+[node name="hosp_wall_3" parent="Walls1" instance=ExtResource("27_hosp_wall")]
+position = Vector3(18, 0, -1.5)
+
+[node name="hosp_wall_door_5" parent="Walls1" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(18, 0, -4.5)
+
+[node name="hosp_wall_door_6" parent="Walls1" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(21, 0, -1.5)
+
+[node name="hosp_wall_4" parent="Walls1" instance=ExtResource("27_hosp_wall")]
+position = Vector3(21, 0, -4.5)
+
+[node name="hosp_wall_door_7" parent="Walls1" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(24, 0, -1.5)
+
+[node name="hosp_wall_door_8" parent="Walls1" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(24, 0, -4.5)
+
+[node name="hosp_wall_5" parent="Walls1" instance=ExtResource("27_hosp_wall")]
+position = Vector3(27, 0, -1.5)
+
+[node name="hosp_wall_door_tile_paint_2" parent="Walls1" instance=ExtResource("39_hosp_wall_door_tile_paint")]
+position = Vector3(27, 0, -4.5)
+
+[node name="hosp_wall_door_9" parent="Walls1" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(30, 0, -1.5)
+
+[node name="hosp_wall_tile_paint_2" parent="Walls1" instance=ExtResource("45_hosp_wall_tile_paint")]
+position = Vector3(30, 0, -4.5)
+
+[node name="hosp_wall_tile_paint_3" parent="Walls1" instance=ExtResource("45_hosp_wall_tile_paint")]
+position = Vector3(4.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_6" parent="Walls1" instance=ExtResource("27_hosp_wall")]
+position = Vector3(10.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_7" parent="Walls1" instance=ExtResource("27_hosp_wall")]
+position = Vector3(13.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_8" parent="Walls1" instance=ExtResource("27_hosp_wall")]
+position = Vector3(19.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_9" parent="Walls1" instance=ExtResource("27_hosp_wall")]
+position = Vector3(22.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_10" parent="Walls1" instance=ExtResource("27_hosp_wall")]
+position = Vector3(28.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_bsmt_paint_2" parent="Walls1" instance=ExtResource("31_hosp_wall_bsmt_paint")]
+position = Vector3(4.5, 0, -6)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_wall_bsmt_paint_3" parent="Walls1" instance=ExtResource("31_hosp_wall_bsmt_paint")]
+position = Vector3(10.5, 0, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_11" parent="Walls1" instance=ExtResource("27_hosp_wall")]
+position = Vector3(16.5, 0, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_12" parent="Walls1" instance=ExtResource("27_hosp_wall")]
+position = Vector3(22.5, 0, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_tile_paint_4" parent="Walls1" instance=ExtResource("45_hosp_wall_tile_paint")]
+position = Vector3(25.5, 0, -6)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_wall_corner_brick_1" parent="Walls1" instance=ExtResource("32_hosp_wall_corner_brick")]
+position = Vector3(-1.5, 0, 1.5)
+
+[node name="hosp_wall_corner_brick_2" parent="Walls1" instance=ExtResource("32_hosp_wall_corner_brick")]
+position = Vector3(31.5, 0, 1.5)
+
+[node name="hosp_wall_corner_brick_3" parent="Walls1" instance=ExtResource("32_hosp_wall_corner_brick")]
+position = Vector3(-1.5, 0, -7.5)
+
+[node name="hosp_wall_corner_brick_4" parent="Walls1" instance=ExtResource("32_hosp_wall_corner_brick")]
+position = Vector3(31.5, 0, -7.5)
+
+[node name="hosp_band_1" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(0, 3.3, 1.5)
+
+[node name="hosp_band_2" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(0, 3.3, -7.5)
+
+[node name="hosp_band_3" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(3, 3.3, 1.5)
+
+[node name="hosp_band_4" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(3, 3.3, -7.5)
+
+[node name="hosp_band_5" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(6, 3.3, 1.5)
+
+[node name="hosp_band_6" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(6, 3.3, -7.5)
+
+[node name="hosp_band_7" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(9, 3.3, 1.5)
+
+[node name="hosp_band_8" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(9, 3.3, -7.5)
+
+[node name="hosp_band_9" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(12, 3.3, 1.5)
+
+[node name="hosp_band_10" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(12, 3.3, -7.5)
+
+[node name="hosp_band_11" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(12, 6.6, 1.5)
+
+[node name="hosp_band_12" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(12, 6.6, -7.5)
+
+[node name="hosp_band_13" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(15, 3.3, 1.5)
+
+[node name="hosp_band_14" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(15, 3.3, -7.5)
+
+[node name="hosp_band_15" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(15, 6.6, 1.5)
+
+[node name="hosp_band_16" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(15, 6.6, -7.5)
+
+[node name="hosp_band_17" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(18, 3.3, 1.5)
+
+[node name="hosp_band_18" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(18, 3.3, -7.5)
+
+[node name="hosp_band_19" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(18, 6.6, 1.5)
+
+[node name="hosp_band_20" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(18, 6.6, -7.5)
+
+[node name="hosp_band_21" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(21, 3.3, 1.5)
+
+[node name="hosp_band_22" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(21, 3.3, -7.5)
+
+[node name="hosp_band_23" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(21, 6.6, 1.5)
+
+[node name="hosp_band_24" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(21, 6.6, -7.5)
+
+[node name="hosp_band_25" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(24, 3.3, 1.5)
+
+[node name="hosp_band_26" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(24, 3.3, -7.5)
+
+[node name="hosp_band_27" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(24, 6.6, 1.5)
+
+[node name="hosp_band_28" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(24, 6.6, -7.5)
+
+[node name="hosp_band_29" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(27, 3.3, 1.5)
+
+[node name="hosp_band_30" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(27, 3.3, -7.5)
+
+[node name="hosp_band_31" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(27, 6.6, 1.5)
+
+[node name="hosp_band_32" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(27, 6.6, -7.5)
+
+[node name="hosp_band_33" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(30, 3.3, 1.5)
+
+[node name="hosp_band_34" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(30, 3.3, -7.5)
+
+[node name="hosp_band_35" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(30, 6.6, 1.5)
+
+[node name="hosp_band_36" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(30, 6.6, -7.5)
+
+[node name="hosp_band_37" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(-1.5, 3.3, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_band_38" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(31.5, 3.3, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_band_39" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(10.5, 6.6, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_band_40" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(31.5, 6.6, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_band_41" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(-1.5, 3.3, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_band_42" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(31.5, 3.3, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_band_43" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(10.5, 6.6, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_band_44" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(31.5, 6.6, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_band_45" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(-1.5, 3.3, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_band_46" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(31.5, 3.3, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_band_47" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(10.5, 6.6, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_band_48" parent="Exterior" instance=ExtResource("10_hosp_band")]
+position = Vector3(31.5, 6.6, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_door_1" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(-1.5, 0, -0.54)
+
+[node name="hosp_door_2" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(2.46, 0, -1.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_door_3" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(5.46, 0, 1.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_door_4" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(5.46, 0, -1.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_door_5" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(11.46, 0, -1.5)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_door_6" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(20.46, 0, -1.5)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_door_7" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(23.46, 0, -1.5)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_door_8" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(29.46, 0, -1.5)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_door_9" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(-0.54, 0, -4.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_door_10" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(5.46, 0, -4.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_door_11" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(11.46, 0, -4.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_door_12" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(17.46, 0, -4.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_door_13" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(23.46, 0, -4.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_door_14" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(26.46, 0, -4.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_gate_leaf_1" parent="Doors1" instance=ExtResource("19_hosp_gate_leaf")]
+position = Vector3(4.86, 0, -7.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_gate_leaf_2" parent="Doors1" instance=ExtResource("19_hosp_gate_leaf")]
+position = Vector3(7.14, 0, -7.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_door_15" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(26.46, 0, -7.5)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_door_16" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(31.5, 0, -6.54)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_door_17" parent="Doors1" instance=ExtResource("14_hosp_door")]
+position = Vector3(31.5, 0, -3.54)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_stairs_flight_1" parent="Stairs" instance=ExtResource("24_hosp_stairs_flight")]
+position = Vector3(15, 0, 0.7)
+
+[node name="hosp_stairs_railing_1" parent="Stairs" instance=ExtResource("26_hosp_stairs_railing")]
+position = Vector3(15, 0, 0.7)
+
+[node name="hosp_stairs_landing_1" parent="Stairs" instance=ExtResource("25_hosp_stairs_landing")]
+position = Vector3(18.7, 1.65, 0)
+
+[node name="hosp_stairs_flight_2" parent="Stairs" instance=ExtResource("24_hosp_stairs_flight")]
+position = Vector3(18, 1.65, -0.7)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_stairs_railing_2" parent="Stairs" instance=ExtResource("26_hosp_stairs_railing")]
+position = Vector3(18, 1.65, -0.7)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_stairs_landing_2" parent="Stairs" instance=ExtResource("25_hosp_stairs_landing")]
+position = Vector3(14.3, 3.3, 0)
+
+[node name="hosp_railing_straight_1" parent="Stairs" instance=ExtResource("22_hosp_railing_straight")]
+position = Vector3(15.05, 3.3, 0.75)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_stairs_flight_3" parent="Stairs" instance=ExtResource("24_hosp_stairs_flight")]
+position = Vector3(18, -1.65, -0.7)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_stairs_railing_3" parent="Stairs" instance=ExtResource("26_hosp_stairs_railing")]
+position = Vector3(18, -1.65, -0.7)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_stairs_landing_3" parent="Stairs" instance=ExtResource("25_hosp_stairs_landing")]
+position = Vector3(18.7, -1.65, 0)
+
+[node name="hosp_stairs_flight_4" parent="Stairs" instance=ExtResource("24_hosp_stairs_flight")]
+position = Vector3(15, -3.3, 0.7)
+
+[node name="hosp_stairs_railing_4" parent="Stairs" instance=ExtResource("26_hosp_stairs_railing")]
+position = Vector3(15, -3.3, 0.7)
+
+[node name="hosp_floor_1" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(12, 3.3, 0)
+
+[node name="hosp_roof_13" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(12, 6.6, 0)
+
+[node name="hosp_floor_2" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(12, 3.3, -3)
+
+[node name="hosp_roof_14" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(12, 6.6, -3)
+
+[node name="hosp_floor_3" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(12, 3.3, -6)
+
+[node name="hosp_roof_15" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(12, 6.6, -6)
+
+[node name="hosp_wall_window_ext_1" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(12, 3.3, 1.5)
+
+[node name="hosp_wall_window_ext_2" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(12, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_roof_16" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(15, 6.6, 0)
+
+[node name="hosp_floor_4" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(15, 3.3, -3)
+
+[node name="hosp_roof_17" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(15, 6.6, -3)
+
+[node name="hosp_floor_5" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(15, 3.3, -6)
+
+[node name="hosp_roof_18" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(15, 6.6, -6)
+
+[node name="hosp_wall_window_ext_3" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(15, 3.3, 1.5)
+
+[node name="hosp_wall_window_ext_4" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(15, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_roof_19" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(18, 6.6, 0)
+
+[node name="hosp_floor_6" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(18, 3.3, -3)
+
+[node name="hosp_roof_20" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(18, 6.6, -3)
+
+[node name="hosp_floor_7" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(18, 3.3, -6)
+
+[node name="hosp_roof_21" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(18, 6.6, -6)
+
+[node name="hosp_wall_window_ext_5" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(18, 3.3, 1.5)
+
+[node name="hosp_wall_window_ext_6" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(18, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_floor_8" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(21, 3.3, 0)
+
+[node name="hosp_roof_22" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(21, 6.6, 0)
+
+[node name="hosp_floor_9" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(21, 3.3, -3)
+
+[node name="hosp_roof_23" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(21, 6.6, -3)
+
+[node name="hosp_floor_10" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(21, 3.3, -6)
+
+[node name="hosp_roof_24" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(21, 6.6, -6)
+
+[node name="hosp_wall_window_ext_7" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(21, 3.3, 1.5)
+
+[node name="hosp_wall_window_ext_8" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(21, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_floor_11" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(24, 3.3, 0)
+
+[node name="hosp_roof_25" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(24, 6.6, 0)
+
+[node name="hosp_floor_12" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(24, 3.3, -3)
+
+[node name="hosp_roof_26" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(24, 6.6, -3)
+
+[node name="hosp_floor_13" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(24, 3.3, -6)
+
+[node name="hosp_roof_27" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(24, 6.6, -6)
+
+[node name="hosp_wall_window_ext_9" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(24, 3.3, 1.5)
+
+[node name="hosp_wall_window_ext_10" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(24, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_floor_14" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(27, 3.3, 0)
+
+[node name="hosp_roof_28" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(27, 6.6, 0)
+
+[node name="hosp_floor_15" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(27, 3.3, -3)
+
+[node name="hosp_roof_29" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(27, 6.6, -3)
+
+[node name="hosp_floor_16" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(27, 3.3, -6)
+
+[node name="hosp_roof_30" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(27, 6.6, -6)
+
+[node name="hosp_wall_window_ext_11" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(27, 3.3, 1.5)
+
+[node name="hosp_wall_window_ext_12" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(27, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_floor_17" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(30, 3.3, 0)
+
+[node name="hosp_roof_31" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(30, 6.6, 0)
+
+[node name="hosp_floor_18" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(30, 3.3, -3)
+
+[node name="hosp_roof_32" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(30, 6.6, -3)
+
+[node name="hosp_floor_19" parent="Floor2" instance=ExtResource("16_hosp_floor")]
+position = Vector3(30, 3.3, -6)
+
+[node name="hosp_roof_33" parent="Roof" instance=ExtResource("23_hosp_roof")]
+position = Vector3(30, 6.6, -6)
+
+[node name="hosp_wall_window_ext_13" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(30, 3.3, 1.5)
+
+[node name="hosp_wall_window_ext_14" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(30, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_wall_ext_1" parent="Walls2" instance=ExtResource("40_hosp_wall_ext")]
+position = Vector3(10.5, 3.3, 0)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_wall_ext_2" parent="Walls2" instance=ExtResource("40_hosp_wall_ext")]
+position = Vector3(31.5, 3.3, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_window_ext_15" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(10.5, 3.3, -3)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_wall_window_ext_16" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(31.5, 3.3, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_ext_3" parent="Walls2" instance=ExtResource("40_hosp_wall_ext")]
+position = Vector3(10.5, 3.3, -6)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_wall_window_ext_17" parent="Walls2" instance=ExtResource("46_hosp_wall_window_ext")]
+position = Vector3(31.5, 3.3, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_door_1" parent="Walls2" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(12, 3.3, -1.5)
+
+[node name="hosp_wall_door_2" parent="Walls2" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(15, 3.3, -1.5)
+
+[node name="hosp_wall_1" parent="Walls2" instance=ExtResource("27_hosp_wall")]
+position = Vector3(18, 3.3, -1.5)
+
+[node name="hosp_wall_door_3" parent="Walls2" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(21, 3.3, -1.5)
+
+[node name="hosp_wall_2" parent="Walls2" instance=ExtResource("27_hosp_wall")]
+position = Vector3(24, 3.3, -1.5)
+
+[node name="hosp_wall_3" parent="Walls2" instance=ExtResource("27_hosp_wall")]
+position = Vector3(27, 3.3, -1.5)
+
+[node name="hosp_wall_4" parent="Walls2" instance=ExtResource("27_hosp_wall")]
+position = Vector3(30, 3.3, -1.5)
+
+[node name="hosp_wall_door_4" parent="Walls2" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(12, 3.3, -4.5)
+
+[node name="hosp_wall_5" parent="Walls2" instance=ExtResource("27_hosp_wall")]
+position = Vector3(15, 3.3, -4.5)
+
+[node name="hosp_wall_door_5" parent="Walls2" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(18, 3.3, -4.5)
+
+[node name="hosp_wall_6" parent="Walls2" instance=ExtResource("27_hosp_wall")]
+position = Vector3(21, 3.3, -4.5)
+
+[node name="hosp_wall_door_6" parent="Walls2" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(24, 3.3, -4.5)
+
+[node name="hosp_wall_7" parent="Walls2" instance=ExtResource("27_hosp_wall")]
+position = Vector3(27, 3.3, -4.5)
+
+[node name="hosp_wall_door_7" parent="Walls2" instance=ExtResource("34_hosp_wall_door")]
+position = Vector3(30, 3.3, -4.5)
+
+[node name="hosp_wall_8" parent="Walls2" instance=ExtResource("27_hosp_wall")]
+position = Vector3(13.5, 3.3, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_9" parent="Walls2" instance=ExtResource("27_hosp_wall")]
+position = Vector3(19.5, 3.3, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_10" parent="Walls2" instance=ExtResource("27_hosp_wall")]
+position = Vector3(16.5, 3.3, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_11" parent="Walls2" instance=ExtResource("27_hosp_wall")]
+position = Vector3(22.5, 3.3, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_12" parent="Walls2" instance=ExtResource("27_hosp_wall")]
+position = Vector3(28.5, 3.3, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_corner_brick_1" parent="Walls2" instance=ExtResource("32_hosp_wall_corner_brick")]
+position = Vector3(10.5, 3.3, 1.5)
+
+[node name="hosp_wall_corner_brick_2" parent="Walls2" instance=ExtResource("32_hosp_wall_corner_brick")]
+position = Vector3(31.5, 3.3, 1.5)
+
+[node name="hosp_wall_corner_brick_3" parent="Walls2" instance=ExtResource("32_hosp_wall_corner_brick")]
+position = Vector3(10.5, 3.3, -7.5)
+
+[node name="hosp_wall_corner_brick_4" parent="Walls2" instance=ExtResource("32_hosp_wall_corner_brick")]
+position = Vector3(31.5, 3.3, -7.5)
+
+[node name="hosp_door_1" parent="Doors2" instance=ExtResource("14_hosp_door")]
+position = Vector3(11.46, 3.3, -1.5)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_door_2" parent="Doors2" instance=ExtResource("14_hosp_door")]
+position = Vector3(20.46, 3.3, -1.5)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_door_3" parent="Doors2" instance=ExtResource("14_hosp_door")]
+position = Vector3(11.46, 3.3, -4.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_door_4" parent="Doors2" instance=ExtResource("14_hosp_door")]
+position = Vector3(17.46, 3.3, -4.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_door_5" parent="Doors2" instance=ExtResource("14_hosp_door")]
+position = Vector3(23.46, 3.3, -4.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_door_6" parent="Doors2" instance=ExtResource("14_hosp_door")]
+position = Vector3(29.46, 3.3, -4.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_floor_concrete_1" parent="Basement" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(9, -3.3, -3)
+
+[node name="hosp_floor_concrete_2" parent="Basement" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(12, -3.3, -3)
+
+[node name="hosp_floor_concrete_3" parent="Basement" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(15, -3.3, -3)
+
+[node name="hosp_floor_concrete_4" parent="Basement" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(18, -3.3, -3)
+
+[node name="hosp_floor_concrete_5" parent="Basement" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(21, -3.3, -3)
+
+[node name="hosp_floor_concrete_6" parent="Basement" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(24, -3.3, -3)
+
+[node name="hosp_floor_concrete_7" parent="Basement" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(15, -3.3, 0)
+
+[node name="hosp_floor_concrete_8" parent="Basement" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(18, -3.3, 0)
+
+[node name="hosp_floor_concrete_9" parent="Basement" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(21, -3.3, 0)
+
+[node name="hosp_floor_concrete_10" parent="Basement" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(24, -3.3, 0)
+
+[node name="hosp_floor_concrete_11" parent="Basement" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(12, -3.3, -6)
+
+[node name="hosp_floor_concrete_12" parent="Basement" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(15, -3.3, -6)
+
+[node name="hosp_floor_concrete_13" parent="Basement" instance=ExtResource("17_hosp_floor_concrete")]
+position = Vector3(18, -3.3, -6)
+
+[node name="hosp_wall_bsmt_ground_1" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(9, -3.3, -1.5)
+
+[node name="hosp_wall_bsmt_ground_2" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(12, -3.3, -1.5)
+
+[node name="hosp_wall_door_bsmt_1" parent="Basement" instance=ExtResource("35_hosp_wall_door_bsmt")]
+position = Vector3(15, -3.3, -1.5)
+
+[node name="hosp_wall_bsmt_1" parent="Basement" instance=ExtResource("28_hosp_wall_bsmt")]
+position = Vector3(18, -3.3, -1.5)
+
+[node name="hosp_wall_door_bsmt_2" parent="Basement" instance=ExtResource("35_hosp_wall_door_bsmt")]
+position = Vector3(21, -3.3, -1.5)
+
+[node name="hosp_wall_bsmt_2" parent="Basement" instance=ExtResource("28_hosp_wall_bsmt")]
+position = Vector3(24, -3.3, -1.5)
+
+[node name="hosp_wall_bsmt_ground_3" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(9, -3.3, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_wall_bsmt_3" parent="Basement" instance=ExtResource("28_hosp_wall_bsmt")]
+position = Vector3(12, -3.3, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_wall_door_bsmt_3" parent="Basement" instance=ExtResource("35_hosp_wall_door_bsmt")]
+position = Vector3(15, -3.3, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_wall_bsmt_4" parent="Basement" instance=ExtResource("28_hosp_wall_bsmt")]
+position = Vector3(18, -3.3, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_wall_bsmt_ground_4" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(21, -3.3, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_wall_bsmt_ground_5" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(24, -3.3, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_wall_bsmt_ground_6" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(15, -3.3, 1.5)
+
+[node name="hosp_wall_bsmt_ground_7" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(18, -3.3, 1.5)
+
+[node name="hosp_wall_bsmt_ground_8" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(21, -3.3, 1.5)
+
+[node name="hosp_wall_bsmt_ground_9" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(24, -3.3, 1.5)
+
+[node name="hosp_wall_bsmt_ground_10" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(12, -3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_wall_bsmt_ground_11" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(15, -3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_wall_bsmt_ground_12" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(18, -3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_wall_bsmt_ground_13" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(7.5, -3.3, -3)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_wall_bsmt_ground_14" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(25.5, -3.3, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_bsmt_ground_15" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(13.5, -3.3, 0)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_wall_bsmt_5" parent="Basement" instance=ExtResource("28_hosp_wall_bsmt")]
+position = Vector3(19.5, -3.3, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_bsmt_ground_16" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(25.5, -3.3, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_bsmt_ground_17" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(10.5, -3.3, -6)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_wall_bsmt_ground_18" parent="Basement" instance=ExtResource("30_hosp_wall_bsmt_ground")]
+position = Vector3(19.5, -3.3, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_wall_corner_bsmt_1" parent="Basement" instance=ExtResource("33_hosp_wall_corner_bsmt")]
+position = Vector3(7.5, -3.3, -1.5)
+
+[node name="hosp_wall_corner_bsmt_2" parent="Basement" instance=ExtResource("33_hosp_wall_corner_bsmt")]
+position = Vector3(7.5, -3.3, -4.5)
+
+[node name="hosp_wall_corner_bsmt_3" parent="Basement" instance=ExtResource("33_hosp_wall_corner_bsmt")]
+position = Vector3(10.5, -3.3, -4.5)
+
+[node name="hosp_wall_corner_bsmt_4" parent="Basement" instance=ExtResource("33_hosp_wall_corner_bsmt")]
+position = Vector3(10.5, -3.3, -7.5)
+
+[node name="hosp_wall_corner_bsmt_5" parent="Basement" instance=ExtResource("33_hosp_wall_corner_bsmt")]
+position = Vector3(19.5, -3.3, -7.5)
+
+[node name="hosp_wall_corner_bsmt_6" parent="Basement" instance=ExtResource("33_hosp_wall_corner_bsmt")]
+position = Vector3(19.5, -3.3, -4.5)
+
+[node name="hosp_wall_corner_bsmt_7" parent="Basement" instance=ExtResource("33_hosp_wall_corner_bsmt")]
+position = Vector3(25.5, -3.3, -4.5)
+
+[node name="hosp_wall_corner_bsmt_8" parent="Basement" instance=ExtResource("33_hosp_wall_corner_bsmt")]
+position = Vector3(25.5, -3.3, 1.5)
+
+[node name="hosp_wall_corner_bsmt_9" parent="Basement" instance=ExtResource("33_hosp_wall_corner_bsmt")]
+position = Vector3(13.5, -3.3, 1.5)
+
+[node name="hosp_wall_corner_bsmt_10" parent="Basement" instance=ExtResource("33_hosp_wall_corner_bsmt")]
+position = Vector3(13.5, -3.3, -1.5)
+
+[node name="hosp_door_metal_1" parent="Basement" instance=ExtResource("15_hosp_door_metal")]
+position = Vector3(14.46, -3.3, -1.5)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_door_metal_2" parent="Basement" instance=ExtResource("15_hosp_door_metal")]
+position = Vector3(20.46, -3.3, -1.5)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_door_metal_3" parent="Basement" instance=ExtResource("15_hosp_door_metal")]
+position = Vector3(14.46, -3.3, -4.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_pipe_run_1" parent="PropsB" instance=ExtResource("63_prop_pipe_run")]
+position = Vector3(9, -0.75, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_pipe_run_2" parent="PropsB" instance=ExtResource("63_prop_pipe_run")]
+position = Vector3(12, -0.75, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_pipe_run_3" parent="PropsB" instance=ExtResource("63_prop_pipe_run")]
+position = Vector3(15, -0.75, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_pipe_run_4" parent="PropsB" instance=ExtResource("63_prop_pipe_run")]
+position = Vector3(18, -0.75, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_pipe_run_5" parent="PropsB" instance=ExtResource("63_prop_pipe_run")]
+position = Vector3(21, -0.75, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_pipe_run_6" parent="PropsB" instance=ExtResource("63_prop_pipe_run")]
+position = Vector3(24, -0.75, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bulkhead_lamp_1" parent="PropsB" instance=ExtResource("52_prop_bulkhead_lamp")]
+position = Vector3(9, -0.2, -3)
+
+[node name="prop_bulkhead_lamp_2" parent="PropsB" instance=ExtResource("52_prop_bulkhead_lamp")]
+position = Vector3(15, -0.2, -3)
+
+[node name="prop_bulkhead_lamp_3" parent="PropsB" instance=ExtResource("52_prop_bulkhead_lamp")]
+position = Vector3(21, -0.2, -3)
+
+[node name="prop_bulkhead_lamp_4" parent="PropsB" instance=ExtResource("52_prop_bulkhead_lamp")]
+position = Vector3(22.5, -0.2, 0)
+
+[node name="prop_bulkhead_lamp_5" parent="PropsB" instance=ExtResource("52_prop_bulkhead_lamp")]
+position = Vector3(15, -0.2, -6)
+
+[node name="prop_oxygen_cylinder_1" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(20, -3.3, 1.2)
+
+[node name="prop_oxygen_cylinder_2" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(20.45, -3.3, 1.2)
+
+[node name="prop_oxygen_cylinder_3" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(20.9, -3.3, 1.2)
+
+[node name="prop_oxygen_cylinder_4" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(21.35, -3.3, 1.2)
+
+[node name="prop_oxygen_cylinder_5" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(21.8, -3.3, 1.2)
+
+[node name="prop_oxygen_cylinder_6" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(22.25, -3.3, 1.2)
+
+[node name="prop_oxygen_cylinder_7" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(22.7, -3.3, 1.2)
+
+[node name="prop_oxygen_cylinder_8" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(23.15, -3.3, 1.2)
+
+[node name="prop_oxygen_cylinder_9" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(23.6, -3.3, 1.2)
+
+[node name="prop_oxygen_cylinder_10" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(24.05, -3.3, 1.2)
+
+[node name="prop_oxygen_cylinder_11" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(24.5, -3.3, 1.2)
+
+[node name="prop_oxygen_cylinder_12" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(23, -3.3, 0.7)
+
+[node name="prop_oxygen_cylinder_13" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(23.45, -3.3, 0.7)
+
+[node name="prop_oxygen_cylinder_14" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(23.9, -3.3, 0.7)
+
+[node name="prop_oxygen_cylinder_15" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(24.35, -3.3, 0.7)
+
+[node name="prop_oxygen_cylinder_16" parent="PropsB" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(24.8, -3.3, 0.7)
+
+[node name="prop_shelf_rack_1" parent="PropsB" instance=ExtResource("65_prop_shelf_rack")]
+position = Vector3(11.6, -3.3, -7.1)
+
+[node name="prop_shelf_rack_2" parent="PropsB" instance=ExtResource("65_prop_shelf_rack")]
+position = Vector3(13.6, -3.3, -7.1)
+
+[node name="prop_shelf_rack_3" parent="PropsB" instance=ExtResource("65_prop_shelf_rack")]
+position = Vector3(15.6, -3.3, -7.1)
+
+[node name="prop_shelf_rack_4" parent="PropsB" instance=ExtResource("65_prop_shelf_rack")]
+position = Vector3(17.6, -3.3, -7.1)
+
+[node name="prop_shelf_rack_5" parent="PropsB" instance=ExtResource("65_prop_shelf_rack")]
+position = Vector3(19.1, -3.3, -5.9)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_pallet_boxes_1" parent="PropsB" instance=ExtResource("62_prop_pallet_boxes")]
+position = Vector3(12.5, -3.3, -5.4)
+
+[node name="prop_pallet_boxes_2" parent="PropsB" instance=ExtResource("62_prop_pallet_boxes")]
+position = Vector3(17, -3.3, -5.3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_box_1" parent="PropsB" instance=ExtResource("51_prop_box")]
+position = Vector3(14, -3.3, -5.6)
+rotation_degrees = Vector3(0, 15, 0)
+
+[node name="prop_coat_rack_suits_1" parent="Props1" instance=ExtResource("55_prop_coat_rack_suits")]
+position = Vector3(0, 0, 1.5)
+
+[node name="prop_med_cabinet_1" parent="Props1" instance=ExtResource("60_prop_med_cabinet")]
+position = Vector3(-0.6, 0, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bench_1" parent="Props1" instance=ExtResource("49_prop_bench")]
+position = Vector3(0.8, 0, -1.2)
+
+[node name="prop_floor_line_1" parent="Props1" instance=ExtResource("57_prop_floor_line")]
+position = Vector3(1.5, 0.001, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_sink_1" parent="Props1" instance=ExtResource("68_prop_sink")]
+position = Vector3(3.8, 0, 1.5)
+
+[node name="prop_bin_hazard_1" parent="Props1" instance=ExtResource("50_prop_bin_hazard")]
+position = Vector3(2.1, 0, 1.1)
+
+[node name="prop_bin_hazard_2" parent="Props1" instance=ExtResource("50_prop_bin_hazard")]
+position = Vector3(4.1, 0, -1.05)
+
+[node name="prop_sign_plate_red_1" parent="Props1" instance=ExtResource("67_prop_sign_plate_red")]
+position = Vector3(3, 2.35, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_sign_plate_1" parent="Props1" instance=ExtResource("66_prop_sign_plate")]
+position = Vector3(-1.5, 2.3, 0)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="prop_bench_2" parent="Props1" instance=ExtResource("49_prop_bench")]
+position = Vector3(8.5, 0, 1.15)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bench_3" parent="Props1" instance=ExtResource("49_prop_bench")]
+position = Vector3(9, 0, -1.15)
+
+[node name="prop_desk_1" parent="Props1" instance=ExtResource("56_prop_desk")]
+position = Vector3(12.6, 0, 0.9)
+
+[node name="prop_chair_1" parent="Props1" instance=ExtResource("54_prop_chair")]
+position = Vector3(12.6, 0, 0.3)
+
+[node name="prop_med_cabinet_2" parent="Props1" instance=ExtResource("60_prop_med_cabinet")]
+position = Vector3(13.5, 0, -0.4)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_sink_2" parent="Props1" instance=ExtResource("68_prop_sink")]
+position = Vector3(19.5, 0, 0.5)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="prop_med_cabinet_3" parent="Props1" instance=ExtResource("60_prop_med_cabinet")]
+position = Vector3(22.5, 0, 0.2)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_gurney_1" parent="Props1" instance=ExtResource("58_prop_gurney")]
+position = Vector3(21.1, 0, 0.3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_bed_1" parent="Props1" instance=ExtResource("48_prop_bed")]
+position = Vector3(25.3, 0, -0.4)
+
+[node name="prop_bed_2" parent="Props1" instance=ExtResource("48_prop_bed")]
+position = Vector3(26.6, 0, -0.4)
+
+[node name="prop_bed_3" parent="Props1" instance=ExtResource("48_prop_bed")]
+position = Vector3(27.9, 0, -0.4)
+
+[node name="prop_iv_stand_1" parent="Props1" instance=ExtResource("59_prop_iv_stand")]
+position = Vector3(25.95, 0, 0.8)
+
+[node name="prop_sink_3" parent="Props1" instance=ExtResource("68_prop_sink")]
+position = Vector3(31.5, 0, 0.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_bed_4" parent="Props1" instance=ExtResource("48_prop_bed")]
+position = Vector3(1.3, 0, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_5" parent="Props1" instance=ExtResource("48_prop_bed")]
+position = Vector3(2.6, 0, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_6" parent="Props1" instance=ExtResource("48_prop_bed")]
+position = Vector3(3.9, 0, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_7" parent="Props1" instance=ExtResource("48_prop_bed")]
+position = Vector3(13.1, 0, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_8" parent="Props1" instance=ExtResource("48_prop_bed")]
+position = Vector3(14.4, 0, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_9" parent="Props1" instance=ExtResource("48_prop_bed")]
+position = Vector3(15.7, 0, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_10" parent="Props1" instance=ExtResource("48_prop_bed")]
+position = Vector3(19.2, 0, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_11" parent="Props1" instance=ExtResource("48_prop_bed")]
+position = Vector3(20.5, 0, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_12" parent="Props1" instance=ExtResource("48_prop_bed")]
+position = Vector3(21.8, 0, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_radiator_1" parent="Props1" instance=ExtResource("64_prop_radiator")]
+position = Vector3(0, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_radiator_2" parent="Props1" instance=ExtResource("64_prop_radiator")]
+position = Vector3(3, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_radiator_3" parent="Props1" instance=ExtResource("64_prop_radiator")]
+position = Vector3(12, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_radiator_4" parent="Props1" instance=ExtResource("64_prop_radiator")]
+position = Vector3(15, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_radiator_5" parent="Props1" instance=ExtResource("64_prop_radiator")]
+position = Vector3(18, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_radiator_6" parent="Props1" instance=ExtResource("64_prop_radiator")]
+position = Vector3(21, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_radiator_7" parent="Props1" instance=ExtResource("64_prop_radiator")]
+position = Vector3(9, 0, 1.5)
+
+[node name="prop_radiator_8" parent="Props1" instance=ExtResource("64_prop_radiator")]
+position = Vector3(12, 0, 1.5)
+
+[node name="prop_radiator_9" parent="Props1" instance=ExtResource("64_prop_radiator")]
+position = Vector3(21, 0, 1.5)
+
+[node name="prop_radiator_10" parent="Props1" instance=ExtResource("64_prop_radiator")]
+position = Vector3(24, 0, 1.5)
+
+[node name="prop_radiator_11" parent="Props1" instance=ExtResource("64_prop_radiator")]
+position = Vector3(27, 0, 1.5)
+
+[node name="prop_pallet_boxes_1" parent="Props1" instance=ExtResource("62_prop_pallet_boxes")]
+position = Vector3(9, 0, -6.2)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_box_1" parent="Props1" instance=ExtResource("51_prop_box")]
+position = Vector3(8, 0, -5.2)
+
+[node name="prop_shelf_rack_1" parent="Props1" instance=ExtResource("65_prop_shelf_rack")]
+position = Vector3(24, 0, -7.1)
+
+[node name="prop_washer_1" parent="Props1" instance=ExtResource("69_prop_washer")]
+position = Vector3(28.3, 0, -6.9)
+
+[node name="prop_washer_2" parent="Props1" instance=ExtResource("69_prop_washer")]
+position = Vector3(29.2, 0, -6.9)
+
+[node name="prop_shelf_rack_2" parent="Props1" instance=ExtResource("65_prop_shelf_rack")]
+position = Vector3(25.85, 0, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_gurney_2" parent="Props1" instance=ExtResource("58_prop_gurney")]
+position = Vector3(17.2, 0, -2)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_gurney_3" parent="Props1" instance=ExtResource("58_prop_gurney")]
+position = Vector3(20.5, 0, -4)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_iv_stand_2" parent="Props1" instance=ExtResource("59_prop_iv_stand")]
+position = Vector3(17.2, 0, -2.7)
+
+[node name="prop_bench_4" parent="Props1" instance=ExtResource("49_prop_bench")]
+position = Vector3(2.2, 0, -4.15)
+
+[node name="prop_oxygen_cylinder_1" parent="Props1" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(9.6, 0, -4.2)
+
+[node name="prop_oxygen_cylinder_2" parent="Props1" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(9.9, 0, -4.2)
+
+[node name="prop_ceiling_lamp_1" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(0, 3.1, -3)
+
+[node name="prop_ceiling_lamp_2" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(3, 3.1, -3)
+
+[node name="prop_ceiling_lamp_3" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(6, 3.1, -3)
+
+[node name="prop_ceiling_lamp_4" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(9, 3.1, -3)
+
+[node name="prop_ceiling_lamp_5" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(12, 3.1, -3)
+
+[node name="prop_ceiling_lamp_6" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(15, 3.1, -3)
+
+[node name="prop_ceiling_lamp_7" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(18, 3.1, -3)
+
+[node name="prop_ceiling_lamp_8" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(21, 3.1, -3)
+
+[node name="prop_ceiling_lamp_9" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(24, 3.1, -3)
+
+[node name="prop_ceiling_lamp_10" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(27, 3.1, -3)
+
+[node name="prop_ceiling_lamp_11" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(30, 3.1, -3)
+
+[node name="prop_ceiling_lamp_12" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(0, 3.1, 0)
+
+[node name="prop_ceiling_lamp_13" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(3, 3.1, 0)
+
+[node name="prop_ceiling_lamp_14" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(6, 3.1, 0)
+
+[node name="prop_ceiling_lamp_15" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(9, 3.1, 0)
+
+[node name="prop_ceiling_lamp_16" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(12, 3.1, 0)
+
+[node name="prop_ceiling_lamp_17" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(21, 3.1, 0)
+
+[node name="prop_ceiling_lamp_18" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(24, 3.1, 0)
+
+[node name="prop_ceiling_lamp_19" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(27, 3.1, 0)
+
+[node name="prop_ceiling_lamp_20" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(30, 3.1, 0)
+
+[node name="prop_ceiling_lamp_21" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(0, 3.1, -6)
+
+[node name="prop_ceiling_lamp_22" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(3, 3.1, -6)
+
+[node name="prop_ceiling_lamp_23" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(6, 3.1, -6)
+
+[node name="prop_ceiling_lamp_24" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(9, 3.1, -6)
+
+[node name="prop_ceiling_lamp_25" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(12, 3.1, -6)
+
+[node name="prop_ceiling_lamp_26" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(15, 3.1, -6)
+
+[node name="prop_ceiling_lamp_27" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(18, 3.1, -6)
+
+[node name="prop_ceiling_lamp_28" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(21, 3.1, -6)
+
+[node name="prop_ceiling_lamp_29" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(24, 3.1, -6)
+
+[node name="prop_ceiling_lamp_30" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(27, 3.1, -6)
+
+[node name="prop_ceiling_lamp_31" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(30, 3.1, -6)
+
+[node name="prop_ceiling_lamp_32" parent="Props1" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(14.3, 3.1, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_desk_1" parent="Props2" instance=ExtResource("56_prop_desk")]
+position = Vector3(12.6, 3.3, 0.9)
+
+[node name="prop_chair_1" parent="Props2" instance=ExtResource("54_prop_chair")]
+position = Vector3(12.6, 3.3, 0.3)
+
+[node name="prop_med_cabinet_1" parent="Props2" instance=ExtResource("60_prop_med_cabinet")]
+position = Vector3(13.5, 3.3, -0.4)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_bed_1" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(22.4, 3.3, -0.4)
+
+[node name="prop_bed_2" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(24, 3.3, -0.4)
+
+[node name="prop_bed_3" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(25.6, 3.3, -0.4)
+
+[node name="prop_bed_4" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(27.2, 3.3, -0.4)
+
+[node name="prop_bed_5" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(28.8, 3.3, -0.4)
+
+[node name="prop_bed_6" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(30.4, 3.3, -0.4)
+
+[node name="prop_iv_stand_1" parent="Props2" instance=ExtResource("59_prop_iv_stand")]
+position = Vector3(23.2, 3.3, 0.9)
+
+[node name="prop_oxygen_cylinder_1" parent="Props2" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(23.2, 3.3, -1.2)
+
+[node name="prop_iv_stand_2" parent="Props2" instance=ExtResource("59_prop_iv_stand")]
+position = Vector3(26.4, 3.3, 0.9)
+
+[node name="prop_oxygen_cylinder_2" parent="Props2" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(26.4, 3.3, -1.2)
+
+[node name="prop_iv_stand_3" parent="Props2" instance=ExtResource("59_prop_iv_stand")]
+position = Vector3(29.6, 3.3, 0.9)
+
+[node name="prop_oxygen_cylinder_3" parent="Props2" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(29.6, 3.3, -1.2)
+
+[node name="prop_radiator_1" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(12, 3.3, 1.5)
+
+[node name="prop_radiator_2" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(15, 3.3, 1.5)
+
+[node name="prop_radiator_3" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(18, 3.3, 1.5)
+
+[node name="prop_radiator_4" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(21, 3.3, 1.5)
+
+[node name="prop_radiator_5" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(24, 3.3, 1.5)
+
+[node name="prop_radiator_6" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(27, 3.3, 1.5)
+
+[node name="prop_radiator_7" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(30, 3.3, 1.5)
+
+[node name="prop_radiator_8" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(12, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_radiator_9" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(15, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_radiator_10" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(18, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_radiator_11" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(21, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_radiator_12" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(24, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_radiator_13" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(27, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_radiator_14" parent="Props2" instance=ExtResource("64_prop_radiator")]
+position = Vector3(30, 3.3, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_7" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(13.1, 3.3, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_8" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(14.4, 3.3, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_9" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(15.7, 3.3, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_10" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(19.2, 3.3, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_11" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(20.5, 3.3, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_12" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(21.8, 3.3, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_13" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(25.2, 3.3, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_14" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(26.5, 3.3, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bed_15" parent="Props2" instance=ExtResource("48_prop_bed")]
+position = Vector3(27.8, 3.3, -5.6)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_shelf_rack_1" parent="Props2" instance=ExtResource("65_prop_shelf_rack")]
+position = Vector3(28.85, 3.3, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_oxygen_cylinder_4" parent="Props2" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(30.5, 3.3, -5)
+
+[node name="prop_oxygen_cylinder_5" parent="Props2" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(30.8, 3.3, -5)
+
+[node name="prop_desk_2" parent="Props2" instance=ExtResource("56_prop_desk")]
+position = Vector3(21, 3.3, -4.1)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_chair_2" parent="Props2" instance=ExtResource("54_prop_chair")]
+position = Vector3(21, 3.3, -3.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_oxygen_cylinder_6" parent="Props2" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(22, 3.3, -4.15)
+
+[node name="prop_oxygen_cylinder_7" parent="Props2" instance=ExtResource("61_prop_oxygen_cylinder")]
+position = Vector3(22.3, 3.3, -4.15)
+
+[node name="prop_gurney_1" parent="Props2" instance=ExtResource("58_prop_gurney")]
+position = Vector3(17.6, 3.3, -2)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_gurney_2" parent="Props2" instance=ExtResource("58_prop_gurney")]
+position = Vector3(25.5, 3.3, -2)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_gurney_3" parent="Props2" instance=ExtResource("58_prop_gurney")]
+position = Vector3(27.8, 3.3, -4)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_gurney_4" parent="Props2" instance=ExtResource("58_prop_gurney")]
+position = Vector3(15.2, 3.3, -4)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="prop_iv_stand_4" parent="Props2" instance=ExtResource("59_prop_iv_stand")]
+position = Vector3(17.6, 3.3, -2.6)
+
+[node name="prop_iv_stand_5" parent="Props2" instance=ExtResource("59_prop_iv_stand")]
+position = Vector3(25.5, 3.3, -2.6)
+
+[node name="prop_sign_plate_1" parent="Props2" instance=ExtResource("66_prop_sign_plate")]
+position = Vector3(21.95, 4.9, -1.5)
+
+[node name="prop_ceiling_lamp_1" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(12, 6.4, -3)
+
+[node name="prop_ceiling_lamp_2" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(12, 6.4, -6)
+
+[node name="prop_ceiling_lamp_3" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(12, 6.4, 0)
+
+[node name="prop_ceiling_lamp_4" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(15, 6.4, -3)
+
+[node name="prop_ceiling_lamp_5" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(15, 6.4, -6)
+
+[node name="prop_ceiling_lamp_6" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(18, 6.4, -3)
+
+[node name="prop_ceiling_lamp_7" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(18, 6.4, -6)
+
+[node name="prop_ceiling_lamp_8" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(21, 6.4, -3)
+
+[node name="prop_ceiling_lamp_9" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(21, 6.4, -6)
+
+[node name="prop_ceiling_lamp_10" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(21, 6.4, 0)
+
+[node name="prop_ceiling_lamp_11" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(24, 6.4, -3)
+
+[node name="prop_ceiling_lamp_12" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(24, 6.4, -6)
+
+[node name="prop_ceiling_lamp_13" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(24, 6.4, 0)
+
+[node name="prop_ceiling_lamp_14" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(27, 6.4, -3)
+
+[node name="prop_ceiling_lamp_15" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(27, 6.4, -6)
+
+[node name="prop_ceiling_lamp_16" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(27, 6.4, 0)
+
+[node name="prop_ceiling_lamp_17" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(30, 6.4, -3)
+
+[node name="prop_ceiling_lamp_18" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(30, 6.4, -6)
+
+[node name="prop_ceiling_lamp_19" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(30, 6.4, 0)
+
+[node name="prop_ceiling_lamp_20" parent="Props2" instance=ExtResource("53_prop_ceiling_lamp")]
+position = Vector3(16.5, 6.4, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_ground_asphalt_1" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(-7.5, -1.1, 4.5)
+
+[node name="ext_ground_asphalt_2" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(-7.5, -1.1, 10.5)
+
+[node name="ext_ground_asphalt_3" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(-7.5, -1.1, 16.5)
+
+[node name="ext_ground_asphalt_4" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(-7.5, -1.1, -10.5)
+
+[node name="ext_ground_asphalt_5" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(-7.5, -1.1, -16.5)
+
+[node name="ext_ground_asphalt_6" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(-7.5, -1.1, -22.5)
+
+[node name="ext_ground_asphalt_7" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(-1.5, -1.1, 4.5)
+
+[node name="ext_ground_asphalt_8" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(-1.5, -1.1, 10.5)
+
+[node name="ext_ground_asphalt_9" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(-1.5, -1.1, 16.5)
+
+[node name="ext_ground_asphalt_10" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(-1.5, -1.1, -10.5)
+
+[node name="ext_ground_asphalt_11" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(-1.5, -1.1, -16.5)
+
+[node name="ext_ground_asphalt_12" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(-1.5, -1.1, -22.5)
+
+[node name="ext_ground_asphalt_13" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(4.5, -1.1, 4.5)
+
+[node name="ext_ground_asphalt_14" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(4.5, -1.1, 10.5)
+
+[node name="ext_ground_asphalt_15" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(4.5, -1.1, 16.5)
+
+[node name="ext_ground_asphalt_16" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(4.5, -1.1, -10.5)
+
+[node name="ext_ground_asphalt_17" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(4.5, -1.1, -16.5)
+
+[node name="ext_ground_asphalt_18" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(4.5, -1.1, -22.5)
+
+[node name="ext_ground_asphalt_19" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(10.5, -1.1, 4.5)
+
+[node name="ext_ground_asphalt_20" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(10.5, -1.1, 10.5)
+
+[node name="ext_ground_asphalt_21" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(10.5, -1.1, 16.5)
+
+[node name="ext_ground_asphalt_22" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(10.5, -1.1, -10.5)
+
+[node name="ext_ground_asphalt_23" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(10.5, -1.1, -16.5)
+
+[node name="ext_ground_asphalt_24" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(10.5, -1.1, -22.5)
+
+[node name="ext_ground_asphalt_25" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(16.5, -1.1, 4.5)
+
+[node name="ext_ground_asphalt_26" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(16.5, -1.1, 10.5)
+
+[node name="ext_ground_asphalt_27" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(16.5, -1.1, 16.5)
+
+[node name="ext_ground_asphalt_28" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(16.5, -1.1, -10.5)
+
+[node name="ext_ground_asphalt_29" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(16.5, -1.1, -16.5)
+
+[node name="ext_ground_asphalt_30" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(16.5, -1.1, -22.5)
+
+[node name="ext_ground_asphalt_31" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(22.5, -1.1, 4.5)
+
+[node name="ext_ground_asphalt_32" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(22.5, -1.1, 10.5)
+
+[node name="ext_ground_asphalt_33" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(22.5, -1.1, 16.5)
+
+[node name="ext_ground_asphalt_34" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(22.5, -1.1, -10.5)
+
+[node name="ext_ground_asphalt_35" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(22.5, -1.1, -16.5)
+
+[node name="ext_ground_asphalt_36" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(22.5, -1.1, -22.5)
+
+[node name="ext_ground_asphalt_37" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(28.5, -1.1, 4.5)
+
+[node name="ext_ground_asphalt_38" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(28.5, -1.1, 10.5)
+
+[node name="ext_ground_asphalt_39" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(28.5, -1.1, 16.5)
+
+[node name="ext_ground_asphalt_40" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(28.5, -1.1, -10.5)
+
+[node name="ext_ground_asphalt_41" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(28.5, -1.1, -16.5)
+
+[node name="ext_ground_asphalt_42" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(28.5, -1.1, -22.5)
+
+[node name="ext_ground_asphalt_43" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(34.5, -1.1, 4.5)
+
+[node name="ext_ground_asphalt_44" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(34.5, -1.1, 10.5)
+
+[node name="ext_ground_asphalt_45" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(34.5, -1.1, 16.5)
+
+[node name="ext_ground_asphalt_46" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(34.5, -1.1, -10.5)
+
+[node name="ext_ground_asphalt_47" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(34.5, -1.1, -16.5)
+
+[node name="ext_ground_asphalt_48" parent="Exterior" instance=ExtResource("8_ext_ground_asphalt")]
+position = Vector3(34.5, -1.1, -22.5)
+
+[node name="ext_ground_asphalt_small_1" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(-9, -1.1, -6)
+
+[node name="ext_ground_asphalt_small_2" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(-9, -1.1, -3)
+
+[node name="ext_ground_asphalt_small_3" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(-9, -1.1, 0)
+
+[node name="ext_ground_asphalt_small_4" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(-6, -1.1, -6)
+
+[node name="ext_ground_asphalt_small_5" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(-6, -1.1, -3)
+
+[node name="ext_ground_asphalt_small_6" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(-6, -1.1, 0)
+
+[node name="ext_ground_asphalt_small_7" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(-3, -1.1, -6)
+
+[node name="ext_ground_asphalt_small_8" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(-3, -1.1, -3)
+
+[node name="ext_ground_asphalt_small_9" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(-3, -1.1, 0)
+
+[node name="ext_ground_asphalt_small_10" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(33, -1.1, -6)
+
+[node name="ext_ground_asphalt_small_11" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(33, -1.1, -3)
+
+[node name="ext_ground_asphalt_small_12" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(33, -1.1, 0)
+
+[node name="ext_ground_asphalt_small_13" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(36, -1.1, -6)
+
+[node name="ext_ground_asphalt_small_14" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(36, -1.1, -3)
+
+[node name="ext_ground_asphalt_small_15" parent="Exterior" instance=ExtResource("9_ext_ground_asphalt_small")]
+position = Vector3(36, -1.1, 0)
+
+[node name="hosp_porch_1" parent="Exterior" instance=ExtResource("21_hosp_porch")]
+position = Vector3(6, 0, 3.1)
+
+[node name="hosp_dock_steps_1" parent="Exterior" instance=ExtResource("13_hosp_dock_steps")]
+position = Vector3(6, -1.1, 6.1)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_dock_canopy_1" parent="Exterior" instance=ExtResource("11_hosp_dock_canopy")]
+position = Vector3(4.5, 0, 1.5)
+
+[node name="hosp_dock_canopy_2" parent="Exterior" instance=ExtResource("11_hosp_dock_canopy")]
+position = Vector3(7.5, 0, 1.5)
+
+[node name="prop_bulkhead_lamp_1" parent="Exterior" instance=ExtResource("52_prop_bulkhead_lamp")]
+position = Vector3(6, 2.88, 2.2)
+
+[node name="prop_sign_plate_red_1" parent="Exterior" instance=ExtResource("67_prop_sign_plate_red")]
+position = Vector3(6, 2.62, 1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_porch_2" parent="Exterior" instance=ExtResource("21_hosp_porch")]
+position = Vector3(-3.1, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="hosp_dock_steps_2" parent="Exterior" instance=ExtResource("13_hosp_dock_steps")]
+position = Vector3(-6.1, -1.1, 0)
+
+[node name="hosp_porch_3" parent="Exterior" instance=ExtResource("21_hosp_porch")]
+position = Vector3(27, 0, -9.1)
+
+[node name="hosp_dock_steps_3" parent="Exterior" instance=ExtResource("13_hosp_dock_steps")]
+position = Vector3(27, -1.1, -12.1)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="hosp_porch_4" parent="Exterior" instance=ExtResource("21_hosp_porch")]
+position = Vector3(33.1, 0, -6)
+
+[node name="hosp_porch_5" parent="Exterior" instance=ExtResource("21_hosp_porch")]
+position = Vector3(33.1, 0, -3)
+
+[node name="hosp_dock_steps_4" parent="Exterior" instance=ExtResource("13_hosp_dock_steps")]
+position = Vector3(36.1, -1.1, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_dock_platform_1" parent="Exterior" instance=ExtResource("12_hosp_dock_platform")]
+position = Vector3(6, 0, -9.1)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_dock_platform_2" parent="Exterior" instance=ExtResource("12_hosp_dock_platform")]
+position = Vector3(9, 0, -9.1)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_dock_steps_5" parent="Exterior" instance=ExtResource("13_hosp_dock_steps")]
+position = Vector3(12, -1.1, -9.1)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_dock_canopy_3" parent="Exterior" instance=ExtResource("11_hosp_dock_canopy")]
+position = Vector3(4.5, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_dock_canopy_4" parent="Exterior" instance=ExtResource("11_hosp_dock_canopy")]
+position = Vector3(7.5, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="hosp_dock_canopy_5" parent="Exterior" instance=ExtResource("11_hosp_dock_canopy")]
+position = Vector3(10.5, 0, -7.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="prop_bulkhead_lamp_2" parent="Exterior" instance=ExtResource("52_prop_bulkhead_lamp")]
+position = Vector3(6, 2.88, -8.2)
+
+[node name="prop_sign_plate_1" parent="Exterior" instance=ExtResource("66_prop_sign_plate")]
+position = Vector3(6, 2.62, -7.5)
+
+[node name="ext_fence_1" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-9, -1.1, 16.5)
+
+[node name="ext_fence_2" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-9, -1.1, -22.5)
+
+[node name="ext_fence_3" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-6, -1.1, 16.5)
+
+[node name="ext_fence_4" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-6, -1.1, -22.5)
+
+[node name="ext_fence_5" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-3, -1.1, 16.5)
+
+[node name="ext_fence_6" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-3, -1.1, -22.5)
+
+[node name="ext_fence_7" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(0, -1.1, -22.5)
+
+[node name="ext_fence_8" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(3, -1.1, -22.5)
+
+[node name="ext_fence_9" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(6, -1.1, 16.5)
+
+[node name="ext_fence_10" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(6, -1.1, -22.5)
+
+[node name="ext_fence_11" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(9, -1.1, 16.5)
+
+[node name="ext_fence_12" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(9, -1.1, -22.5)
+
+[node name="ext_fence_13" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(12, -1.1, 16.5)
+
+[node name="ext_fence_14" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(12, -1.1, -22.5)
+
+[node name="ext_fence_15" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(15, -1.1, 16.5)
+
+[node name="ext_fence_16" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(15, -1.1, -22.5)
+
+[node name="ext_fence_17" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(18, -1.1, 16.5)
+
+[node name="ext_fence_18" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(18, -1.1, -22.5)
+
+[node name="ext_fence_19" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(21, -1.1, 16.5)
+
+[node name="ext_fence_20" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(21, -1.1, -22.5)
+
+[node name="ext_fence_21" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(24, -1.1, 16.5)
+
+[node name="ext_fence_22" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(24, -1.1, -22.5)
+
+[node name="ext_fence_23" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(27, -1.1, 16.5)
+
+[node name="ext_fence_24" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(30, -1.1, 16.5)
+
+[node name="ext_fence_25" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(33, -1.1, 16.5)
+
+[node name="ext_fence_26" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(33, -1.1, -22.5)
+
+[node name="ext_fence_27" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(36, -1.1, 16.5)
+
+[node name="ext_fence_28" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(36, -1.1, -22.5)
+
+[node name="ext_fence_29" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-10.5, -1.1, -21)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_30" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(37.5, -1.1, -21)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_31" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-10.5, -1.1, -18)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_32" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(37.5, -1.1, -18)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_33" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-10.5, -1.1, -15)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_34" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(37.5, -1.1, -15)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_35" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-10.5, -1.1, -12)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_36" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(37.5, -1.1, -12)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_37" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-10.5, -1.1, -9)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_38" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(37.5, -1.1, -9)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_39" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-10.5, -1.1, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_40" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(37.5, -1.1, -6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_41" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-10.5, -1.1, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_42" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(37.5, -1.1, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_43" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-10.5, -1.1, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_44" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(37.5, -1.1, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_45" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-10.5, -1.1, 3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_46" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(37.5, -1.1, 3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_47" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-10.5, -1.1, 6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_48" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(37.5, -1.1, 6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_49" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-10.5, -1.1, 9)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_50" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(37.5, -1.1, 9)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_51" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-10.5, -1.1, 12)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_52" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(37.5, -1.1, 12)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_53" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(-10.5, -1.1, 15)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="ext_fence_54" parent="Exterior" instance=ExtResource("7_ext_fence")]
+position = Vector3(37.5, -1.1, 15)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="blk_vehicle_truck_1" parent="Vehicles" instance=ExtResource("4_blk_vehicle_truck")]
+position = Vector3(1.5, -1.1, 12.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="blk_vehicle_van_1" parent="Vehicles" instance=ExtResource("6_blk_vehicle_van")]
+position = Vector3(11.5, -1.1, 7)
+
+[node name="blk_vehicle_uaz_1" parent="Vehicles" instance=ExtResource("5_blk_vehicle_uaz")]
+position = Vector3(7.5, -1.1, -12.8)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="blk_vehicle_ambulance_1" parent="Vehicles" instance=ExtResource("3_blk_vehicle_ambulance")]
+position = Vector3(28.5, -1.1, -19)
+
+[node name="SignPharmacyPlate" parent="PropsB" instance=ExtResource("66_prop_sign_plate")]
+position = Vector3(15.95, -1.7, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="SignOxygenPlate" parent="PropsB" instance=ExtResource("66_prop_sign_plate")]
+position = Vector3(21.95, -1.7, -1.5)
+
+[node name="Corridor1_0" type="OmniLight3D" parent="Lights"]
+position = Vector3(0, 2.9, -3)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 7.0
+
+[node name="Corridor1_2" type="OmniLight3D" parent="Lights"]
+position = Vector3(6, 2.9, -3)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 7.0
+
+[node name="Corridor1_4" type="OmniLight3D" parent="Lights"]
+position = Vector3(12, 2.9, -3)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 7.0
+
+[node name="Corridor1_6" type="OmniLight3D" parent="Lights"]
+position = Vector3(18, 2.9, -3)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 7.0
+
+[node name="Corridor1_8" type="OmniLight3D" parent="Lights"]
+position = Vector3(24, 2.9, -3)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 7.0
+
+[node name="Corridor1_10" type="OmniLight3D" parent="Lights"]
+position = Vector3(30, 2.9, -3)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 7.0
+
+[node name="Room1_0" type="OmniLight3D" parent="Lights"]
+position = Vector3(1.5, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room1_1" type="OmniLight3D" parent="Lights"]
+position = Vector3(7.5, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room1_2" type="OmniLight3D" parent="Lights"]
+position = Vector3(12, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room1_3" type="OmniLight3D" parent="Lights"]
+position = Vector3(21, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room1_4" type="OmniLight3D" parent="Lights"]
+position = Vector3(25.5, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room1_5" type="OmniLight3D" parent="Lights"]
+position = Vector3(30, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room1_6" type="OmniLight3D" parent="Lights"]
+position = Vector3(1.5, 2.9, -6)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room1_7" type="OmniLight3D" parent="Lights"]
+position = Vector3(7.5, 2.9, -6)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room1_8" type="OmniLight3D" parent="Lights"]
+position = Vector3(13.5, 2.9, -6)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room1_9" type="OmniLight3D" parent="Lights"]
+position = Vector3(19.5, 2.9, -6)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room1_10" type="OmniLight3D" parent="Lights"]
+position = Vector3(24, 2.9, -6)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room1_11" type="OmniLight3D" parent="Lights"]
+position = Vector3(28.5, 2.9, -6)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Stair_0" type="OmniLight3D" parent="Lights"]
+position = Vector3(16.5, 2.4, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 0.9
+omni_range = 6.0
+
+[node name="Stair_1" type="OmniLight3D" parent="Lights"]
+position = Vector3(16.5, 5.6, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 0.9
+omni_range = 6.0
+
+[node name="Stair_2" type="OmniLight3D" parent="Lights"]
+position = Vector3(16.5, -1, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 0.9
+omni_range = 6.0
+
+[node name="Stair_3" type="OmniLight3D" parent="Lights"]
+position = Vector3(16.5, -2.6, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 0.9
+omni_range = 6.0
+
+[node name="Corridor2_4" type="OmniLight3D" parent="Lights"]
+position = Vector3(12, 6.2, -3)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 7.0
+
+[node name="Corridor2_6" type="OmniLight3D" parent="Lights"]
+position = Vector3(18, 6.2, -3)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 7.0
+
+[node name="Corridor2_8" type="OmniLight3D" parent="Lights"]
+position = Vector3(24, 6.2, -3)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 7.0
+
+[node name="Corridor2_10" type="OmniLight3D" parent="Lights"]
+position = Vector3(30, 6.2, -3)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 7.0
+
+[node name="Room2_0" type="OmniLight3D" parent="Lights"]
+position = Vector3(12, 6.2, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room2_1" type="OmniLight3D" parent="Lights"]
+position = Vector3(22.5, 6.2, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room2_2" type="OmniLight3D" parent="Lights"]
+position = Vector3(28.5, 6.2, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room2_3" type="OmniLight3D" parent="Lights"]
+position = Vector3(13.5, 6.2, -6)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room2_4" type="OmniLight3D" parent="Lights"]
+position = Vector3(19.5, 6.2, -6)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room2_5" type="OmniLight3D" parent="Lights"]
+position = Vector3(25.5, 6.2, -6)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Room2_6" type="OmniLight3D" parent="Lights"]
+position = Vector3(30, 6.2, -6)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="Basement_0" type="OmniLight3D" parent="Lights"]
+position = Vector3(9, -0.5, -3)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 0.9
+omni_range = 6.0
+
+[node name="Basement_1" type="OmniLight3D" parent="Lights"]
+position = Vector3(15, -0.5, -3)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 0.9
+omni_range = 6.0
+
+[node name="Basement_2" type="OmniLight3D" parent="Lights"]
+position = Vector3(21, -0.5, -3)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 0.9
+omni_range = 6.0
+
+[node name="Basement_3" type="OmniLight3D" parent="Lights"]
+position = Vector3(22.5, -0.5, 0)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 0.9
+omni_range = 6.0
+
+[node name="Basement_4" type="OmniLight3D" parent="Lights"]
+position = Vector3(15, -0.5, -6)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 0.9
+omni_range = 6.0
+
+[node name="Outdoor_0" type="OmniLight3D" parent="Lights"]
+position = Vector3(6, 2.6, 2.2)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 1.5
+omni_range = 7.0
+
+[node name="Outdoor_1" type="OmniLight3D" parent="Lights"]
+position = Vector3(6, 2.6, -8.2)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 1.5
+omni_range = 7.0
+
+[node name="Outdoor_2" type="OmniLight3D" parent="Lights"]
+position = Vector3(27, 2.2, -8.6)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 1.5
+omni_range = 7.0
+
+[node name="Outdoor_3" type="OmniLight3D" parent="Lights"]
+position = Vector3(-2.5, 2.2, 0)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 1.5
+omni_range = 7.0
+
+[node name="Outdoor_4" type="OmniLight3D" parent="Lights"]
+position = Vector3(28.5, 3, -20)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 1.5
+omni_range = 7.0
+
+[node name="Outdoor_5" type="OmniLight3D" parent="Lights"]
+position = Vector3(33.1, 2.2, -4.5)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 1.5
+omni_range = 7.0
+
+[node name="SignAirlockRed" type="Label3D" parent="Labels"]
+position = Vector3(3, 2.35, -1.387)
+pixel_size = 0.001
+modulate = Color(1, 1, 1, 1)
+outline_size = 0
+text = "КРАСНАЯ ЗОНА"
+font_size = 44
+
+[node name="SignAirlockClean" type="Label3D" parent="Labels"]
+position = Vector3(-1.387, 2.3, 0)
+rotation_degrees = Vector3(0, 90, 0)
+pixel_size = 0.001
+modulate = Color(0.12, 0.12, 0.12, 1)
+outline_size = 0
+text = "ЧИСТАЯ ЗОНА"
+font_size = 36
+
+[node name="SignMain" type="Label3D" parent="Labels"]
+position = Vector3(6, 2.62, 1.613)
+pixel_size = 0.001
+modulate = Color(1, 1, 1, 1)
+outline_size = 0
+text = "ИНФЕКЦИОННЫЙ КОРПУС № 4"
+font_size = 22
+
+[node name="Sign214" type="Label3D" parent="Labels"]
+position = Vector3(21.95, 4.9, -1.613)
+rotation_degrees = Vector3(0, 180, 0)
+pixel_size = 0.001
+modulate = Color(0.12, 0.12, 0.12, 1)
+outline_size = 0
+text = "Палата № 214"
+font_size = 36
+
+[node name="SignPharmacy" type="Label3D" parent="Labels"]
+position = Vector3(15.95, -1.7, -4.387)
+pixel_size = 0.001
+modulate = Color(0.12, 0.12, 0.12, 1)
+outline_size = 0
+text = "АПТЕЧНЫЙ СКЛАД"
+font_size = 28
+
+[node name="SignOxygen" type="Label3D" parent="Labels"]
+position = Vector3(21.95, -1.7, -1.613)
+rotation_degrees = Vector3(0, 180, 0)
+pixel_size = 0.001
+modulate = Color(0.12, 0.12, 0.12, 1)
+outline_size = 0
+text = "КИСЛОРОД"
+font_size = 36
+
+[node name="SignDock" type="Label3D" parent="Labels"]
+position = Vector3(6, 2.62, -7.613)
+rotation_degrees = Vector3(0, 180, 0)
+pixel_size = 0.001
+modulate = Color(0.12, 0.12, 0.12, 1)
+outline_size = 0
+text = "АПТЕКА"
+font_size = 36
+
+[node name="S01_Gate" type="Marker3D" parent="Markers"]
+position = Vector3(1.5, 1.6, 15)
+
+[node name="Text" type="Label3D" parent="Markers/S01_Gate"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.1: «Урал» у ворот, родственники"
+font_size = 48
+
+[node name="S01_Airlock" type="Marker3D" parent="Markers"]
+position = Vector3(1.5, 2.2, 0)
+
+[node name="Text" type="Label3D" parent="Markers/S01_Airlock"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.1: шлюз — надеть СИЗ"
+font_size = 48
+
+[node name="S02_Olga" type="Marker3D" parent="Markers"]
+position = Vector3(4.5, 2.2, -3)
+
+[node name="Text" type="Label3D" parent="Markers/S02_Olga"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.2: Ольга — «мне нужны руки»"
+font_size = 48
+
+[node name="S02_Oxygen" type="Marker3D" parent="Markers"]
+position = Vector3(22.5, -1.2, 0)
+
+[node name="Text" type="Label3D" parent="Markers/S02_Oxygen"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.2: кислород — 2 ходки на 2 этаж"
+font_size = 48
+
+[node name="S02_Grandma" type="Marker3D" parent="Markers"]
+position = Vector3(16.5, 5.4, -3)
+
+[node name="Text" type="Label3D" parent="Markers/S02_Grandma"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.2: бабушка ищет Валю"
+font_size = 48
+
+[node name="S02_DeadList" type="Marker3D" parent="Markers"]
+position = Vector3(21, 5.4, -4.2)
+
+[node name="Text" type="Label3D" parent="Markers/S02_DeadList"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.2: список умерших у поста"
+font_size = 48
+
+[node name="S02_Drawings" type="Marker3D" parent="Markers"]
+position = Vector3(12, 5.4, 0)
+
+[node name="Text" type="Label3D" parent="Markers/S02_Drawings"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.2: детские рисунки"
+font_size = 48
+
+[node name="S03_Gena" type="Marker3D" parent="Markers"]
+position = Vector3(7.5, 2.2, -0.6)
+
+[node name="Text" type="Label3D" parent="Markers/S03_Gena"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.3: Гена у стекла"
+font_size = 48
+
+[node name="S03_Lida" type="Marker3D" parent="Markers"]
+position = Vector3(30.4, 5.2, 0.4)
+
+[node name="Text" type="Label3D" parent="Markers/S03_Lida"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.3: палата 214, Лида у окна"
+font_size = 48
+
+[node name="S04_Syringe" type="Marker3D" parent="Markers"]
+position = Vector3(27.9, 3.6, 0.8)
+
+[node name="Text" type="Label3D" parent="Markers/S04_Syringe"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.4: шприц на полу → В-2"
+font_size = 48
+
+[node name="S05_Break" type="Marker3D" parent="Markers"]
+position = Vector3(27, 1.4, -9.6)
+
+[node name="Text" type="Label3D" parent="Markers/S05_Break"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.5: ночь, перерыв с Ольгой"
+font_size = 48
+
+[node name="S06_Dock" type="Marker3D" parent="Markers"]
+position = Vector3(7.5, 1.4, -11)
+
+[node name="Text" type="Label3D" parent="Markers/S06_Dock"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.6: мародёры, «буханка» у рампы"
+font_size = 48
+
+[node name="S06_Store" type="Marker3D" parent="Markers"]
+position = Vector3(15, -1.2, -6)
+
+[node name="Text" type="Label3D" parent="Markers/S06_Store"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.6: бой в подвале, аптечный склад"
+font_size = 48
+
+[node name="S06_Escape" type="Marker3D" parent="Markers"]
+position = Vector3(28.5, 2.2, -6)
+
+[node name="Text" type="Label3D" parent="Markers/S06_Escape"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.6: бегство через прачечную"
+font_size = 48
+
+[node name="S07_Order" type="Marker3D" parent="Markers"]
+position = Vector3(6, 1.2, 7.5)
+
+[node name="Text" type="Label3D" parent="Markers/S07_Order"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.7: приказ Ершова, сварщики"
+font_size = 48
+
+[node name="S08_Doors" type="Marker3D" parent="Markers"]
+position = Vector3(6, 2, 3)
+
+[node name="Text" type="Label3D" parent="Markers/S08_Doors"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.8: двери открываются"
+font_size = 48
+
+[node name="S09_Fight" type="Marker3D" parent="Markers"]
+position = Vector3(12, 1.2, 10)
+
+[node name="Text" type="Label3D" parent="Markers/S09_Fight"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.9: бой со своими"
+font_size = 48
+
+[node name="S10_Ershov" type="Marker3D" parent="Markers"]
+position = Vector3(33.5, 1.2, 3)
+
+[node name="Text" type="Label3D" parent="Markers/S10_Ershov"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.10: Ершов за углом"
+font_size = 48
+
+[node name="S10_Exit" type="Marker3D" parent="Markers"]
+position = Vector3(28.5, 1.8, -17)
+
+[node name="Text" type="Label3D" parent="Markers/S10_Exit"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.55, 0.1, 1)
+outline_size = 8
+text = "Сц.10: отход — скорая, задние ворота"
+font_size = 48
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+position = Vector3(3, -1.05, 15.5)
+rotation_degrees = Vector3(0, 0, 0)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="DebugOverlay" type="Label" parent="HUD" node_paths=PackedStringArray("player")]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 520.0
+offset_bottom = 200.0
+script = ExtResource("2_overlay")
+player = NodePath("../../Player")

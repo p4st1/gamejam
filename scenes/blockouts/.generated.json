@@ -1,4 +1,5 @@
 {
  "scenes/blockouts/hospital_service_blockout.tscn": "a1eb4189335063189d35c4fdf8b45ceb8c99c3cb8933af5b945a4f6a7154d9b4",
- "scenes/blockouts/hospital_ward_blockout.tscn": "189afe9b1d96fc7afb231ae0de242acb87292e92e12ef87c6fa263989cb67ade"
+ "scenes/blockouts/hospital_ward_blockout.tscn": "189afe9b1d96fc7afb231ae0de242acb87292e92e12ef87c6fa263989cb67ade",
+ "scenes/blockouts/m03_red_zone_blockout.tscn": "1f273504058442c958eb4fb9ab022f19bd8c334d69718f76a0181598e66a822e"
 }

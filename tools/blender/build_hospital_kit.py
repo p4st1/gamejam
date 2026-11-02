@@ -1,4 +1,4 @@
-"""Модульный набор «Больница» v0.4 — генератор для Blender.
+"""Модульный набор «Больница» v0.5 — генератор для Blender.
 
 Строит модули (стены, углы, перекрытия, двери, лестницы, реквизит) и выгружает каждый в отдельный
 .glb. Пишет библиотеку материалов Godot (assets/materials/hospital/*.tres), которые ссылаются на
@@ -84,6 +84,9 @@ PALETTE = {
 	"pipe_rust": ((0.30, 0.20, 0.15), 0.7, 0.6, 1.0),
 	"roof_metal": ((0.55, 0.57, 0.58), 0.4, 0.8, 1.0),
 	"lamp_warm": ((1.00, 0.85, 0.60), 0.3, 0.0, 1.0),
+	# v0.5 — болванки наброска (заменить готовыми моделями)
+	"blockout_orange": ((0.95, 0.50, 0.10), 0.6, 0.0, 1.0),
+	"blockout_white": ((0.92, 0.92, 0.90), 0.6, 0.0, 1.0),
 }
 
 # Светящиеся материалы: сила свечения.
@@ -270,13 +273,17 @@ def build_wall_door():
 	return [mb.build("hosp_wall_door-col")]
 
 
-def build_wall_window():
+def make_wall_window(name, inner="paint", outer=None):
+	return lambda: _wall_window(name, inner, outer)
+
+
+def _wall_window(name, inner, outer):
 	mb = MeshBuilder()
 	h, w = CELL / 2, WINDOW_WIDTH / 2
-	wall_piece(mb, -h, -w, 0, WALL_HEIGHT)
-	wall_piece(mb, w, h, 0, WALL_HEIGHT)
-	wall_piece(mb, -w, w, 0, WINDOW_SILL)
-	wall_piece(mb, -w, w, WINDOW_TOP, WALL_HEIGHT)
+	wall_piece(mb, -h, -w, 0, WALL_HEIGHT, inner, outer)
+	wall_piece(mb, w, h, 0, WALL_HEIGHT, inner, outer)
+	wall_piece(mb, -w, w, 0, WINDOW_SILL, inner, outer)
+	wall_piece(mb, -w, w, WINDOW_TOP, WALL_HEIGHT, inner, outer)
 	f, fd = FRAME, 0.05
 	mb.box((-w, -fd, WINDOW_SILL), (-w + f, fd, WINDOW_TOP), "frame_paint")
 	mb.box((w - f, -fd, WINDOW_SILL), (w, fd, WINDOW_TOP), "frame_paint")
@@ -287,7 +294,7 @@ def build_wall_window():
 	# подоконник — с внутренней стороны (+Y в Blender = −Z в Godot)
 	mb.box((-w - 0.05, WALL_THICKNESS / 2 - 0.02, WINDOW_SILL - 0.04),
 		(w + 0.05, WALL_THICKNESS / 2 + 0.2, WINDOW_SILL), "whitewash")
-	return [mb.build("hosp_wall_window-col")]
+	return [mb.build(name + "-col")]
 
 
 def build_door():
@@ -790,12 +797,141 @@ def build_sign_plate_red():
 	return [mb.build("prop_sign_plate_red")]
 
 
+# --- v0.5: модули для наброска уровня миссии 3 --------------------------------------------------
+
+def make_wall_glass(name, door=False):
+	"""Стеклянная перегородка (вестибюль): глухой низ 0,9 м, стекло до 2,4 м, побелка выше.
+	С door=True — посередине дверной проём."""
+	def build():
+		mb = MeshBuilder()
+		h, t, sill, top = CELL / 2, WALL_THICKNESS / 2, 0.9, 2.4
+		spans = [(-h, -DOOR_WIDTH / 2), (DOOR_WIDTH / 2, h)] if door else [(-h, h)]
+		for x0, x1 in spans:
+			wall_piece(mb, x0, x1, 0, sill)
+			mb.box((x0, -0.05, sill), (x1, 0.05, sill + FRAME), "frame_paint")
+			mb.box((x0 + 0.02, -0.005, sill + FRAME), (x1 - 0.02, 0.005, top - FRAME), "glass")
+			n = max(1, round((x1 - x0) / 1.0))
+			for k in range(n + 1):  # стойки рамы
+				x = x0 + (x1 - x0) * k / n
+				mb.box((x - FRAME / 2, -0.05, sill), (x + FRAME / 2, 0.05, top), "frame_paint")
+		wall_piece(mb, -h, h, top, WALL_HEIGHT)
+		mb.box((-h, -0.05, top - FRAME), (h, 0.05, top), "frame_paint")
+		if door:
+			d = DOOR_WIDTH / 2
+			mb.box((-d, -t - 0.02, 0), (-d + FRAME, t + 0.02, DOOR_HEIGHT), "frame_paint")
+			mb.box((d - FRAME, -t - 0.02, 0), (d, t + 0.02, DOOR_HEIGHT), "frame_paint")
+			mb.box((-d, -0.05, DOOR_HEIGHT), (d, 0.05, top), "glass")
+		return [mb.build(name + "-col")]
+	return build
+
+
+def build_porch():
+	"""Крыльцо 3 × 3 × 1,1 м (без отбойников). Центр, верх на нуле."""
+	mb = MeshBuilder()
+	h = CELL / 2
+	mb.box((-h, -h, -DOCK_HEIGHT), (h, h, 0), "concrete")
+	return [mb.build("hosp_porch-col")]
+
+
+def build_roof():
+	"""Кровля 3 × 3 м: сверху рубероид (текстура асфальта), снизу побелка. Центр, верх на нуле."""
+	mb = MeshBuilder()
+	h = CELL / 2
+	mb.box((-h, -h, -SLAB), (h, h, 0), "concrete", top="asphalt", bottom="ceiling")
+	return [mb.build("hosp_roof-col")]
+
+
+def build_band():
+	"""Межэтажный пояс фасада 3,2 × 0,24 × 0,2 м (перекрывает углы): закрывает торец перекрытия
+	на линии стены. Ставится на отметке пола верхнего этажа (верх на нуле)."""
+	mb = MeshBuilder()
+	mb.box((-1.6, -0.12, -SLAB), (1.6, 0.12, 0), "concrete")
+	return [mb.build("hosp_band-col")]
+
+
+def build_plinth():
+	"""Цоколь под стеной: 3,2 м (перекрывает углы), от −1,3 до −0,2 м. Ставится на уровне пола этажа."""
+	mb = MeshBuilder()
+	mb.box((-1.6, -0.12, -1.3), (1.6, 0.12, -SLAB), "concrete")
+	return [mb.build("hosp_plinth-col")]
+
+
+def build_asphalt_small():
+	"""Асфальт 3 × 3 м — для узких полос у стен."""
+	mb = MeshBuilder()
+	mb.box((-1.5, -1.5, -0.2), (1.5, 1.5, 0), "concrete", top="asphalt")
+	return [mb.build("ext_ground_asphalt_small-col")]
+
+
+def build_fence():
+	"""Забор территории, секция 3 м вдоль X: бетонный столб на −X, металлические прутья."""
+	mb = MeshBuilder()
+	mb.box((-1.58, -0.08, 0), (-1.42, 0.08, 2.2), "concrete")
+	for z in (0.15, 1.9):
+		mb.box((-1.42, -0.015, z), (1.5, 0.015, z + 0.04), "metal_dark")
+	for i in range(19):
+		x = -1.35 + i * 0.15
+		mb.box((x - 0.01, -0.01, 0.05), (x + 0.01, 0.01, 2.05), "metal_dark")
+	col = MeshBuilder()
+	col.box((-1.58, -0.08, 0), (1.5, 0.08, 2.2), "concrete")
+	return [mb.build("ext_fence"), col.build("ext_fence_col-colonly")]
+
+
+def make_vehicle(name, parts, wheels):
+	"""Болванка машины для наброска (оранжевая — «заменить готовой моделью»). Длина вдоль X, нос на +X.
+	parts — коробки (mn, mx, материал); wheels — x-координаты осей."""
+	def build():
+		mb = MeshBuilder()
+		for mn, mx, mat in parts:
+			mb.box(mn, mx, mat)
+		width = max(mx[1] for mn, mx, _ in parts)
+		for x in wheels:
+			for y in (-width + 0.05, width - 0.25):
+				mb.box((x - 0.45, y, 0), (x + 0.45, y + 0.2, 0.9), "rubber_black")
+		return [mb.build(name + "-col")]
+	return build
+
+
+def build_desk():
+	"""Стол (пост медсестры, ординаторская) 1,2 × 0,6 м. Центр низа, глубина вдоль Y."""
+	mb = MeshBuilder()
+	mb.box((-0.6, -0.3, 0.72), (0.6, 0.3, 0.76), "wood")
+	mb.box((0.15, -0.28, 0.1), (0.58, 0.28, 0.72), "wood")  # тумба
+	for x in (-0.58, ):
+		for y in (-0.28, 0.24):
+			mb.box((x, y, 0), (x + 0.04, y + 0.04, 0.72), "metal_dark")
+	mb.box((-0.5, -0.1, 0.76), (-0.2, 0.15, 0.78), "tyvek")  # журнал
+	return [mb.build("prop_desk-col")]
+
+
+def build_chair():
+	"""Стул."""
+	mb = MeshBuilder()
+	mb.box((-0.22, -0.22, 0.44), (0.22, 0.22, 0.48), "wood")
+	mb.box((-0.22, 0.18, 0.48), (0.22, 0.22, 0.9), "wood")
+	for x in (-0.21, 0.18):
+		for y in (-0.21, 0.18):
+			mb.box((x, y, 0), (x + 0.03, y + 0.03, 0.44), "metal_dark")
+	return [mb.build("prop_chair-col")]
+
+
+def build_washer():
+	"""Промышленная стиральная машина 0,8 × 1,0 × 1,4 м с круглым люком на стороне −Y."""
+	mb = MeshBuilder()
+	mb.box((-0.4, -0.5, 0), (0.4, 0.5, 1.4), "metal_white")
+	along_y = Matrix.Rotation(math.radians(90), 4, "X")
+	mb.cylinder((0, -0.8, 0.51), 0.28, 0.02, "glass", segments=20, matrix=along_y)
+	mb.cylinder((0, -0.8, 0.505), 0.32, 0.01, "metal_dark", segments=20, matrix=along_y)
+	mb.box((-0.35, -0.51, 1.15), (0.35, -0.5, 1.35), "metal_dark")  # панель
+	return [mb.build("prop_washer-col")]
+
+
 MODULES = {
 	"hosp_floor": build_floor,
 	"hosp_wall": build_wall,
 	"hosp_wall_corner": build_wall_corner,
 	"hosp_wall_door": build_wall_door,
-	"hosp_wall_window": build_wall_window,
+	"hosp_wall_window": make_wall_window("hosp_wall_window"),
 	"hosp_door": build_door,
 	"hosp_stairs_flight": build_stairs_flight,
 	"hosp_stairs_landing": build_stairs_landing,
@@ -849,6 +985,41 @@ MODULES = {
 	"prop_bin_hazard": build_bin_hazard,
 	"prop_floor_line": build_floor_line,
 	"prop_sign_plate_red": build_sign_plate_red,
+	# v0.5 — для наброска уровня миссии 3
+	"hosp_wall_ext": make_wall("hosp_wall_ext", "paint", "brick"),
+	"hosp_wall_window_ext": make_wall_window("hosp_wall_window_ext", "paint", "brick"),
+	"hosp_wall_window_tile_ext": make_wall_window("hosp_wall_window_tile_ext", "tile", "brick"),
+	"hosp_wall_door_ext": make_wall_opening("hosp_wall_door_ext", DOOR_WIDTH, DOOR_HEIGHT, "paint", "brick"),
+	"hosp_wall_door_tile_ext": make_wall_opening("hosp_wall_door_tile_ext", DOOR_WIDTH, DOOR_HEIGHT, "tile", "brick"),
+	"hosp_wall_tile_paint": make_wall("hosp_wall_tile_paint", "tile", "paint"),
+	"hosp_wall_door_tile_paint": make_wall_opening("hosp_wall_door_tile_paint", DOOR_WIDTH, DOOR_HEIGHT, "tile", "paint"),
+	"hosp_wall_bsmt_paint": make_wall("hosp_wall_bsmt_paint", "basement", "paint"),
+	"hosp_wall_door_bsmt_paint": make_wall_opening("hosp_wall_door_bsmt_paint", DOOR_WIDTH, DOOR_HEIGHT,
+		"basement", "paint", frame="metal_grey"),
+	"hosp_wall_glass": make_wall_glass("hosp_wall_glass"),
+	"hosp_wall_glass_door": make_wall_glass("hosp_wall_glass_door", door=True),
+	"hosp_porch": build_porch,
+	"hosp_plinth": build_plinth,
+	"hosp_roof": build_roof,
+	"hosp_band": build_band,
+	"ext_ground_asphalt_small": build_asphalt_small,
+	"ext_fence": build_fence,
+	"blk_vehicle_truck": make_vehicle("blk_vehicle_truck", [
+		((-3.7, -1.25, 0.5), (-1.3, 1.25, 3.1), "blockout_orange"),   # кузов под тентом
+		((-1.2, -1.2, 0.5), (1.2, 1.2, 1.1), "blockout_orange"),      # рама
+		((1.3, -1.2, 0.6), (3.7, 1.2, 2.9), "blockout_orange")], (-2.8, -1.4, 2.6)),  # кабина
+	"blk_vehicle_van": make_vehicle("blk_vehicle_van", [
+		((-2.75, -1.05, 0.4), (1.5, 1.05, 2.4), "blockout_orange"),
+		((1.5, -1.0, 0.4), (2.75, 1.0, 1.9), "blockout_orange")], (-1.8, 1.9)),
+	"blk_vehicle_uaz": make_vehicle("blk_vehicle_uaz", [
+		((-2.2, -1.0, 0.45), (2.2, 1.0, 2.1), "blockout_orange")], (-1.3, 1.3)),
+	"blk_vehicle_ambulance": make_vehicle("blk_vehicle_ambulance", [
+		((-2.75, -1.05, 0.4), (1.5, 1.05, 2.5), "blockout_white"),
+		((-2.76, -1.06, 1.2), (1.51, 1.06, 1.45), "warning_red"),
+		((1.5, -1.0, 0.4), (2.75, 1.0, 1.9), "blockout_white")], (-1.8, 1.9)),
+	"prop_desk": build_desk,
+	"prop_chair": build_chair,
+	"prop_washer": build_washer,
 }
 
 
@@ -979,20 +1150,34 @@ def _set_engine(scene):
 			continue
 
 
-# Ракурсы превью служебного блока: (суффикс файла, камера, точка взгляда — в координатах Godot, наружный?)
-SERVICE_SHOTS = (
-	("airlock", (-7.0, 1.65, 0.3), (-2.0, 1.2, -0.6), False),
-	("dock", (10.5, 0.9, 9.5), (1.5, 0.6, 2.0), True),
-	("basement", (-1.0, -1.65, -0.3), (10.0, -2.3, -0.9), False),
+# Превью набросков: (функция расстановки, имя файла, ракурсы). Ракурс: (суффикс, камера, точка взгляда —
+# в координатах Godot, наружный?).
+PREVIEWS = (
+	("service_layout", "hospital_kit_v04", (
+		("airlock", (-7.0, 1.65, 0.3), (-2.0, 1.2, -0.6), False),
+		("dock", (10.5, 0.9, 9.5), (1.5, 0.6, 2.0), True),
+		("basement", (-1.0, -1.65, -0.3), (10.0, -2.3, -0.9), False))),
+	("m03_layout", "m03_blockout", (
+		("front", (26.0, 9.0, 24.0), (10.0, 0.5, 0.0), True),
+		("back", (-2.0, 8.0, -26.0), (14.0, 0.5, -8.0), True),
+		("corridor2", (11.4, 4.95, -3.0), (31.0, 4.6, -3.2), False),
+		("ward214", (21.2, 4.95, -1.1), (30.5, 4.2, 0.9), False))),
 )
 
 
-def render_layout_previews(modules, base_path):
-	"""Превью служебного блока по общей расстановке tools/hospital_layouts.py."""
+def render_layout_previews(modules, art_dir, only=None):
+	"""Превью набросков по общим расстановкам tools/hospital_layouts.py."""
 	sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 	import hospital_layouts
-	layout = hospital_layouts.service_layout()
-	for suffix, cam_pos, target, outdoor in SERVICE_SHOTS:
+	for layout_name, base, shots in PREVIEWS:
+		if only and base not in only:
+			continue
+		layout = getattr(hospital_layouts, layout_name)()
+		_render_shots(modules, layout, os.path.join(art_dir, base), shots)
+
+
+def _render_shots(modules, layout, base_path, shots):
+	for suffix, cam_pos, target, outdoor in shots:
 		scene = bpy.data.scenes.new(f"Preview_{suffix}")
 		for _, _, module, pos, rot in layout["placements"]:
 			place(modules[module], godot_to_blender(pos), rot, scene)
@@ -1000,6 +1185,7 @@ def render_layout_previews(modules, base_path):
 			lamp = bpy.data.objects.new(name, bpy.data.lights.new(name, "POINT"))
 			lamp.data.energy = 220 * energy
 			lamp.data.color = color
+			lamp.data.use_shadow = False  # десятки ламп переполняют буфер теней EEVEE; тень даёт солнце
 			lamp.location = godot_to_blender(pos)
 			scene.collection.objects.link(lamp)
 		world = bpy.data.worlds.new(f"World_{suffix}")
@@ -1101,9 +1287,11 @@ def main():
 
 	if preview:
 		apply_preview_textures()
-		render_preview(modules, preview)
-		print(f"[hospital_kit] превью: {preview}")
-		render_layout_previews(modules, os.path.splitext(preview)[0])
+		if not any(a.startswith("--only=") for a in all_args):
+			render_preview(modules, preview)
+			print(f"[hospital_kit] превью: {preview}")
+		only = [a.split("=", 1)[1] for a in all_args if a.startswith("--only=")]
+		render_layout_previews(modules, os.path.dirname(preview), only)
 
 
 main()

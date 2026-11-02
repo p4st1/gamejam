@@ -227,6 +227,383 @@ def service_layout():
 	}
 
 
+def m03_layout():
+	"""Набросок уровня миссии 3 «Красная зона»: корпус № 4 (подвал, 2 этажа), площадь перед ним, задний
+	двор с рампой и прачечной. Ячейки по X: i = 0…10 (x = 3i), ряды: S (z = 0), C — коридор (z = −3),
+	N (z = −6). Фасады: юг z = 1,5, север z = −7,5, запад x = −1,5, восток x = 31,5."""
+	p = []
+	count = {}
+
+	def add(group, module, pos, rot=0, name=None):
+		if name is None:
+			count[(group, module)] = count.get((group, module), 0) + 1
+			name = f"{module}_{count[(group, module)]}"
+		p.append((group, name, module, pos, rot))
+
+	def hw(group, i, zb, y, module, inner="-z"):
+		"""Стена вдоль X на линии z = zb; inner — куда смотрит её внутренняя отделка."""
+		add(group, module, (3 * i, y, zb), 180 if inner == "+z" else 0)
+
+	def vw(group, xb, cz, y, module, inner="-x"):
+		"""Стена вдоль Z на линии x = xb."""
+		add(group, module, (xb, y, cz), -90 if inner == "+x" else 90)
+
+	def leaf_h(group, i, zb, y, into, module="hosp_door"):
+		"""Открытая дверь в стене вдоль X: петли у западного края проёма; into — куда открыта."""
+		add(group, module, (3 * i - 0.54, y, zb), 90 if into == "-z" else -90)
+
+	def leaf_v(group, xb, cz, y, into, module="hosp_door"):
+		add(group, module, (xb, y, cz - 0.54), 0 if into == "+x" else 180)
+
+	S, C, N = 0, -3, -6
+	H2 = G + 3.3          # пол 2 этажа
+	ROOF = G + 6.6
+	stair = {(5, S), (6, S)}
+
+	# ---------- 1 этаж ----------
+	for i in range(11):
+		for cz in (S, C, N):
+			if (i, cz) in stair:
+				continue
+			add("Floor1", "hosp_floor_concrete" if (i in (2, 3) and cz == N) else "hosp_floor", (3 * i, G, cz))
+			if i < 4:
+				add("Roof", "hosp_roof", (3 * i, H2, cz))  # крыша одноэтажного крыла
+	add("Floor1", "hosp_floor_half", (14.25, G, 0), 90)  # площадка у лестницы
+	south = ["hosp_wall_tile_ext"] * 2 + ["hosp_wall_door_ext", "hosp_wall_window_ext", "hosp_wall_window_ext",
+		"hosp_wall_ext", "hosp_wall_ext", "hosp_wall_window_ext", "hosp_wall_window_ext", "hosp_wall_window_ext",
+		"hosp_wall_ext"]
+	north = ["hosp_wall_window_ext"] * 2 + ["hosp_wall_gate_bsmt_ext", "hosp_wall_bsmt_ext"] + \
+		["hosp_wall_window_ext"] * 4 + ["hosp_wall_ext", "hosp_wall_door_tile_ext", "hosp_wall_window_tile_ext"]
+	for i in range(11):
+		hw("Walls1", i, 1.5, G, south[i], "-z")
+		hw("Walls1", i, -7.5, G, north[i], "+z")
+		add("Exterior", "hosp_plinth", (3 * i, G, 1.5))
+		add("Exterior", "hosp_plinth", (3 * i, G, -7.5))
+	for cz, west, east in ((S, "hosp_wall_door_tile_ext", "hosp_wall_ext"),
+			(C, "hosp_wall_window_ext", "hosp_wall_door_ext"),
+			(N, "hosp_wall_ext", "hosp_wall_door_tile_ext")):
+		vw("Walls1", -1.5, cz, G, west, "+x")
+		vw("Walls1", 31.5, cz, G, east, "-x")
+		add("Exterior", "hosp_plinth", (-1.5, G, cz), 90)
+		add("Exterior", "hosp_plinth", (31.5, G, cz), 90)
+	corridor_s = [("hosp_wall_tile_paint", "+z"), ("hosp_wall_door_tile_paint", "+z"), ("hosp_wall_glass_door", "-z"),
+		("hosp_wall_glass", "-z")] + [(m, "-z") for m in ("hosp_wall_door", "hosp_wall_door", "hosp_wall",
+		"hosp_wall_door", "hosp_wall_door", "hosp_wall", "hosp_wall_door")]
+	corridor_n = [("hosp_wall_door", "-z"), ("hosp_wall", "-z"), ("hosp_wall_door_bsmt_paint", "-z"),
+		("hosp_wall_bsmt_paint", "-z")] + [(m, "-z") for m in ("hosp_wall_door", "hosp_wall", "hosp_wall_door",
+		"hosp_wall", "hosp_wall_door")] + [("hosp_wall_door_tile_paint", "-z"), ("hosp_wall_tile_paint", "-z")]
+	for i in range(11):
+		hw("Walls1", i, -1.5, G, *corridor_s[i])
+		hw("Walls1", i, -4.5, G, *corridor_n[i])
+	for xb, module, inner in ((4.5, "hosp_wall_tile_paint", "-x"), (10.5, "hosp_wall", "-x"), (13.5, "hosp_wall", "-x"),
+			(19.5, "hosp_wall", "-x"), (22.5, "hosp_wall", "-x"), (28.5, "hosp_wall", "-x")):
+		vw("Walls1", xb, S, G, module, inner)
+	for xb, module, inner in ((4.5, "hosp_wall_bsmt_paint", "+x"), (10.5, "hosp_wall_bsmt_paint", "-x"),
+			(16.5, "hosp_wall", "-x"), (22.5, "hosp_wall", "-x"), (25.5, "hosp_wall_tile_paint", "+x")):
+		vw("Walls1", xb, N, G, module, inner)
+	for x, z in ((-1.5, 1.5), (31.5, 1.5), (-1.5, -7.5), (31.5, -7.5)):
+		add("Walls1", "hosp_wall_corner_brick", (x, G, z))
+	# межэтажные пояса по фасадам: над 1 этажом — по всему периметру, над 2 этажом — по его периметру
+	for i in range(11):
+		add("Exterior", "hosp_band", (3 * i, H2, 1.5))
+		add("Exterior", "hosp_band", (3 * i, H2, -7.5))
+		if i >= 4:
+			add("Exterior", "hosp_band", (3 * i, ROOF, 1.5))
+			add("Exterior", "hosp_band", (3 * i, ROOF, -7.5))
+	for cz in (S, C, N):
+		add("Exterior", "hosp_band", (-1.5, H2, cz), 90)
+		add("Exterior", "hosp_band", (31.5, H2, cz), 90)
+		add("Exterior", "hosp_band", (10.5, ROOF, cz), 90)
+		add("Exterior", "hosp_band", (31.5, ROOF, cz), 90)
+	# двери 1 этажа (открыты)
+	leaf_v("Doors1", -1.5, S, G, "+x")             # вход в шлюз
+	leaf_h("Doors1", 1, -1.5, G, "-z")             # шлюз → коридор
+	leaf_h("Doors1", 2, 1.5, G, "-z")              # главный вход
+	leaf_h("Doors1", 2, -1.5, G, "-z")             # дверь в стеклянной перегородке
+	for i in (4, 7, 8, 10):
+		leaf_h("Doors1", i, -1.5, G, "+z")         # комнаты южного ряда
+	for i in (0, 2, 4, 6, 8, 9):
+		leaf_h("Doors1", i, -4.5, G, "-z")         # комнаты северного ряда
+	add("Doors1", "hosp_gate_leaf", (4.86, G, -7.5), 90)   # ворота приёмки — во двор
+	add("Doors1", "hosp_gate_leaf", (7.14, G, -7.5), 90)
+	leaf_h("Doors1", 9, -7.5, G, "+z")             # прачечная → задний двор
+	leaf_v("Doors1", 31.5, N, G, "-x")             # прачечная → боковой проезд
+	leaf_v("Doors1", 31.5, C, G, "-x")             # коридор → боковой проезд
+
+	# ---------- лестничная клетка (ножничная: вверх в южной половине, вниз — в северной) ----------
+	add("Stairs", "hosp_stairs_flight", (15, G, 0.7))
+	add("Stairs", "hosp_stairs_railing", (15, G, 0.7))
+	add("Stairs", "hosp_stairs_landing", (18.7, 1.65, 0))
+	add("Stairs", "hosp_stairs_flight", (18, 1.65, -0.7), 180)
+	add("Stairs", "hosp_stairs_railing", (18, 1.65, -0.7), 180)
+	add("Stairs", "hosp_stairs_landing", (14.3, H2, 0))
+	add("Stairs", "hosp_railing_straight", (15.05, H2, 0.75), 90)
+	add("Stairs", "hosp_stairs_flight", (18, -1.65, -0.7), 180)   # вниз, в подвал
+	add("Stairs", "hosp_stairs_railing", (18, -1.65, -0.7), 180)
+	add("Stairs", "hosp_stairs_landing", (18.7, -1.65, 0))
+	add("Stairs", "hosp_stairs_flight", (15, B, 0.7))
+	add("Stairs", "hosp_stairs_railing", (15, B, 0.7))
+
+	# ---------- 2 этаж (x ≥ 10,5) ----------
+	for i in range(4, 11):
+		for cz in (S, C, N):
+			if (i, cz) not in stair:
+				add("Floor2", "hosp_floor", (3 * i, H2, cz))
+			add("Roof", "hosp_roof", (3 * i, ROOF, cz))
+		hw("Walls2", i, 1.5, H2, "hosp_wall_window_ext", "-z")
+		hw("Walls2", i, -7.5, H2, "hosp_wall_window_ext", "+z")
+	for cz, west, east in ((S, "hosp_wall_ext", "hosp_wall_ext"), (C, "hosp_wall_window_ext", "hosp_wall_window_ext"),
+			(N, "hosp_wall_ext", "hosp_wall_window_ext")):
+		vw("Walls2", 10.5, cz, H2, west, "+x")
+		vw("Walls2", 31.5, cz, H2, east, "-x")
+	for i, module in zip(range(4, 11), ("hosp_wall_door", "hosp_wall_door", "hosp_wall", "hosp_wall_door",
+			"hosp_wall", "hosp_wall", "hosp_wall")):
+		hw("Walls2", i, -1.5, H2, module)
+	for i, module in zip(range(4, 11), ("hosp_wall_door", "hosp_wall", "hosp_wall_door", "hosp_wall",
+			"hosp_wall_door", "hosp_wall", "hosp_wall_door")):
+		hw("Walls2", i, -4.5, H2, module)
+	for xb in (13.5, 19.5):
+		vw("Walls2", xb, S, H2, "hosp_wall")
+	for xb in (16.5, 22.5, 28.5):
+		vw("Walls2", xb, N, H2, "hosp_wall")
+	for x, z in ((10.5, 1.5), (31.5, 1.5), (10.5, -7.5), (31.5, -7.5)):
+		add("Walls2", "hosp_wall_corner_brick", (x, H2, z))
+	for i in (4, 7):
+		leaf_h("Doors2", i, -1.5, H2, "+z")
+	for i in (4, 6, 8, 10):
+		leaf_h("Doors2", i, -4.5, H2, "-z")
+
+	# ---------- подвал ----------
+	basement_cells = [(i, C) for i in range(3, 9)] + [(5, S), (6, S), (7, S), (8, S)] + [(4, N), (5, N), (6, N)]
+	for i, cz in basement_cells:
+		add("Basement", "hosp_floor_concrete", (3 * i, B, cz))
+	for i, module, inner in ((3, "hosp_wall_bsmt_ground", "-z"), (4, "hosp_wall_bsmt_ground", "-z"),
+			(5, "hosp_wall_door_bsmt", "-z"), (6, "hosp_wall_bsmt", "-z"), (7, "hosp_wall_door_bsmt", "-z"),
+			(8, "hosp_wall_bsmt", "-z")):
+		hw("Basement", i, -1.5, B, module, inner)
+	for i, module, inner in ((3, "hosp_wall_bsmt_ground", "+z"), (4, "hosp_wall_bsmt", "+z"),
+			(5, "hosp_wall_door_bsmt", "+z"), (6, "hosp_wall_bsmt", "+z"), (7, "hosp_wall_bsmt_ground", "+z"),
+			(8, "hosp_wall_bsmt_ground", "+z")):
+		hw("Basement", i, -4.5, B, module, inner)
+	for i in (5, 6, 7, 8):
+		hw("Basement", i, 1.5, B, "hosp_wall_bsmt_ground", "-z")
+	for i in (4, 5, 6):
+		hw("Basement", i, -7.5, B, "hosp_wall_bsmt_ground", "+z")
+	vw("Basement", 7.5, C, B, "hosp_wall_bsmt_ground", "+x")
+	vw("Basement", 25.5, C, B, "hosp_wall_bsmt_ground", "-x")
+	vw("Basement", 13.5, S, B, "hosp_wall_bsmt_ground", "+x")
+	vw("Basement", 19.5, S, B, "hosp_wall_bsmt")
+	vw("Basement", 25.5, S, B, "hosp_wall_bsmt_ground", "-x")
+	vw("Basement", 10.5, N, B, "hosp_wall_bsmt_ground", "+x")
+	vw("Basement", 19.5, N, B, "hosp_wall_bsmt_ground", "-x")
+	for x, z in ((7.5, -1.5), (7.5, -4.5), (10.5, -4.5), (10.5, -7.5), (19.5, -7.5), (19.5, -4.5),
+			(25.5, -4.5), (25.5, 1.5), (13.5, 1.5), (13.5, -1.5)):
+		add("Basement", "hosp_wall_corner_bsmt", (x, B, z))
+	leaf_h("Basement", 5, -1.5, B, "+z", "hosp_door_metal")   # коридор → лестница
+	leaf_h("Basement", 7, -1.5, B, "+z", "hosp_door_metal")   # коридор → кислород
+	leaf_h("Basement", 5, -4.5, B, "-z", "hosp_door_metal")   # коридор → аптечный склад
+	for i in range(3, 9):
+		add("PropsB", "prop_pipe_run", (3 * i, B + 2.55, -4.5), 180)
+	for x, z in ((9, -3), (15, -3), (21, -3), (22.5, 0), (15, -6)):
+		add("PropsB", "prop_bulkhead_lamp", (x, -0.2, z))
+	for k in range(11):
+		add("PropsB", "prop_oxygen_cylinder", (20.0 + k * 0.45, B, 1.2))
+	for k in range(5):
+		add("PropsB", "prop_oxygen_cylinder", (23.0 + k * 0.45, B, 0.7))
+	for x in (11.6, 13.6, 15.6, 17.6):
+		add("PropsB", "prop_shelf_rack", (x, B, -7.1))
+	add("PropsB", "prop_shelf_rack", (19.1, B, -5.9), 90)
+	add("PropsB", "prop_pallet_boxes", (12.5, B, -5.4))
+	add("PropsB", "prop_pallet_boxes", (17.0, B, -5.3), 90)
+	add("PropsB", "prop_box", (14.0, B, -5.6), 15)
+
+	# ---------- реквизит 1 этажа ----------
+	L1 = G + 3.1  # потолок 1 этажа
+	# шлюз
+	add("Props1", "prop_coat_rack_suits", (0, G, 1.5))
+	add("Props1", "prop_med_cabinet", (-0.6, G, -1.5), 180)
+	add("Props1", "prop_bench", (0.8, G, -1.2))
+	add("Props1", "prop_floor_line", (1.5, G + 0.001, 0), 90)
+	add("Props1", "prop_sink", (3.8, G, 1.5))
+	add("Props1", "prop_bin_hazard", (2.1, G, 1.1))
+	add("Props1", "prop_bin_hazard", (4.1, G, -1.05))
+	add("Props1", "prop_sign_plate_red", (3, G + 2.35, -1.5), 180)
+	add("Props1", "prop_sign_plate", (-1.5, G + 2.3, 0), -90)
+	# вестибюль
+	add("Props1", "prop_bench", (8.5, G, 1.15), 180)
+	add("Props1", "prop_bench", (9.0, G, -1.15))
+	# ординаторская 1 этажа
+	add("Props1", "prop_desk", (12.6, G, 0.9))
+	add("Props1", "prop_chair", (12.6, G, 0.3))
+	add("Props1", "prop_med_cabinet", (13.5, G, -0.4), 90)
+	# процедурная
+	add("Props1", "prop_sink", (19.5, G, 0.5), -90)
+	add("Props1", "prop_med_cabinet", (22.5, G, 0.2), 90)
+	add("Props1", "prop_gurney", (21.1, G, 0.3), 90)
+	# палата 1 этажа (юг)
+	for x in (25.3, 26.6, 27.9):
+		add("Props1", "prop_bed", (x, G, -0.4))
+	add("Props1", "prop_iv_stand", (25.95, G, 0.8))
+	add("Props1", "prop_sink", (31.5, G, 0.5), 90)  # санузел
+	# палаты северного ряда
+	for x in (1.3, 2.6, 3.9, 13.1, 14.4, 15.7, 19.2, 20.5, 21.8):
+		add("Props1", "prop_bed", (x, G, -5.6), 180)
+	for i in (0, 1, 4, 5, 6, 7):
+		add("Props1", "prop_radiator", (3 * i, G, -7.5), 180)
+	for i in (3, 4, 7, 8, 9):
+		add("Props1", "prop_radiator", (3 * i, G, 1.5))
+	# приёмка, кладовая, прачечная
+	add("Props1", "prop_pallet_boxes", (9.0, G, -6.2), 90)
+	add("Props1", "prop_box", (8.0, G, -5.2))
+	add("Props1", "prop_shelf_rack", (24, G, -7.1))
+	add("Props1", "prop_washer", (28.3, G, -6.9))
+	add("Props1", "prop_washer", (29.2, G, -6.9))
+	add("Props1", "prop_shelf_rack", (25.85, G, -6.0), 90)
+	# коридор
+	add("Props1", "prop_gurney", (17.2, G, -2.0), 90)
+	add("Props1", "prop_gurney", (20.5, G, -4.0), 90)
+	add("Props1", "prop_iv_stand", (17.2, G, -2.7))
+	add("Props1", "prop_bench", (2.2, G, -4.15))
+	add("Props1", "prop_oxygen_cylinder", (9.6, G, -4.2))
+	add("Props1", "prop_oxygen_cylinder", (9.9, G, -4.2))
+	for i in range(11):
+		add("Props1", "prop_ceiling_lamp", (3 * i, L1, C))
+	for x, z in ((0, S), (3, S), (6, S), (9, S), (12, S), (21, S), (24, S), (27, S), (30, S), (0, N), (3, N),
+			(6, N), (9, N), (12, N), (15, N), (18, N), (21, N), (24, N), (27, N), (30, N)):
+		add("Props1", "prop_ceiling_lamp", (x, L1, z))
+	add("Props1", "prop_ceiling_lamp", (14.3, L1, 0), 90)  # под верхней площадкой лестницы
+
+	# ---------- реквизит 2 этажа ----------
+	L2 = H2 + 3.1
+	add("Props2", "prop_desk", (12.6, H2, 0.9))
+	add("Props2", "prop_chair", (12.6, H2, 0.3))
+	add("Props2", "prop_med_cabinet", (13.5, H2, -0.4), 90)
+	for x in (22.4, 24.0, 25.6, 27.2, 28.8, 30.4):   # палата 214 — шесть коек
+		add("Props2", "prop_bed", (x, H2, -0.4))
+	for x in (23.2, 26.4, 29.6):
+		add("Props2", "prop_iv_stand", (x, H2, 0.9))
+		add("Props2", "prop_oxygen_cylinder", (x, H2, -1.2))
+	for i in (4, 5, 6, 7, 8, 9, 10):
+		add("Props2", "prop_radiator", (3 * i, H2, 1.5))
+	for i in (4, 5, 6, 7, 8, 9, 10):
+		add("Props2", "prop_radiator", (3 * i, H2, -7.5), 180)
+	for x in (13.1, 14.4, 15.7, 19.2, 20.5, 21.8, 25.2, 26.5, 27.8):
+		add("Props2", "prop_bed", (x, H2, -5.6), 180)
+	add("Props2", "prop_shelf_rack", (28.85, H2, -6.0), 90)   # сестринская
+	add("Props2", "prop_oxygen_cylinder", (30.5, H2, -5.0))
+	add("Props2", "prop_oxygen_cylinder", (30.8, H2, -5.0))
+	add("Props2", "prop_desk", (21, H2, -4.1), 180)           # сестринский пост
+	add("Props2", "prop_chair", (21, H2, -3.5), 180)
+	add("Props2", "prop_oxygen_cylinder", (22.0, H2, -4.15))
+	add("Props2", "prop_oxygen_cylinder", (22.3, H2, -4.15))
+	for x, z in ((17.6, -2.0), (25.5, -2.0), (27.8, -4.0), (15.2, -4.0)):
+		add("Props2", "prop_gurney", (x, H2, z), 90)
+	add("Props2", "prop_iv_stand", (17.6, H2, -2.6))
+	add("Props2", "prop_iv_stand", (25.5, H2, -2.6))
+	add("Props2", "prop_sign_plate", (21.95, H2 + 1.6, -1.5))
+	for i in range(4, 11):
+		for cz in (C, N) + ((S,) if i not in (5, 6) else ()):
+			add("Props2", "prop_ceiling_lamp", (3 * i, L2, cz))
+	add("Props2", "prop_ceiling_lamp", (16.5, L2, 0), 90)
+
+	# ---------- улица ----------
+	for x in (-7.5, -1.5, 4.5, 10.5, 16.5, 22.5, 28.5, 34.5):
+		for z in (4.5, 10.5, 16.5, -10.5, -16.5, -22.5):
+			add("Exterior", "ext_ground_asphalt", (x, Y, z))
+	for x in (-9, -6, -3, 33, 36):
+		for z in (-6, -3, 0):
+			add("Exterior", "ext_ground_asphalt_small", (x, Y, z))
+	add("Exterior", "hosp_porch", (6, G, 3.1))                      # главное крыльцо
+	add("Exterior", "hosp_dock_steps", (6, Y, 6.1), 90)
+	add("Exterior", "hosp_dock_canopy", (4.5, G, 1.5))
+	add("Exterior", "hosp_dock_canopy", (7.5, G, 1.5))
+	add("Exterior", "prop_bulkhead_lamp", (6, G + 2.88, 2.2))
+	add("Exterior", "prop_sign_plate_red", (6, G + 2.62, 1.5), 180)
+	add("Exterior", "hosp_porch", (-3.1, G, 0), 90)                 # крыльцо шлюза
+	add("Exterior", "hosp_dock_steps", (-6.1, Y, 0))
+	add("Exterior", "hosp_porch", (27, G, -9.1))                    # крыльцо прачечной
+	add("Exterior", "hosp_dock_steps", (27, Y, -12.1), -90)
+	add("Exterior", "hosp_porch", (33.1, G, -6))                    # боковое крыльцо
+	add("Exterior", "hosp_porch", (33.1, G, -3))
+	add("Exterior", "hosp_dock_steps", (36.1, Y, -4.5), 180)
+	for x in (6, 9):                                                # рампа аптеки
+		add("Exterior", "hosp_dock_platform", (x, G, -9.1), 180)
+	add("Exterior", "hosp_dock_steps", (12.0, Y, -9.1), 180)
+	for x in (4.5, 7.5, 10.5):
+		add("Exterior", "hosp_dock_canopy", (x, G, -7.5), 180)
+	add("Exterior", "prop_bulkhead_lamp", (6, G + 2.88, -8.2))
+	add("Exterior", "prop_sign_plate", (6, G + 2.62, -7.5))
+	for k in range(16):                                             # забор
+		x = -9 + 3 * k
+		if x not in (0, 3):
+			add("Exterior", "ext_fence", (x, Y, 16.5))
+		if x not in (27, 30):
+			add("Exterior", "ext_fence", (x, Y, -22.5))
+	for k in range(13):
+		z = -21 + 3 * k
+		add("Exterior", "ext_fence", (-10.5, Y, z), 90)
+		add("Exterior", "ext_fence", (37.5, Y, z), 90)
+	add("Vehicles", "blk_vehicle_truck", (1.5, Y, 12.5), 90)        # «Урал» (сц. 1)
+	add("Vehicles", "blk_vehicle_van", (11.5, Y, 7.0))              # фургон сварщиков (сц. 7)
+	add("Vehicles", "blk_vehicle_uaz", (7.5, Y, -12.8), 90)         # «буханка» у рампы (сц. 6)
+	add("Vehicles", "blk_vehicle_ambulance", (28.5, Y, -19.0))      # скорая (сц. 10)
+
+	cool, warm = (0.92, 1.0, 0.95), (1.0, 0.85, 0.6)
+	lights = []
+	for i in range(0, 11, 2):
+		lights.append((f"Corridor1_{i}", (3 * i, 2.9, C), cool, 1.0, 7.0))
+	for k, (x, z) in enumerate(((1.5, S), (7.5, S), (12, S), (21, S), (25.5, S), (30, S), (1.5, N), (7.5, N),
+			(13.5, N), (19.5, N), (24, N), (28.5, N))):
+		lights.append((f"Room1_{k}", (x, 2.9, z), cool, 1.0, 6.0))
+	for k, y in enumerate((2.4, 5.6, -1.0, -2.6)):
+		lights.append((f"Stair_{k}", (16.5, y, 0), cool, 0.9, 6.0))
+	for i in range(4, 11, 2):
+		lights.append((f"Corridor2_{i}", (3 * i, 6.2, C), cool, 1.0, 7.0))
+	for k, (x, z) in enumerate(((12, S), (22.5, S), (28.5, S), (13.5, N), (19.5, N), (25.5, N), (30, N))):
+		lights.append((f"Room2_{k}", (x, 6.2, z), cool, 1.0, 6.0))
+	for k, (x, z) in enumerate(((9, C), (15, C), (21, C), (22.5, S), (15, N))):
+		lights.append((f"Basement_{k}", (x, -0.5, z), warm, 0.9, 6.0))
+	for k, pos in enumerate(((6, 2.6, 2.2), (6, 2.6, -8.2), (27, 2.2, -8.6), (-2.5, 2.2, 0), (28.5, 3.0, -20),
+			(33.1, 2.2, -4.5))):
+		lights.append((f"Outdoor_{k}", pos, warm, 1.5, 7.0))
+
+	dark, white = (0.12, 0.12, 0.12), (1, 1, 1)
+	labels = [
+		("SignAirlockRed", (3, 2.35, -1.387), 0, "КРАСНАЯ ЗОНА", 44, white),
+		("SignAirlockClean", (-1.387, 2.3, 0), 90, "ЧИСТАЯ ЗОНА", 36, dark),
+		("SignMain", (6, 2.62, 1.613), 0, "ИНФЕКЦИОННЫЙ КОРПУС № 4", 22, white),
+		("Sign214", (21.95, H2 + 1.6, -1.613), 180, "Палата № 214", 36, dark),
+		("SignPharmacy", (15.95, B + 1.6, -4.387), 0, "АПТЕЧНЫЙ СКЛАД", 28, dark),
+		("SignOxygen", (21.95, B + 1.6, -1.613), 180, "КИСЛОРОД", 36, dark),
+		("SignDock", (6, 2.62, -7.613), 180, "АПТЕКА", 36, dark),
+	]
+	p += [("PropsB", "SignPharmacyPlate", "prop_sign_plate", (15.95, B + 1.6, -4.5), 180),
+		("PropsB", "SignOxygenPlate", "prop_sign_plate", (21.95, B + 1.6, -1.5), 0)]
+	markers = [
+		("S01_Gate", (1.5, 1.6, 15.0), "Сц.1: «Урал» у ворот, родственники"),
+		("S01_Airlock", (1.5, 2.2, 0), "Сц.1: шлюз — надеть СИЗ"),
+		("S02_Olga", (4.5, 2.2, -3), "Сц.2: Ольга — «мне нужны руки»"),
+		("S02_Oxygen", (22.5, -1.2, 0), "Сц.2: кислород — 2 ходки на 2 этаж"),
+		("S02_Grandma", (16.5, 5.4, -3), "Сц.2: бабушка ищет Валю"),
+		("S02_DeadList", (21, 5.4, -4.2), "Сц.2: список умерших у поста"),
+		("S02_Drawings", (12, 5.4, 0), "Сц.2: детские рисунки"),
+		("S03_Gena", (7.5, 2.2, -0.6), "Сц.3: Гена у стекла"),
+		("S03_Lida", (30.4, 5.2, 0.4), "Сц.3: палата 214, Лида у окна"),
+		("S04_Syringe", (27.9, 3.6, 0.8), "Сц.4: шприц на полу → В-2"),
+		("S05_Break", (27, 1.4, -9.6), "Сц.5: ночь, перерыв с Ольгой"),
+		("S06_Dock", (7.5, 1.4, -11.0), "Сц.6: мародёры, «буханка» у рампы"),
+		("S06_Store", (15, -1.2, -6), "Сц.6: бой в подвале, аптечный склад"),
+		("S06_Escape", (28.5, 2.2, -6), "Сц.6: бегство через прачечную"),
+		("S07_Order", (6, 1.2, 7.5), "Сц.7: приказ Ершова, сварщики"),
+		("S08_Doors", (6, 2.0, 3.0), "Сц.8: двери открываются"),
+		("S09_Fight", (12, 1.2, 10), "Сц.9: бой со своими"),
+		("S10_Ershov", (33.5, 1.2, 3.0), "Сц.10: Ершов за углом"),
+		("S10_Exit", (28.5, 1.8, -17), "Сц.10: отход — скорая, задние ворота"),
+	]
+	return {"placements": p, "lights": lights, "labels": labels, "markers": markers,
+		"player": ((3, -1.05, 15.5), 0)}
+
+
 def write_tscn(layout, path, root_name, force=False):
 	"""Пишет сцену Godot из расстановки: модули — экземпляры .glb, свет — OmniLight3D, надписи — Label3D.
 	Не перезаписывает файл, если его правили после генерации (если не force). Возвращает True, если записал."""
@@ -252,7 +629,8 @@ def write_tscn(layout, path, root_name, force=False):
 		'[node name="WorldEnvironment" type="WorldEnvironment" parent="."]', 'environment = SubResource("Env")', "",
 		'[node name="Sun" type="DirectionalLight3D" parent="."]', "rotation_degrees = Vector3(-35, -150, 0)",
 		"light_color = Color(0.92, 0.94, 1, 1)", "light_energy = 0.7", "shadow_enabled = true", ""]
-	for g in groups + ["Lights", "Labels"]:
+	extra = ["Lights", "Labels"] + (["Markers"] if layout.get("markers") else [])
+	for g in groups + extra:
 		out += [f'[node name="{g}" type="Node3D" parent="."]', ""]
 	for g, name, m, pos, rot in layout["placements"]:
 		out.append(f'[node name="{name}" parent="{g}" instance=ExtResource("{ids[m]}")]')
@@ -269,6 +647,11 @@ def write_tscn(layout, path, root_name, force=False):
 			out.append(f"rotation_degrees = Vector3(0, {rot}, 0)")
 		out += ["pixel_size = 0.001", f"modulate = Color({fmt(color)}, 1)", "outline_size = 0",
 			f'text = "{text}"', f"font_size = {size}", ""]
+	for name, pos, text in layout.get("markers", []):
+		# Подписи сцен сценария — для создателя; в финальной локации их удаляют.
+		out += [f'[node name="{name}" type="Marker3D" parent="Markers"]', f"position = Vector3({fmt(pos)})", "",
+			f'[node name="Text" type="Label3D" parent="Markers/{name}"]', "pixel_size = 0.004", "billboard = 1",
+			"modulate = Color(1, 0.55, 0.1, 1)", "outline_size = 8", f'text = "{text}"', "font_size = 48", ""]
 	(px, py, pz), prot = layout["player"]
 	out += ['[node name="Player" parent="." instance=ExtResource("1_player")]',
 		f"position = Vector3({px}, {py}, {pz})", f"rotation_degrees = Vector3(0, {prot}, 0)", "",
@@ -297,6 +680,7 @@ def write_tscn(layout, path, root_name, force=False):
 BLOCKOUT_SCENES = (
 	(ward_layout, "hospital_ward_blockout.tscn", "HospitalWardBlockout"),
 	(service_layout, "hospital_service_blockout.tscn", "HospitalServiceBlockout"),
+	(m03_layout, "m03_red_zone_blockout.tscn", "M03RedZoneBlockout"),
 )
 
 
