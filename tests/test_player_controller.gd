@@ -2,10 +2,13 @@ extends SceneTree
 ## Автотест контроллера игрока на тестовой площадке.
 ## Запуск: godot --headless --path . --script res://tests/test_player_controller.gd
 
-const TEST_RANGE := preload("res://scenes/levels/prototype/test_range.tscn")
+## Сцены грузятся во время выполнения, а не preload, и класс Player не указывается как тип:
+## тест компилируется раньше, чем регистрируются автозагрузки (Settings, Game), на которые
+## ссылается игрок.
+const TEST_RANGE := "res://scenes/levels/prototype/test_range.tscn"
 
 var _failures := 0
-var _player: Player
+var _player  # без типа Player — см. комментарий выше
 
 
 func _initialize() -> void:
@@ -13,7 +16,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-	var level := TEST_RANGE.instantiate()
+	var level: Node = load(TEST_RANGE).instantiate()
 	root.add_child(level)
 	_player = level.get_node("Player")
 

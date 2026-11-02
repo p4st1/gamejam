@@ -25,6 +25,7 @@ signal landed(fall_speed: float)
 @export var eye_offset := 0.12
 
 @export_group("Обзор")
+## Базовая чувствительность; итоговая умножается на настройку игрока.
 @export var mouse_sensitivity := 0.0022
 @export var max_pitch_degrees := 89.0
 
@@ -35,6 +36,8 @@ var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var _current_height := 1.8
 var _was_on_floor := true
 var _fall_speed := 0.0
+var _look_sensitivity := 0.0022
+var _invert_y := false
 
 @onready var _collision: CollisionShape3D = $CollisionShape3D
 @onready var _capsule: CapsuleShape3D = _collision.shape
@@ -42,19 +45,22 @@ var _fall_speed := 0.0
 
 
 func _ready() -> void:
+	add_to_group("player")
 	_current_height = stand_height
 	_apply_height()
+	Settings.changed.connect(_on_settings_changed)
+	_apply_settings()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		rotate_y(-event.relative.x * mouse_sensitivity)
-		_head.rotate_x(-event.relative.y * mouse_sensitivity)
+		rotate_y(-event.relative.x * _look_sensitivity)
+		var pitch_sign := 1.0 if _invert_y else -1.0
+		_head.rotate_x(pitch_sign * event.relative.y * _look_sensitivity)
 		var limit := deg_to_rad(max_pitch_degrees)
 		_head.rotation.x = clampf(_head.rotation.x, -limit, limit)
-	elif event.is_action_pressed("ui_cancel"):
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	# Esc — меню паузы (autoload Game); клик возвращает захват мыши, если он потерян.
 	elif event is InputEventMouseButton and event.pressed:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
@@ -102,6 +108,16 @@ func _physics_process(delta: float) -> void:
 ## Горизонтальная скорость — нужна эффектам камеры и отладочному оверлею.
 func get_horizontal_speed() -> float:
 	return Vector2(velocity.x, velocity.z).length()
+
+
+func _apply_settings() -> void:
+	_look_sensitivity = mouse_sensitivity * Settings.get_value("controls/mouse_sensitivity")
+	_invert_y = Settings.get_value("controls/invert_y")
+
+
+func _on_settings_changed(key: String) -> void:
+	if key.begins_with("controls/"):
+		_apply_settings()
 
 
 func _update_crouch(delta: float) -> void:

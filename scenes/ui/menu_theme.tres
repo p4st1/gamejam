@@ -1,0 +1,114 @@
+[gd_resource type="Theme" format=3]
+
+[sub_resource type="StyleBoxFlat" id="Btn_normal"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 1, 1, 0)
+
+[sub_resource type="StyleBoxFlat" id="Btn_hover"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 1, 1, 0.06)
+border_width_left = 3
+border_color = Color(0.72, 0.22, 0.17, 1)
+
+[sub_resource type="StyleBoxFlat" id="Btn_pressed"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 1, 1, 0.12)
+border_width_left = 3
+border_color = Color(0.72, 0.22, 0.17, 1)
+
+[sub_resource type="StyleBoxFlat" id="Btn_focus"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+draw_center = false
+border_width_left = 3
+border_color = Color(0.72, 0.22, 0.17, 0.7)
+
+[sub_resource type="StyleBoxFlat" id="Key_normal"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(1, 1, 1, 0.05)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.12)
+
+[sub_resource type="StyleBoxFlat" id="Key_hover"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(1, 1, 1, 0.1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.72, 0.22, 0.17, 1)
+
+[sub_resource type="StyleBoxFlat" id="Panel"]
+content_margin_left = 24.0
+content_margin_top = 20.0
+content_margin_right = 24.0
+content_margin_bottom = 20.0
+bg_color = Color(1, 1, 1, 0.03)
+
+[sub_resource type="StyleBoxFlat" id="Tab_selected"]
+content_margin_left = 20.0
+content_margin_top = 8.0
+content_margin_right = 20.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 1, 1, 0.03)
+border_width_bottom = 2
+border_color = Color(0.72, 0.22, 0.17, 1)
+
+[sub_resource type="StyleBoxFlat" id="Tab_unselected"]
+content_margin_left = 20.0
+content_margin_top = 8.0
+content_margin_right = 20.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 1, 1, 0)
+
+[resource]
+default_font_size = 20
+Button/colors/font_color = Color(0.82, 0.82, 0.78, 1)
+Button/colors/font_hover_color = Color(0.96, 0.95, 0.9, 1)
+Button/colors/font_pressed_color = Color(0.96, 0.95, 0.9, 1)
+Button/colors/font_focus_color = Color(0.96, 0.95, 0.9, 1)
+Button/colors/font_disabled_color = Color(0.45, 0.46, 0.44, 1)
+Button/styles/normal = SubResource("Btn_normal")
+Button/styles/hover = SubResource("Btn_hover")
+Button/styles/pressed = SubResource("Btn_pressed")
+Button/styles/focus = SubResource("Btn_focus")
+Button/styles/disabled = SubResource("Btn_normal")
+KeyButton/base_type = &"Button"
+KeyButton/styles/normal = SubResource("Key_normal")
+KeyButton/styles/hover = SubResource("Key_hover")
+KeyButton/styles/pressed = SubResource("Key_hover")
+KeyButton/styles/focus = SubResource("Key_hover")
+Label/colors/font_color = Color(0.82, 0.82, 0.78, 1)
+HeaderLabel/base_type = &"Label"
+HeaderLabel/colors/font_color = Color(0.55, 0.56, 0.53, 1)
+HeaderLabel/font_sizes/font_size = 16
+TitleLabel/base_type = &"Label"
+TitleLabel/colors/font_color = Color(0.92, 0.91, 0.86, 1)
+TitleLabel/font_sizes/font_size = 64
+TabContainer/colors/font_selected_color = Color(0.96, 0.95, 0.9, 1)
+TabContainer/colors/font_unselected_color = Color(0.6, 0.61, 0.58, 1)
+TabContainer/colors/font_hovered_color = Color(0.86, 0.85, 0.8, 1)
+TabContainer/styles/panel = SubResource("Panel")
+TabContainer/styles/tab_selected = SubResource("Tab_selected")
+TabContainer/styles/tab_unselected = SubResource("Tab_unselected")
+TabContainer/styles/tab_hovered = SubResource("Tab_unselected")

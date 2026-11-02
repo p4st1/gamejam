@@ -538,3 +538,40 @@ P-040: Петрович остаётся у переправы с пулемёт
 `DECISIONS.md`, `CURRENT_STATE.md`, `BACKLOG.md`, `DEVELOPMENT_LOG.md`.
 
 **Следующая задача:** создатель смотрит набросок v2.
+
+---
+
+## 2026-11-02 — Сессия 27: меню и настройки v0.1
+
+**Выполнено:**
+- Создатель выбрал объём (D-039): базовые настройки + переназначение клавиш, «Новая игра» → выбор
+  сцены, Esc — меню паузы.
+- Техописание «Меню и настройки v0.1» в TECHNICAL_DESIGN.md.
+- Автозагрузка `Settings`: значения, пресеты качества, применение к окну/вьюпорту/шинам/InputMap,
+  SSAO через `WorldEnvironment` уровня без правки сцен, `user://settings.cfg`, переназначение клавиш
+  (2 слота, конфликты, сброс).
+- Автозагрузка `Game`: смена сцен с фоновой загрузкой и экраном «Загрузка… N %», пауза по Esc в любой
+  сцене с игроком.
+- Сцены `scenes/ui/`: главное меню (выбор сцены собирается из `scenes/levels/` и `scenes/blockouts/`),
+  меню паузы, экран настроек (строится из таблицы), общая тема `menu_theme.tres`.
+- Аудиошины Master / Music / SFX / Voice / Radio→Voice / Ambience→SFX.
+- Игрок: группа `player`, чувствительность × настройка и инверсия Y на лету; Esc больше не
+  отпускает мышь сам (согласовано).
+- По решению создателя поле зрения и покачивание камеры убраны из настроек — остаются параметрами
+  сцены игрока.
+- Автотест `test_menu_settings.gd` — 28/28; остальные автотесты 7/7, 8/8, 9/9, 21/21.
+- Проверено скриншотами реального окна (меню, выбор сцены, вкладки, пауза).
+
+**Обнаруженные проблемы:**
+- Тест-скрипты компилируются раньше автозагрузок: `preload` сцены с игроком и тип `Player` в тесте
+  ломали компиляцию. Тесты переведены на `load()` и нетипизированного игрока; правило записано в
+  TECHNICAL_DESIGN.md.
+
+**Изменённые файлы:** `project.godot`, `default_bus_layout.tres`, `scripts/autoload/settings.gd`,
+`scripts/autoload/game.gd`, `scripts/ui/{main_menu,pause_menu,settings_menu}.gd`,
+`scenes/ui/{main_menu,pause_menu,settings_menu}.tscn`, `scenes/ui/menu_theme.tres`,
+`scripts/player/player.gd`, `scripts/debug/debug_overlay.gd`, `tests/test_menu_settings.gd` (новый),
+`tests/test_{player_controller,hospital_kit,hospital_service,m03_blockout}.gd`;
+`docs/TECHNICAL_DESIGN.md`, `DECISIONS.md`, `CURRENT_STATE.md`, `BACKLOG.md`, `DEVELOPMENT_LOG.md`.
+
+**Следующая задача:** создатель проверяет меню (F5) → набросок миссии 3 v2.

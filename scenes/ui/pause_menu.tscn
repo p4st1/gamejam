@@ -1,0 +1,86 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/pause_menu.gd" id="1_script"]
+[ext_resource type="Theme" path="res://scenes/ui/menu_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://scenes/ui/settings_menu.tscn" id="3_settings"]
+
+[node name="PauseMenu" type="CanvasLayer"]
+process_mode = 3
+layer = 50
+script = ExtResource("1_script")
+
+[node name="Panel" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="Dim" type="ColorRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.025, 0.022, 0.72)
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 96
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 96
+theme_override_constants/margin_bottom = 64
+
+[node name="Column" type="VBoxContainer" parent="Panel/Margin"]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Panel/Margin/Column"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 40
+text = "Пауза"
+
+[node name="Gap" type="Control" parent="Panel/Margin/Column"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+
+[node name="Resume" type="Button" parent="Panel/Margin/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Продолжить"
+alignment = 0
+
+[node name="Settings" type="Button" parent="Panel/Margin/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Настройки"
+alignment = 0
+
+[node name="MainMenu" type="Button" parent="Panel/Margin/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "В главное меню"
+alignment = 0
+
+[node name="Quit" type="Button" parent="Panel/Margin/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Выйти из игры"
+alignment = 0
+
+[node name="SettingsMenu" parent="." instance=ExtResource("3_settings")]
+unique_name_in_owner = true
+visible = false

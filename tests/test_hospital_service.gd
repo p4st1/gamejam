@@ -2,10 +2,13 @@ extends SceneTree
 ## Автотест служебного блока набора «Больница»: шлюз, рампа, приёмка, подвал, склад.
 ## Запуск: godot --headless --path . --script res://tests/test_hospital_service.gd
 
-const DEMO := preload("res://scenes/blockouts/hospital_service_blockout.tscn")
+## Сцены грузятся во время выполнения, а не preload, и класс Player не указывается как тип:
+## тест компилируется раньше, чем регистрируются автозагрузки (Settings, Game), на которые
+## ссылается игрок.
+const DEMO := "res://scenes/blockouts/hospital_service_blockout.tscn"
 
 var _failures := 0
-var _player: Player
+var _player  # без типа Player — см. комментарий выше
 
 
 func _initialize() -> void:
@@ -13,7 +16,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-	var level := DEMO.instantiate()
+	var level: Node = load(DEMO).instantiate()
 	root.add_child(level)
 	_player = level.get_node("Player")
 

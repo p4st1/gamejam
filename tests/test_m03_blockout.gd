@@ -2,10 +2,13 @@ extends SceneTree
 ## Автотест наброска миссии 3 (версия 2): проходимы ли маршруты, которые требует сценарий.
 ## Запуск: godot --headless --path . --script res://tests/test_m03_blockout.gd
 
-const LEVEL := preload("res://scenes/blockouts/m03_red_zone_blockout.tscn")
+## Сцены грузятся во время выполнения, а не preload, и класс Player не указывается как тип:
+## тест компилируется раньше, чем регистрируются автозагрузки (Settings, Game), на которые
+## ссылается игрок.
+const LEVEL := "res://scenes/blockouts/m03_red_zone_blockout.tscn"
 
 var _failures := 0
-var _player: Player
+var _player  # без типа Player — см. комментарий выше
 
 
 func _initialize() -> void:
@@ -13,7 +16,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-	var level := LEVEL.instantiate()
+	var level: Node = load(LEVEL).instantiate()
 	root.add_child(level)
 	_player = level.get_node("Player")
 

@@ -11,9 +11,14 @@ config_version=5
 [application]
 
 config/name="Сорок дней (прототип)"
-run/main_scene="res://scenes/levels/prototype/test_range.tscn"
+run/main_scene="res://scenes/ui/main_menu.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Settings="*res://scripts/autoload/settings.gd"
+Game="*res://scripts/autoload/game.gd"
 
 [display]
 

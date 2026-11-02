@@ -16,5 +16,5 @@ func _process(_delta: float) -> void:
 	var state := "присед" if player.is_crouching else ("бег" if player.is_sprinting else "шаг")
 	if not player.is_on_floor():
 		state = "в воздухе"
-	text = "FPS %d\nСкорость %.1f м/с\nСостояние: %s\n\nWASD — ходьба, Shift — бег, Ctrl/C — присед,\nПробел — прыжок, Esc — отпустить мышь, F3 — скрыть" \
+	text = "FPS %d\nСкорость %.1f м/с\nСостояние: %s\n\nWASD — ходьба, Shift — бег, Ctrl/C — присед,\nПробел — прыжок, Esc — пауза, F3 — скрыть" \
 		% [Engine.get_frames_per_second(), player.get_horizontal_speed(), state]
