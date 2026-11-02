@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "iv_bag"
+albedo_color = Color(0.850, 0.900, 0.900, 0.4)
+roughness = 0.2
+transparency = 1

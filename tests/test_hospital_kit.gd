@@ -50,6 +50,13 @@ func _run() -> void:
 	_check(_player.global_position.y > 3.2,
 		"поднялся на второй этаж (высота %.2f)" % _player.global_position.y)
 
+	# Ограждение площадки второго этажа не даёт шагнуть в пролёт над первым маршем.
+	await _teleport(Vector3(11.0, 3.35, 0.7), -90.0)
+	await _walk(2.0)
+	_check(_player.global_position.y > 3.2 and _player.global_position.x < 12.0,
+		"ограждение держит на краю пролёта (x %.2f, высота %.2f)"
+		% [_player.global_position.x, _player.global_position.y])
+
 	print("\nИТОГ: %s" % ("все проверки пройдены" if _failures == 0 else "провалено: %d" % _failures))
 	quit(_failures)
 

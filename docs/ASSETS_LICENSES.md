@@ -8,9 +8,9 @@
 
 | Ассет | Путь | Как создан | Права |
 |---|---|---|---|
-| Модульный набор «Больница» v0.2 (13 моделей) | `assets/models/kits/hospital/` | Скрипт `tools/blender/build_hospital_kit.py` | Собственность проекта |
+| Модульный набор «Больница» v0.3 (21 модель) | `assets/models/kits/hospital/` | Скрипт `tools/blender/build_hospital_kit.py` | Собственность проекта |
 | Процедурные текстуры набора «Больница» (7 наборов × 3 карты) | `assets/textures/hospital/` | Скрипт `tools/blender/build_textures.py` | Собственность проекта |
-| Библиотека материалов «Больница» (17 материалов) | `assets/materials/hospital/` | Скрипт `tools/blender/build_hospital_kit.py` | Собственность проекта |
+| Библиотека материалов «Больница» (23 материала) | `assets/materials/hospital/` | Скрипт `tools/blender/build_hospital_kit.py` | Собственность проекта |
 
 ## Сторонние ассеты
 

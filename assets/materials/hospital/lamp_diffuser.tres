@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "lamp_diffuser"
+albedo_color = Color(0.950, 0.970, 0.950, 1.0)
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.95, 0.97, 0.95, 1)
+emission_energy_multiplier = 3.0

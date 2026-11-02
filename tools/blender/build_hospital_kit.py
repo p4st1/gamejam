@@ -1,4 +1,4 @@
-"""Модульный набор «Больница» v0.2 — генератор для Blender.
+"""Модульный набор «Больница» v0.3 — генератор для Blender.
 
 Строит модули (стены, углы, перекрытия, двери, лестницы, реквизит) и выгружает каждый в отдельный
 .glb. Пишет библиотеку материалов Godot (assets/materials/hospital/*.tres), которые ссылаются на
@@ -60,7 +60,16 @@ PALETTE = {
 	"brass": ((0.70, 0.55, 0.25), 0.35, 1.0, 1.0),
 	"oilcloth": ((0.35, 0.12, 0.10), 0.5, 0.0, 1.0),
 	"wood": ((0.45, 0.30, 0.18), 0.7, 0.0, 1.0),
+	"handrail": ((0.28, 0.16, 0.10), 0.4, 0.0, 1.0),
+	"ceramic": ((0.92, 0.92, 0.90), 0.15, 0.0, 1.0),
+	"mirror": ((0.80, 0.82, 0.82), 0.05, 1.0, 1.0),
+	"lamp_diffuser": ((0.95, 0.97, 0.95), 0.3, 0.0, 1.0),
+	"iv_bag": ((0.85, 0.90, 0.90), 0.2, 0.0, 0.4),
+	"sign_plate": ((0.90, 0.90, 0.88), 0.3, 0.0, 1.0),
 }
+
+# Светящиеся материалы: сила свечения.
+EMISSION = {"lamp_diffuser": 3.0}
 
 _materials = {}
 
@@ -86,6 +95,9 @@ def material(name):
 			mat.surface_render_method = "BLENDED"
 		if hasattr(mat, "blend_method"):
 			mat.blend_method = "BLEND"
+	if name in EMISSION:
+		bsdf.inputs["Emission Color"].default_value = (*[srgb_to_linear(c) for c in rgb], 1.0)
+		bsdf.inputs["Emission Strength"].default_value = EMISSION[name]
 	mat.diffuse_color = (*[srgb_to_linear(c) for c in rgb], alpha)
 	_materials[name] = mat
 	return mat
@@ -341,6 +353,128 @@ def build_bench():
 	return [mb.build("prop_bench"), col.build("prop_bench_col-colonly")]
 
 
+def build_stairs_railing():
+	"""Перила марша: стойки на каждой ступени и поручень. Та же точка привязки, что у марша;
+	стоят у края +Y (внутренняя сторона между маршами)."""
+	mb = MeshBuilder()
+	y, height = FLIGHT_WIDTH / 2 - 0.04, 0.9
+	run, rise = STEP_COUNT * STEP_RUN, STEP_COUNT * STEP_RISE
+	slope = rise / run
+
+	def rail_z(x):
+		return slope * x + STEP_RISE / 2 + height
+
+	for i in range(STEP_COUNT):
+		x = (i + 0.5) * STEP_RUN
+		mb.box((x - 0.01, y - 0.01, (i + 1) * STEP_RISE), (x + 0.01, y + 0.01, rail_z(x)), "metal_dark")
+	angle, length = math.atan2(rise, run), math.hypot(run, rise)
+	rail = (Matrix.Translation((run / 2, y, rail_z(run / 2))) @ Matrix.Rotation(-angle, 4, "Y"))
+	mb.box((-length / 2 - 0.1, -0.03, -0.02), (length / 2 + 0.1, 0.03, 0.03), "handrail", matrix=rail)
+	visual = mb.build("hosp_stairs_railing")
+	col = MeshBuilder()
+	wall = Matrix.Translation((run / 2, y, rise / 2 + 0.5)) @ Matrix.Rotation(-angle, 4, "Y")
+	col.box((-length / 2, -0.03, -0.5), (length / 2, 0.03, 0.5), "concrete", matrix=wall)
+	return [visual, col.build("hosp_stairs_railing_col-colonly")]
+
+
+def build_railing_straight():
+	"""Прямое ограждение 1,3 м (край площадки). Центр нижней грани, вдоль X."""
+	mb = MeshBuilder()
+	half, height = 0.65, 0.95
+	for i in range(11):
+		x = -half + 0.05 + i * (2 * half - 0.1) / 10
+		mb.box((x - 0.01, -0.01, 0), (x + 0.01, 0.01, height), "metal_dark")
+	mb.box((-half, -0.01, 0.1), (half, 0.01, 0.12), "metal_dark")
+	mb.box((-half, -0.03, height), (half, 0.03, height + 0.05), "handrail")
+	col = MeshBuilder()
+	col.box((-half, -0.03, 0), (half, 0.03, height + 0.05), "concrete")
+	return [mb.build("hosp_railing_straight"), col.build("hosp_railing_straight_col-colonly")]
+
+
+def build_ceiling_lamp():
+	"""Люминесцентный светильник. Точка привязки — потолок (верх корпуса), вдоль X."""
+	mb = MeshBuilder()
+	mb.box((-0.62, -0.08, -0.07), (0.62, 0.08, 0), "metal_white")
+	mb.box((-0.6, -0.065, -0.085), (0.6, 0.065, -0.07), "lamp_diffuser")
+	return [mb.build("prop_ceiling_lamp")]
+
+
+def build_radiator():
+	"""Чугунная батарея под окном. Точка привязки — как у стены (линия стены), батарея на стороне +Y."""
+	mb = MeshBuilder()
+	y0 = WALL_THICKNESS / 2 + 0.05
+	for i in range(10):
+		x = -0.45 + i * 0.1
+		mb.box((x, y0, 0.18), (x + 0.07, y0 + 0.1, 0.72), "metal_white")
+	mb.box((-0.46, y0 + 0.02, 0.24), (0.46, y0 + 0.08, 0.28), "metal_white")
+	mb.box((-0.46, y0 + 0.02, 0.62), (0.46, y0 + 0.08, 0.66), "metal_white")
+	# стояк сбоку от окна и подводки к батарее
+	mb.box((-0.84, y0 + 0.03, 0), (-0.81, y0 + 0.06, WALL_HEIGHT), "metal_white")
+	for z in (0.25, 0.63):
+		mb.box((-0.84, y0 + 0.035, z), (-0.46, y0 + 0.055, z + 0.02), "metal_white")
+	col = MeshBuilder()
+	col.box((-0.5, y0, 0.15), (0.5, y0 + 0.1, 0.75), "concrete")
+	return [mb.build("prop_radiator"), col.build("prop_radiator_col-colonly")]
+
+
+def build_sink():
+	"""Раковина с краном и зеркалом. Точка привязки — линия стены, всё на стороне +Y."""
+	mb = MeshBuilder()
+	y0 = WALL_THICKNESS / 2
+	mb.box((-0.25, y0, 0.66), (0.25, y0 + 0.42, 0.7), "ceramic")  # дно
+	for (x0, x1, ya, yb) in ((-0.25, -0.22, 0, 0.42), (0.22, 0.25, 0, 0.42), (-0.25, 0.25, 0, 0.03), (-0.25, 0.25, 0.39, 0.42)):
+		mb.box((x0, y0 + ya, 0.7), (x1, y0 + yb, 0.84), "ceramic")
+	mb.box((-0.04, y0 + 0.05, 0.4), (0.04, y0 + 0.13, 0.66), "ceramic")  # кронштейн
+	mb.box((-0.015, y0, 0.95), (0.015, y0 + 0.15, 0.98), "metal_white")  # кран
+	mb.box((-0.015, y0 + 0.13, 0.9), (0.015, y0 + 0.16, 0.98), "metal_white")
+	mb.box((-0.06, y0, 0.98), (0.06, y0 + 0.03, 1.02), "metal_white")
+	mb.box((-0.22, y0, 1.15), (0.22, y0 + 0.01, 1.6), "mirror")
+	col = MeshBuilder()
+	col.box((-0.25, y0, 0.4), (0.25, y0 + 0.42, 0.84), "concrete")
+	return [mb.build("prop_sink"), col.build("prop_sink_col-colonly")]
+
+
+def build_iv_stand():
+	"""Стойка для капельницы с флаконом."""
+	mb = MeshBuilder()
+	mb.box((-0.3, -0.02, 0.03), (0.3, 0.02, 0.06), "metal_white")
+	mb.box((-0.02, -0.3, 0.03), (0.02, 0.3, 0.06), "metal_white")
+	for x, y in ((-0.3, 0), (0.3, 0), (0, -0.3), (0, 0.3)):
+		mb.box((x - 0.02, y - 0.02, 0), (x + 0.02, y + 0.02, 0.03), "metal_dark")
+	mb.cylinder((0, 0, 0.06), 0.012, 1.84, "metal_white", segments=8)
+	mb.box((-0.15, -0.006, 1.86), (0.15, 0.006, 1.88), "metal_white")
+	mb.box((0.07, -0.025, 1.6), (0.15, 0.025, 1.83), "iv_bag")
+	col = MeshBuilder()
+	col.box((-0.15, -0.15, 0), (0.15, 0.15, 1.9), "concrete")
+	return [mb.build("prop_iv_stand"), col.build("prop_iv_stand_col-colonly")]
+
+
+def build_med_cabinet():
+	"""Медицинский шкаф со стеклянной дверцей. Точка привязки — линия стены, шкаф на стороне +Y."""
+	mb = MeshBuilder()
+	y0, w, d, h = WALL_THICKNESS / 2, 0.4, 0.4, 1.75
+	mb.box((-w, y0, 0.1), (w, y0 + 0.02, h), "metal_white")  # задняя стенка
+	mb.box((-w, y0, 0.1), (-w + 0.02, y0 + d, h), "metal_white")
+	mb.box((w - 0.02, y0, 0.1), (w, y0 + d, h), "metal_white")
+	mb.box((-w, y0, h - 0.02), (w, y0 + d, h), "metal_white")
+	for z in (0.1, 0.55, 0.95, 1.35):
+		mb.box((-w + 0.02, y0 + 0.02, z), (w - 0.02, y0 + d - 0.02, z + 0.02), "metal_white")
+	mb.box((-w + 0.03, y0 + d - 0.015, 0.13), (w - 0.03, y0 + d - 0.005, h - 0.03), "glass")
+	for x in (-w + 0.01, w - 0.05):
+		mb.box((x, y0 + 0.01, 0), (x + 0.04, y0 + d - 0.01, 0.1), "metal_white")  # ножки-цоколь
+	col = MeshBuilder()
+	col.box((-w, y0, 0), (w, y0 + d, h), "concrete")
+	return [mb.build("prop_med_cabinet"), col.build("prop_med_cabinet_col-colonly")]
+
+
+def build_sign_plate():
+	"""Табличка на стену 30 × 12 см (текст — Label3D в сцене). Точка привязки — центр, линия стены."""
+	mb = MeshBuilder()
+	y0 = WALL_THICKNESS / 2
+	mb.box((-0.15, y0, -0.06), (0.15, y0 + 0.012, 0.06), "sign_plate")
+	return [mb.build("prop_sign_plate")]
+
+
 MODULES = {
 	"hosp_floor": build_floor,
 	"hosp_wall": build_wall,
@@ -350,11 +484,19 @@ MODULES = {
 	"hosp_door": build_door,
 	"hosp_stairs_flight": build_stairs_flight,
 	"hosp_stairs_landing": build_stairs_landing,
+	"hosp_stairs_railing": build_stairs_railing,
+	"hosp_railing_straight": build_railing_straight,
 	"prop_bed": build_bed,
 	"prop_cabinet": build_cabinet,
 	"prop_oxygen_cylinder": build_oxygen_cylinder,
 	"prop_gurney": build_gurney,
 	"prop_bench": build_bench,
+	"prop_ceiling_lamp": build_ceiling_lamp,
+	"prop_radiator": build_radiator,
+	"prop_sink": build_sink,
+	"prop_iv_stand": build_iv_stand,
+	"prop_med_cabinet": build_med_cabinet,
+	"prop_sign_plate": build_sign_plate,
 }
 
 
@@ -408,6 +550,9 @@ def write_godot_materials():
 			lines.append(f"metallic = {metallic}")
 		if alpha < 1.0:
 			lines.append("transparency = 1")
+		if name in EMISSION:
+			lines += ["emission_enabled = true", f"emission = Color({rgb[0]}, {rgb[1]}, {rgb[2]}, 1)",
+				f"emission_energy_multiplier = {EMISSION[name]}"]
 		text = "[gd_resource type=\"StandardMaterial3D\" format=3]\n\n"
 		if resources:
 			text += "\n".join(resources) + "\n\n"
@@ -472,8 +617,14 @@ def render_preview(modules, path):
 	place(modules["prop_cabinet"], (1.35, 4.15, 0))
 	place(modules["prop_oxygen_cylinder"], (-0.9, 4.1, 0))
 	place(modules["prop_oxygen_cylinder"], (-0.6, 4.2, 0))
-	place(modules["prop_bench"], (-1.15, 1.8, 0), 90)
+	place(modules["prop_bench"], (-1.15, 1.6, 0), 90)
 	place(modules["prop_gurney"], (2.6, 0.2, 0), 90)
+	place(modules["prop_radiator"], (0, 4.5, 0), 180)
+	place(modules["prop_radiator"], (3, 4.5, 0), 180)
+	place(modules["prop_sink"], (-1.5, 3.4, 0), -90)
+	place(modules["prop_iv_stand"], (1.35, 2.7, 0))
+	place(modules["prop_ceiling_lamp"], (0.5, 1.5, WALL_HEIGHT), 90)
+	place(modules["prop_ceiling_lamp"], (2.5, 3.0, WALL_HEIGHT), 90)
 
 	scene = bpy.context.scene
 	world = bpy.data.worlds.new("PreviewWorld")
@@ -483,7 +634,7 @@ def render_preview(modules, path):
 	sun.data.energy = 3.0
 	sun.rotation_euler = (math.radians(55), 0, math.radians(200))
 	scene.collection.objects.link(sun)
-	for i, loc in enumerate(((0.5, 1.5, 3.0), (2.5, 3.0, 3.0))):
+	for i, loc in enumerate(((0.5, 1.5, 2.85), (2.5, 3.0, 2.85))):
 		lamp = bpy.data.objects.new(f"Lamp{i}", bpy.data.lights.new(f"Lamp{i}", "POINT"))
 		lamp.data.energy = 250
 		lamp.data.color = (0.95, 1.0, 0.96)

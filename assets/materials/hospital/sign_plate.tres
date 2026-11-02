@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "sign_plate"
+albedo_color = Color(0.900, 0.900, 0.880, 1.0)
+roughness = 0.3
