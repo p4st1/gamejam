@@ -113,12 +113,12 @@ def whitewash():
 	return albedo, height, roughness, 0.5
 
 
-def paint_green():
+def paint(base=(0.30, 0.45, 0.38)):
 	"""Масляная краска с полосами от валика и редкими сколами до побелки."""
 	streak = _upsample(rng.random((8, 8)), SIZE) * 0.3 + noise(4, 3) * 0.7
 	streak = 0.5 * streak + 0.5 * np.repeat(noise(64, 2)[:1, :], SIZE, axis=0)  # вертикальные мазки
 	chips = noise(16, 4) > 0.81
-	albedo = tint((0.30, 0.45, 0.38), 0.94 + streak * 0.08)
+	albedo = tint(base, 0.94 + streak * 0.08)
 	albedo[chips] = np.array((0.72, 0.72, 0.68))
 	height = streak * 0.3 + np.where(chips, -0.6, 0.0)
 	roughness = np.where(chips, 0.9, 0.3 + streak * 0.15)
@@ -168,14 +168,69 @@ def wood():
 	return albedo, height, roughness, 1.0
 
 
+def wall_tile():
+	"""Белый кафель шлюза: 8 × 8 плиток на текстуру (1 м → 12,5 см), тонкие светлые швы, блестит."""
+	tiles, grout = 8, 2
+	cell = SIZE // tiles
+	y, x = np.mgrid[0:SIZE, 0:SIZE]
+	in_grout = ((x % cell) < grout) | ((y % cell) < grout)
+	tile_id = (y // cell) * tiles + (x // cell)
+	per_tile = rng.uniform(0.96, 1.02, tiles * tiles)[tile_id]
+	stain = noise(4, 3)
+	albedo = tint((0.88, 0.89, 0.88), per_tile * (0.97 + stain * 0.05))
+	albedo[in_grout] = np.array((0.62, 0.62, 0.60))
+	height = np.where(in_grout, 0.0, 1.0)
+	roughness = np.where(in_grout, 0.8, 0.12 + stain * 0.1)
+	return albedo, height, roughness, 1.5
+
+
+def brick():
+	"""Силикатный кирпич фасада: 4 кирпича × 14 рядов на текстуру (1,04 × 1,05 м), перевязка в полкирпича."""
+	cols, rows, joint = 4, 14, 9
+	y, x = np.mgrid[0:SIZE, 0:SIZE]
+	row = (y * rows) // SIZE
+	row_y = (y * rows) % SIZE
+	shifted = (x + (row % 2) * (SIZE // cols // 2)) % SIZE
+	col = (shifted * cols) // SIZE
+	col_x = (shifted * cols) % SIZE
+	in_joint = (row_y < joint * rows) | (col_x < joint * cols)
+	brick_id = row * cols + col
+	per_brick = rng.uniform(0.88, 1.05, rows * cols)[brick_id]
+	dirt = noise(3, 4)
+	fine = noise(96, 2)
+	albedo = tint((0.78, 0.76, 0.70), per_brick * (0.9 + fine * 0.1) * (0.85 + dirt * 0.15))
+	albedo[in_joint] = np.array((0.50, 0.49, 0.46)) * (0.9 + fine[in_joint] * 0.1)[:, None]
+	height = np.where(in_joint, 0.0, 1.0) + fine * 0.15
+	roughness = np.where(in_joint, 0.95, 0.8 + fine * 0.1)
+	return albedo, height, roughness, 2.0
+
+
+def asphalt():
+	"""Асфальт двора: тёмный, с крупкой, пятнами и трещинами. Текстура на 4 × 4 м."""
+	big = noise(3, 4)
+	grit = noise(160, 1)
+	ridge = 1 - np.abs(noise(4, 3, persistence=0.35) * 2 - 1)  # «хребты» шума — трещины
+	cracks = ridge > 0.992
+	albedo = tint((0.24, 0.24, 0.23), 0.85 + big * 0.2 + grit * 0.12)
+	albedo[cracks] *= 0.6
+	height = grit * 0.5 - cracks * 0.8
+	roughness = 0.9 + grit * 0.08
+	return albedo, height, roughness, 2.0
+
+
 TEXTURES = {
 	"floor_tile": floor_tile,
 	"whitewash": whitewash,
-	"paint_green": paint_green,
+	"paint_green": paint,
 	"concrete": concrete,
 	"stair_tread": terrazzo,
 	"door_paint": door_paint,
 	"wood": wood,
+	# v0.4 — добавлены в конец, чтобы прежние текстуры не изменились (общее зерно случайностей)
+	"wall_tile": wall_tile,
+	"brick": brick,
+	"asphalt": asphalt,
+	"paint_grey": lambda: paint((0.45, 0.47, 0.47)),
 }
 
 

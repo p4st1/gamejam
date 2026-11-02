@@ -1,4 +1,4 @@
-"""Модульный набор «Больница» v0.3 — генератор для Blender.
+"""Модульный набор «Больница» v0.4 — генератор для Blender.
 
 Строит модули (стены, углы, перекрытия, двери, лестницы, реквизит) и выгружает каждый в отдельный
 .glb. Пишет библиотеку материалов Godot (assets/materials/hospital/*.tres), которые ссылаются на
@@ -66,10 +66,26 @@ PALETTE = {
 	"lamp_diffuser": ((0.95, 0.97, 0.95), 0.3, 0.0, 1.0),
 	"iv_bag": ((0.85, 0.90, 0.90), 0.2, 0.0, 0.4),
 	"sign_plate": ((0.90, 0.90, 0.88), 0.3, 0.0, 1.0),
+	# v0.4 — шлюз, подвал, рампа
+	"wall_tile": ((0.88, 0.89, 0.88), 0.2, 0.0, 1.0),
+	"brick": ((0.78, 0.76, 0.70), 0.9, 0.0, 1.0),
+	"asphalt": ((0.24, 0.24, 0.23), 0.95, 0.0, 1.0),
+	"paint_grey": ((0.45, 0.47, 0.47), 0.5, 0.0, 1.0),
+	"metal_grey": ((0.42, 0.44, 0.44), 0.45, 0.5, 1.0),
+	"tyvek": ((0.93, 0.94, 0.95), 0.8, 0.0, 1.0),
+	"cardboard": ((0.55, 0.42, 0.28), 0.9, 0.0, 1.0),
+	"wood_raw": ((0.70, 0.58, 0.40), 0.85, 0.0, 1.0),
+	"rubber_black": ((0.08, 0.08, 0.08), 0.8, 0.0, 1.0),
+	"hazard_yellow": ((0.85, 0.70, 0.10), 0.5, 0.0, 1.0),
+	"warning_red": ((0.70, 0.10, 0.08), 0.5, 0.0, 1.0),
+	"pipe_insulation": ((0.75, 0.74, 0.70), 0.9, 0.0, 1.0),
+	"pipe_rust": ((0.30, 0.20, 0.15), 0.7, 0.6, 1.0),
+	"roof_metal": ((0.55, 0.57, 0.58), 0.4, 0.8, 1.0),
+	"lamp_warm": ((1.00, 0.85, 0.60), 0.3, 0.0, 1.0),
 }
 
 # Светящиеся материалы: сила свечения.
-EMISSION = {"lamp_diffuser": 3.0}
+EMISSION = {"lamp_diffuser": 3.0, "lamp_warm": 2.5}
 
 _materials = {}
 
@@ -117,8 +133,9 @@ class MeshBuilder:
 			self.material_names.append(name)
 		return self.material_names.index(name)
 
-	def box(self, mn, mx, mat, top=None, bottom=None, matrix=None):
-		"""Коробка от угла mn до угла mx. top/bottom — отдельные материалы верхней/нижней грани."""
+	def box(self, mn, mx, mat, top=None, bottom=None, matrix=None, faces=None):
+		"""Коробка от угла mn до угла mx. top/bottom — отдельные материалы верхней/нижней грани;
+		faces — материалы граней по направлению нормали: {"+y": ..., "-y": ...}."""
 		size = Vector(mx) - Vector(mn)
 		center = (Vector(mx) + Vector(mn)) / 2
 		verts = bmesh.ops.create_cube(self.bm, size=1.0)["verts"]
@@ -126,27 +143,36 @@ class MeshBuilder:
 		if matrix is not None:
 			transform = matrix @ transform
 		bmesh.ops.transform(self.bm, matrix=transform, verts=verts)
-		self._assign(verts, mat, top, bottom)
+		faces = dict(faces or {})
+		if top:
+			faces["+z"] = top
+		if bottom:
+			faces["-z"] = bottom
+		self._assign(verts, mat, faces)
 
-	def cylinder(self, center, radius, height, mat, segments=16):
-		"""Вертикальный цилиндр; center — центр нижнего основания."""
+	def cylinder(self, center, radius, height, mat, segments=16, matrix=None):
+		"""Цилиндр вдоль Z; center — центр нижнего основания. matrix — дополнительный поворот/сдвиг."""
+		transform = Matrix.Translation(Vector(center) + Vector((0, 0, height / 2)))
+		if matrix is not None:
+			transform = matrix @ transform
 		verts = bmesh.ops.create_cone(
 			self.bm, cap_ends=True, segments=segments,
-			radius1=radius, radius2=radius, depth=height,
-			matrix=Matrix.Translation(Vector(center) + Vector((0, 0, height / 2))),
+			radius1=radius, radius2=radius, depth=height, matrix=transform,
 		)["verts"]
 		self._assign(verts, mat)
+		axis = (transform.to_3x3() @ Vector((0, 0, 1))).normalized()
 		for face in {f for v in verts for f in v.link_faces}:
-			face.smooth = abs(face.normal.z) < 0.5
+			face.smooth = abs(face.normal.dot(axis)) < 0.5
 
-	def _assign(self, verts, mat, top=None, bottom=None):
+	def _assign(self, verts, mat, faces=None):
 		self.bm.normal_update()
 		for face in {f for v in verts for f in v.link_faces}:
 			name = mat
-			if top and face.normal.z > 0.5:
-				name = top
-			elif bottom and face.normal.z < -0.5:
-				name = bottom
+			if faces:
+				n = face.normal
+				axis = max(range(3), key=lambda i: abs(n[i]))
+				key = ("+" if n[axis] > 0 else "-") + "xyz"[axis]
+				name = faces.get(key, mat)
 			face.material_index = self._index(name)
 
 	def build(self, name):
@@ -178,13 +204,31 @@ def _project_uvs(bm):
 				loop[uv].uv = (co.x, co.y)
 
 
-def wall_piece(mb, x0, x1, z0, z1):
-	"""Участок стены: краска до PAINT_HEIGHT, побелка выше."""
-	t = WALL_THICKNESS / 2
-	if z0 < PAINT_HEIGHT:
-		mb.box((x0, -t, z0), (x1, t, min(z1, PAINT_HEIGHT)), "paint_green")
-	if z1 > PAINT_HEIGHT:
-		mb.box((x0, -t, max(z0, PAINT_HEIGHT)), (x1, t, z1), "whitewash")
+# Отделка стен: полосы (верхняя граница полосы, материал) снизу вверх; None — до верха.
+STYLES = {
+	"paint": ((PAINT_HEIGHT, "paint_green"), (None, "whitewash")),  # палаты, коридоры
+	"tile": ((1.8, "wall_tile"), (None, "whitewash")),               # шлюз, процедурные
+	"basement": ((1.2, "paint_grey"), (None, "whitewash")),          # подвал, склад
+	"brick": ((None, "brick"),),                                     # фасад
+	"concrete": ((None, "concrete"),),                               # стены в грунте
+}
+
+
+def style_material(style, z):
+	for limit, mat in STYLES[style]:
+		if limit is None or z < limit:
+			return mat
+
+
+def wall_piece(mb, x0, x1, z0, z1, inner="paint", outer=None, t=WALL_THICKNESS / 2):
+	"""Участок стены. inner — отделка стороны +Y (внутренняя), outer — стороны −Y (по умолчанию та же)."""
+	outer = outer or inner
+	cuts = sorted({z0, z1} | {lim for st in (inner, outer) for lim, _ in STYLES[st]
+		if lim is not None and z0 < lim < z1})
+	for a, b in zip(cuts, cuts[1:]):
+		mid = (a + b) / 2
+		mat = style_material(inner, mid)
+		mb.box((x0, -t, a), (x1, t, b), mat, faces={"+y": mat, "-y": style_material(outer, mid)})
 
 
 # --- Модули: каждая функция возвращает список объектов одного .glb --------------------------------
@@ -251,6 +295,50 @@ def build_door():
 	mb.box((0, -0.025, 0.01), (width, 0.025, DOOR_HEIGHT - FRAME - 0.01), "door_paint")
 	mb.box((width - 0.12, -0.06, 0.95), (width - 0.08, 0.06, 1.05), "metal_dark")
 	return [mb.build("hosp_door-col")]
+
+
+def make_wall(name, inner="paint", outer=None):
+	def build():
+		mb = MeshBuilder()
+		wall_piece(mb, -CELL / 2, CELL / 2, 0, WALL_HEIGHT, inner, outer)
+		return [mb.build(name + "-col")]
+	return build
+
+
+def make_wall_opening(name, width, height, inner="paint", outer=None, frame="frame_paint"):
+	"""Стена с проёмом (дверь, ворота) по центру."""
+	def build():
+		mb = MeshBuilder()
+		h, d = CELL / 2, width / 2
+		wall_piece(mb, -h, -d, 0, WALL_HEIGHT, inner, outer)
+		wall_piece(mb, d, h, 0, WALL_HEIGHT, inner, outer)
+		wall_piece(mb, -d, d, height, WALL_HEIGHT, inner, outer)
+		t = WALL_THICKNESS / 2 + 0.02
+		mb.box((-d, -t, 0), (-d + FRAME, t, height), frame)
+		mb.box((d - FRAME, -t, 0), (d, t, height), frame)
+		mb.box((-d, -t, height - FRAME), (d, t, height), frame)
+		return [mb.build(name + "-col")]
+	return build
+
+
+def make_corner(name, style):
+	def build():
+		mb = MeshBuilder()
+		t = WALL_THICKNESS / 2
+		wall_piece(mb, -t, t, 0, WALL_HEIGHT, style, style, t)
+		return [mb.build(name + "-col")]
+	return build
+
+
+def make_door_leaf(name, mat, opening=DOOR_WIDTH, height=DOOR_HEIGHT):
+	"""Полотно двери/створка ворот. Ось — на петлях (x = 0), полотно вдоль +X."""
+	def build():
+		mb = MeshBuilder()
+		width = opening - 2 * FRAME - 0.02
+		mb.box((0, -0.025, 0.01), (width, 0.025, height - FRAME - 0.01), mat)
+		mb.box((width - 0.12, -0.06, 0.95), (width - 0.08, 0.06, 1.05), "metal_dark")
+		return [mb.build(name + "-col")]
+	return build
 
 
 def build_stairs_flight():
@@ -353,11 +441,15 @@ def build_bench():
 	return [mb.build("prop_bench"), col.build("prop_bench_col-colonly")]
 
 
-def build_stairs_railing():
+def make_stairs_railing(name, side=1):
 	"""Перила марша: стойки на каждой ступени и поручень. Та же точка привязки, что у марша;
-	стоят у края +Y (внутренняя сторона между маршами)."""
+	side=1 — у края +Y (внутренняя сторона между маршами), side=−1 — у края −Y."""
+	return lambda: _stairs_railing(name, side)
+
+
+def _stairs_railing(name, side):
 	mb = MeshBuilder()
-	y, height = FLIGHT_WIDTH / 2 - 0.04, 0.9
+	y, height = side * (FLIGHT_WIDTH / 2 - 0.04), 0.9
 	run, rise = STEP_COUNT * STEP_RUN, STEP_COUNT * STEP_RISE
 	slope = rise / run
 
@@ -370,11 +462,11 @@ def build_stairs_railing():
 	angle, length = math.atan2(rise, run), math.hypot(run, rise)
 	rail = (Matrix.Translation((run / 2, y, rail_z(run / 2))) @ Matrix.Rotation(-angle, 4, "Y"))
 	mb.box((-length / 2 - 0.1, -0.03, -0.02), (length / 2 + 0.1, 0.03, 0.03), "handrail", matrix=rail)
-	visual = mb.build("hosp_stairs_railing")
+	visual = mb.build(name)
 	col = MeshBuilder()
 	wall = Matrix.Translation((run / 2, y, rise / 2 + 0.5)) @ Matrix.Rotation(-angle, 4, "Y")
 	col.box((-length / 2, -0.03, -0.5), (length / 2, 0.03, 0.5), "concrete", matrix=wall)
-	return [visual, col.build("hosp_stairs_railing_col-colonly")]
+	return [visual, col.build(name + "_col-colonly")]
 
 
 def build_railing_straight():
@@ -475,6 +567,227 @@ def build_sign_plate():
 	return [mb.build("prop_sign_plate")]
 
 
+# --- v0.4: шлюз, подвал, рампа -------------------------------------------------------------------
+
+def build_floor_concrete():
+	"""Перекрытие с бетонным полом (подвал, склад)."""
+	mb = MeshBuilder()
+	h = CELL / 2
+	mb.box((-h, -h, -SLAB), (h, h, 0), "concrete", bottom="ceiling")
+	return [mb.build("hosp_floor_concrete-col")]
+
+
+def build_floor_half():
+	"""Половина перекрытия 3 × 1,5 м (край над лестничным проёмом). Центр половины, верх на нуле."""
+	mb = MeshBuilder()
+	mb.box((-CELL / 2, -CELL / 4, -SLAB), (CELL / 2, CELL / 4, 0), "concrete", top="concrete", bottom="ceiling")
+	return [mb.build("hosp_floor_half-col")]
+
+
+def build_beam():
+	"""Ригель 3 × 0,2 × 0,2 м — закрывает торец перекрытия там, где пола нет. Верх на нуле."""
+	mb = MeshBuilder()
+	mb.box((-CELL / 2, -WALL_THICKNESS / 2, -SLAB), (CELL / 2, WALL_THICKNESS / 2, 0), "concrete")
+	return [mb.build("hosp_beam-col")]
+
+
+def build_stairs_landing_half():
+	"""Узкая площадка 1,4 × 1,3 м — только под шириной марша."""
+	mb = MeshBuilder()
+	mb.box((-0.7, -0.65, -SLAB), (0.7, 0.65, 0), "concrete", top="stair_tread", bottom="ceiling")
+	return [mb.build("hosp_stairs_landing_half-col")]
+
+
+DOCK_HEIGHT = 1.1
+
+
+def build_dock_platform():
+	"""Погрузочная рампа 3 × 3 м высотой 1,1 м. Центр, верх на нуле; отбойники — на стороне −Y (к двору)."""
+	mb = MeshBuilder()
+	h = CELL / 2
+	mb.box((-h, -h, -DOCK_HEIGHT), (h, h, 0), "concrete")
+	mb.box((-h, -h - 0.01, -0.06), (h, -h + 0.05, 0), "metal_grey")  # уголок по кромке
+	for x in (-0.9, 0.9):
+		mb.box((x - 0.15, -h - 0.12, -0.75), (x + 0.15, -h, -0.25), "rubber_black")
+	return [mb.build("hosp_dock_platform-col")]
+
+
+def build_dock_steps():
+	"""Лестница на рампу: 5 ступеней по 0,22 м, ширина 1,2 м, подъём вдоль +X; пандус-коллизия."""
+	mb = MeshBuilder()
+	w, rise, run, n = 0.6, DOCK_HEIGHT / 5, 0.3, 5
+	for i in range(n):
+		mb.box((i * run, -w, 0), ((i + 1) * run, w, (i + 1) * rise), "concrete", top="concrete")
+	angle, length = math.atan2(DOCK_HEIGHT, n * run), math.hypot(DOCK_HEIGHT, n * run)
+	ramp = MeshBuilder()
+	m = (Matrix.Translation((n * run / 2, 0, DOCK_HEIGHT / 2)) @ Matrix.Rotation(-angle, 4, "Y")
+		@ Matrix.Translation((0, 0, -0.05)))
+	ramp.box((-length / 2, -w, -0.05), (length / 2, w, 0.05), "concrete", matrix=m)
+	return [mb.build("hosp_dock_steps"), ramp.build("hosp_dock_steps_ramp-colonly")]
+
+
+def build_dock_canopy():
+	"""Навес над рампой, секция 3 м. Привязка — линия стены на уровне рампы; навес на стороне −Y (к двору)."""
+	mb = MeshBuilder()
+	h, depth, z_wall, z_front = CELL / 2, 3.0, 3.0, 2.7
+	angle = math.atan2(z_wall - z_front, depth)
+	roof = Matrix.Translation((0, -depth / 2 - WALL_THICKNESS / 2, (z_wall + z_front) / 2)) @ Matrix.Rotation(angle, 4, "X")
+	mb.box((-h, -depth / 2, -0.02), (h, depth / 2, 0.02), "roof_metal", matrix=roof)
+	y_front = -depth - WALL_THICKNESS / 2 + 0.1
+	mb.box((-h, y_front - 0.05, z_front - 0.15), (h, y_front + 0.05, z_front - 0.03), "metal_grey")  # прогон
+	mb.box((-0.05, y_front - 0.05, 0), (0.05, y_front + 0.05, z_front - 0.03), "metal_grey")  # стойка
+	col = MeshBuilder()
+	col.box((-0.06, y_front - 0.06, 0), (0.06, y_front + 0.06, z_front), "concrete")
+	return [mb.build("hosp_dock_canopy"), col.build("hosp_dock_canopy_col-colonly")]
+
+
+def build_ground_asphalt():
+	"""Асфальт двора, плита 6 × 6 м. Центр, верх на нуле."""
+	mb = MeshBuilder()
+	mb.box((-3, -3, -0.2), (3, 3, 0), "concrete", top="asphalt")
+	return [mb.build("ext_ground_asphalt-col")]
+
+
+def _boxes_on(mb, x0, x1, y0, y1, z, seed):
+	"""Ставит коробки в ряд на полку/поддон; размеры чуть разные, но всегда одинаковые при пересборке."""
+	x = x0
+	k = seed
+	while True:
+		w = 0.3 + (k * 37 % 5) * 0.03
+		hgt = 0.2 + (k * 53 % 4) * 0.04
+		if x + w > x1:
+			break
+		d = min(y1 - y0, 0.3 + (k * 29 % 3) * 0.05)
+		mb.box((x, y0, z), (x + w - 0.02, y0 + d, z + hgt), "cardboard")
+		mb.box((x + (w - 0.02) / 2 - 0.02, y0, z + hgt), (x + (w - 0.02) / 2 + 0.02, y0 + d, z + hgt + 0.002), "tyvek")
+		x += w
+		k += 1
+
+
+def build_shelf_rack():
+	"""Металлический стеллаж 1,8 × 0,5 × 2 м с коробками. Центр низа; глубина вдоль Y."""
+	mb = MeshBuilder()
+	w, d, h = 0.9, 0.25, 2.0
+	for x in (-w, w - 0.04):
+		for y in (-d, d - 0.04):
+			mb.box((x, y, 0), (x + 0.04, y + 0.04, h), "metal_grey")
+	for i, z in enumerate((0.1, 0.6, 1.1, 1.6, 1.98)):
+		mb.box((-w, -d, z), (w, d, z + 0.02), "metal_grey")
+		if z < 1.9:
+			_boxes_on(mb, -w + 0.05, w - 0.05, -d + 0.03, d - 0.03, z + 0.02, i * 3 + 1)
+	col = MeshBuilder()
+	col.box((-w, -d, 0), (w, d, h), "concrete")
+	return [mb.build("prop_shelf_rack"), col.build("prop_shelf_rack_col-colonly")]
+
+
+def build_box():
+	"""Картонная коробка 0,4 × 0,3 × 0,3 м с лентой."""
+	mb = MeshBuilder()
+	mb.box((-0.2, -0.15, 0), (0.2, 0.15, 0.3), "cardboard")
+	mb.box((-0.2, -0.02, 0.3), (0.2, 0.02, 0.302), "tyvek")
+	return [mb.build("prop_box-col")]
+
+
+def _pallet(mb):
+	for y in (-0.38, -0.02, 0.32):
+		mb.box((-0.6, y, 0), (0.6, y + 0.06, 0.1), "wood_raw")
+	for i in range(7):
+		x = -0.6 + i * 0.19
+		mb.box((x, -0.4, 0.1), (x + 0.12, 0.4, 0.13), "wood_raw")
+
+
+def build_pallet():
+	"""Деревянный поддон 1,2 × 0,8 м."""
+	mb = MeshBuilder()
+	_pallet(mb)
+	return [mb.build("prop_pallet-col")]
+
+
+def build_pallet_boxes():
+	"""Поддон с коробками в два яруса — укрытие высотой ~1 м."""
+	mb = MeshBuilder()
+	_pallet(mb)
+	for layer in range(2):
+		z = 0.13 + layer * 0.42
+		for row, (y0, y1) in enumerate(((-0.4, -0.01), (0.01, 0.4))):
+			_boxes_on(mb, -0.6, 0.6, y0, y1, z, layer * 5 + row * 2 + 7)
+	col = MeshBuilder()
+	col.box((-0.6, -0.4, 0), (0.6, 0.4, 0.95), "concrete")
+	return [mb.build("prop_pallet_boxes"), col.build("prop_pallet_boxes_col-colonly")]
+
+
+def build_coat_rack_suits():
+	"""Настенная вешалка с защитными комбинезонами. Привязка — линия стены, всё на стороне +Y."""
+	mb = MeshBuilder()
+	y0 = WALL_THICKNESS / 2
+	mb.box((-0.9, y0, 1.9), (0.9, y0 + 0.03, 1.98), "wood")
+	for i in range(4):
+		x = -0.6 + i * 0.4
+		mb.box((x - 0.01, y0, 1.88), (x + 0.01, y0 + 0.08, 1.92), "metal_dark")  # крючок
+		yy = y0 + 0.05
+		mb.box((x - 0.12, yy, 1.65), (x + 0.12, yy + 0.12, 1.88), "tyvek")  # капюшон
+		mb.box((x - 0.2, yy, 0.95), (x + 0.2, yy + 0.14, 1.67), "tyvek")  # туловище
+		mb.box((x - 0.19, yy + 0.01, 0.25), (x - 0.02, yy + 0.13, 0.97), "tyvek")  # штанины
+		mb.box((x + 0.02, yy + 0.01, 0.25), (x + 0.19, yy + 0.13, 0.97), "tyvek")
+	col = MeshBuilder()
+	col.box((-0.9, y0, 0.25), (0.9, y0 + 0.2, 1.98), "concrete")
+	return [mb.build("prop_coat_rack_suits"), col.build("prop_coat_rack_suits_col-colonly")]
+
+
+def build_pipe_run():
+	"""Трубы под потолком, секция 3 м вдоль X: две голые и одна в изоляции, кронштейны.
+	Привязка — линия стены на высоте оси труб; трубы на стороне +Y."""
+	mb = MeshBuilder()
+	y0 = WALL_THICKNESS / 2
+	along_x = Matrix.Rotation(math.radians(90), 4, "Y")
+	for y, z, r, mat in ((y0 + 0.12, 0.0, 0.05, "pipe_rust"), (y0 + 0.28, 0.0, 0.05, "pipe_rust"),
+			(y0 + 0.2, 0.22, 0.1, "pipe_insulation")):
+		mb.cylinder((-z, y, -CELL / 2), r, CELL, mat, segments=12, matrix=along_x)
+	for x in (-0.75, 0.75):
+		mb.box((x - 0.02, y0, -0.07), (x + 0.02, y0 + 0.36, -0.05), "metal_dark")
+		mb.box((x - 0.02, y0, 0.08), (x + 0.02, y0 + 0.32, 0.1), "metal_dark")
+	return [mb.build("prop_pipe_run")]
+
+
+def build_bulkhead_lamp():
+	"""Плафон в решётке (подвал, рампа). Привязка — потолок, висит вниз."""
+	mb = MeshBuilder()
+	mb.cylinder((0, 0, -0.04), 0.12, 0.04, "metal_dark", segments=12)
+	mb.cylinder((0, 0, -0.15), 0.09, 0.11, "lamp_warm", segments=12)
+	for a in range(4):
+		m = Matrix.Rotation(math.radians(45 + 90 * a), 4, "Z")
+		mb.box((0.088, -0.006, -0.16), (0.1, 0.006, -0.04), "metal_dark", matrix=m)
+	mb.box((-0.1, -0.006, -0.165), (0.1, 0.006, -0.155), "metal_dark")
+	mb.box((-0.006, -0.1, -0.165), (0.006, 0.1, -0.155), "metal_dark")
+	return [mb.build("prop_bulkhead_lamp")]
+
+
+def build_bin_hazard():
+	"""Жёлтый бак для медицинских отходов класса Б."""
+	mb = MeshBuilder()
+	mb.cylinder((0, 0, 0), 0.2, 0.55, "hazard_yellow", segments=16)
+	mb.cylinder((0, 0, 0.55), 0.21, 0.04, "hazard_yellow", segments=16)
+	mb.box((-0.06, -0.26, 0), (0.06, -0.18, 0.03), "metal_dark")  # педаль
+	col = MeshBuilder()
+	col.box((-0.21, -0.21, 0), (0.21, 0.21, 0.59), "concrete")
+	return [mb.build("prop_bin_hazard"), col.build("prop_bin_hazard_col-colonly")]
+
+
+def build_floor_line():
+	"""Красная линия на полу 3 м — граница «чистой» и «грязной» зоны."""
+	mb = MeshBuilder()
+	mb.box((-CELL / 2, -0.04, 0), (CELL / 2, 0.04, 0.003), "warning_red")
+	return [mb.build("prop_floor_line")]
+
+
+def build_sign_plate_red():
+	"""Красная табличка 40 × 15 см (текст — Label3D). Привязка — центр, линия стены, сторона +Y."""
+	mb = MeshBuilder()
+	y0 = WALL_THICKNESS / 2
+	mb.box((-0.2, y0, -0.075), (0.2, y0 + 0.012, 0.075), "warning_red")
+	return [mb.build("prop_sign_plate_red")]
+
+
 MODULES = {
 	"hosp_floor": build_floor,
 	"hosp_wall": build_wall,
@@ -484,7 +797,7 @@ MODULES = {
 	"hosp_door": build_door,
 	"hosp_stairs_flight": build_stairs_flight,
 	"hosp_stairs_landing": build_stairs_landing,
-	"hosp_stairs_railing": build_stairs_railing,
+	"hosp_stairs_railing": make_stairs_railing("hosp_stairs_railing", 1),
 	"hosp_railing_straight": build_railing_straight,
 	"prop_bed": build_bed,
 	"prop_cabinet": build_cabinet,
@@ -497,6 +810,43 @@ MODULES = {
 	"prop_iv_stand": build_iv_stand,
 	"prop_med_cabinet": build_med_cabinet,
 	"prop_sign_plate": build_sign_plate,
+	# v0.4 — отделка стен: _tile (кафель), _bsmt (подвал); _ext — снаружи кирпич/бетон
+	"hosp_wall_tile": make_wall("hosp_wall_tile", "tile"),
+	"hosp_wall_tile_ext": make_wall("hosp_wall_tile_ext", "tile", "brick"),
+	"hosp_wall_door_tile": make_wall_opening("hosp_wall_door_tile", DOOR_WIDTH, DOOR_HEIGHT, "tile"),
+	"hosp_wall_door_tile_bsmt": make_wall_opening("hosp_wall_door_tile_bsmt", DOOR_WIDTH, DOOR_HEIGHT, "tile",
+		"basement"),
+	"hosp_wall_corner_tile": make_corner("hosp_wall_corner_tile", "tile"),
+	"hosp_wall_bsmt": make_wall("hosp_wall_bsmt", "basement"),
+	"hosp_wall_bsmt_ext": make_wall("hosp_wall_bsmt_ext", "basement", "brick"),
+	"hosp_wall_bsmt_ground": make_wall("hosp_wall_bsmt_ground", "basement", "concrete"),
+	"hosp_wall_door_bsmt": make_wall_opening("hosp_wall_door_bsmt", DOOR_WIDTH, DOOR_HEIGHT, "basement",
+		frame="metal_grey"),
+	"hosp_wall_gate_bsmt_ext": make_wall_opening("hosp_wall_gate_bsmt_ext", 2.4, 2.4, "basement", "brick",
+		frame="metal_grey"),
+	"hosp_wall_corner_bsmt": make_corner("hosp_wall_corner_bsmt", "basement"),
+	"hosp_wall_corner_brick": make_corner("hosp_wall_corner_brick", "brick"),
+	"hosp_door_metal": make_door_leaf("hosp_door_metal", "metal_grey"),
+	"hosp_gate_leaf": make_door_leaf("hosp_gate_leaf", "metal_grey", 1.2 + 2 * FRAME, 2.4),
+	"hosp_floor_concrete": build_floor_concrete,
+	"hosp_floor_half": build_floor_half,
+	"hosp_beam": build_beam,
+	"hosp_stairs_landing_half": build_stairs_landing_half,
+	"hosp_stairs_railing_l": make_stairs_railing("hosp_stairs_railing_l", -1),
+	"hosp_dock_platform": build_dock_platform,
+	"hosp_dock_steps": build_dock_steps,
+	"hosp_dock_canopy": build_dock_canopy,
+	"ext_ground_asphalt": build_ground_asphalt,
+	"prop_shelf_rack": build_shelf_rack,
+	"prop_box": build_box,
+	"prop_pallet": build_pallet,
+	"prop_pallet_boxes": build_pallet_boxes,
+	"prop_coat_rack_suits": build_coat_rack_suits,
+	"prop_pipe_run": build_pipe_run,
+	"prop_bulkhead_lamp": build_bulkhead_lamp,
+	"prop_bin_hazard": build_bin_hazard,
+	"prop_floor_line": build_floor_line,
+	"prop_sign_plate_red": build_sign_plate_red,
 }
 
 
@@ -522,6 +872,10 @@ TEXTURED = {
 	"door_paint": ("door_paint", 1.0),
 	"frame_paint": ("door_paint", 1.0),
 	"wood": ("wood", 1.0),
+	"wall_tile": ("wall_tile", 1.0),
+	"brick": ("brick", (1 / 1.04, 1 / 1.05)),
+	"asphalt": ("asphalt", 0.25),
+	"paint_grey": ("paint_grey", 0.5),
 }
 TEXTURE_DIR = "assets/textures/hospital"
 MATERIAL_DIR = "assets/materials/hospital"
@@ -542,7 +896,8 @@ def write_godot_materials():
 					("roughness", "roughness_texture"))):
 				resources.append(f'[ext_resource type="Texture2D" path="res://{TEXTURE_DIR}/{texture}_{kind}.png" id="{i + 1}_{kind}"]')
 				lines.append(f'{prop} = ExtResource("{i + 1}_{kind}")')
-			lines += ["normal_enabled = true", "roughness = 1.0", f"uv1_scale = Vector3({scale}, {scale}, {scale})"]
+			sx, sy = scale if isinstance(scale, tuple) else (scale, scale)
+			lines += ["normal_enabled = true", "roughness = 1.0", f"uv1_scale = Vector3({sx:g}, {sy:g}, 1)"]
 		else:
 			lines.append(f"roughness = {roughness}")
 		lines.insert(0, f'albedo_color = Color({color[0]:.3f}, {color[1]:.3f}, {color[2]:.3f}, {color[3]})')
@@ -570,7 +925,8 @@ def apply_preview_textures():
 		bsdf = nodes["Principled BSDF"]
 		coords = nodes.new("ShaderNodeTexCoord")
 		mapping = nodes.new("ShaderNodeMapping")
-		mapping.inputs["Scale"].default_value = (scale, scale, scale)
+		sx, sy = scale if isinstance(scale, tuple) else (scale, scale)
+		mapping.inputs["Scale"].default_value = (sx, sy, 1)
 		links.new(coords.outputs["UV"], mapping.inputs["Vector"])
 		for kind, socket in (("albedo", "Base Color"), ("roughness", "Roughness"), ("normal", None)):
 			node = nodes.new("ShaderNodeTexImage")
@@ -586,8 +942,9 @@ def apply_preview_textures():
 				links.new(normal_map.outputs["Normal"], bsdf.inputs["Normal"])
 
 
-def place(objects, location, rotation_z=0.0):
+def place(objects, location, rotation_z=0.0, scene=None):
 	"""Ставит копию модуля (меши общие) в сцену превью. Координаты — Blender (Z вверх)."""
+	scene = scene or bpy.context.scene
 	for obj in objects:
 		if obj.name.endswith("-colonly"):
 			continue
@@ -595,7 +952,65 @@ def place(objects, location, rotation_z=0.0):
 		copy.hide_render = False
 		copy.location = location
 		copy.rotation_euler = (0, 0, math.radians(rotation_z))
-		bpy.context.scene.collection.objects.link(copy)
+		scene.collection.objects.link(copy)
+
+
+def godot_to_blender(pos):
+	"""Godot (X, Y вверх, Z) → Blender (X, Y, Z вверх). Поворот вокруг Y Godot = поворот вокруг Z Blender."""
+	x, y, z = pos
+	return (x, -z, y)
+
+
+def _set_engine(scene):
+	for engine in ("BLENDER_EEVEE", "BLENDER_EEVEE_NEXT", "BLENDER_WORKBENCH"):
+		try:
+			scene.render.engine = engine
+			return
+		except TypeError:
+			continue
+
+
+# Ракурсы превью служебного блока: (суффикс файла, камера, точка взгляда — в координатах Godot, наружный?)
+SERVICE_SHOTS = (
+	("airlock", (-7.0, 1.65, 0.3), (-2.0, 1.2, -0.6), False),
+	("dock", (10.5, 0.9, 9.5), (1.5, 0.6, 2.0), True),
+	("basement", (-1.0, -1.65, -0.3), (10.0, -2.3, -0.9), False),
+)
+
+
+def render_layout_previews(modules, base_path):
+	"""Превью служебного блока по общей расстановке tools/hospital_layouts.py."""
+	sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+	import hospital_layouts
+	layout = hospital_layouts.service_layout()
+	for suffix, cam_pos, target, outdoor in SERVICE_SHOTS:
+		scene = bpy.data.scenes.new(f"Preview_{suffix}")
+		for _, _, module, pos, rot in layout["placements"]:
+			place(modules[module], godot_to_blender(pos), rot, scene)
+		for name, pos, color, energy, _ in layout["lights"]:
+			lamp = bpy.data.objects.new(name, bpy.data.lights.new(name, "POINT"))
+			lamp.data.energy = 220 * energy
+			lamp.data.color = color
+			lamp.location = godot_to_blender(pos)
+			scene.collection.objects.link(lamp)
+		world = bpy.data.worlds.new(f"World_{suffix}")
+		world.color = (0.45, 0.48, 0.52) if outdoor else (0.04, 0.04, 0.045)
+		scene.world = world
+		sun = bpy.data.objects.new(f"Sun_{suffix}", bpy.data.lights.new(f"Sun_{suffix}", "SUN"))
+		sun.data.energy = 3.0 if outdoor else 0.5
+		sun.rotation_euler = (math.radians(50), 0, math.radians(30))
+		scene.collection.objects.link(sun)
+		cam = bpy.data.objects.new(f"Cam_{suffix}", bpy.data.cameras.new(f"Cam_{suffix}"))
+		cam.data.lens = 18
+		cam.location = godot_to_blender(cam_pos)
+		cam.rotation_euler = (Vector(godot_to_blender(target)) - cam.location).to_track_quat("-Z", "Y").to_euler()
+		scene.collection.objects.link(cam)
+		scene.camera = cam
+		scene.render.resolution_x, scene.render.resolution_y = 1600, 900
+		scene.render.filepath = f"{base_path}_{suffix}.png"
+		_set_engine(scene)
+		bpy.ops.render.render(write_still=True, scene=scene.name)
+		print(f"[hospital_kit] превью: {scene.render.filepath}")
 
 
 def render_preview(modules, path):
@@ -678,6 +1093,7 @@ def main():
 		apply_preview_textures()
 		render_preview(modules, preview)
 		print(f"[hospital_kit] превью: {preview}")
+		render_layout_previews(modules, os.path.splitext(preview)[0])
 
 
 main()

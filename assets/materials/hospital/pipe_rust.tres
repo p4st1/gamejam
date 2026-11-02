@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "pipe_rust"
+albedo_color = Color(0.300, 0.200, 0.150, 1.0)
+roughness = 0.7
+metallic = 0.6

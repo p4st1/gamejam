@@ -1,0 +1,713 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
+[ext_resource type="Script" path="res://scripts/debug/debug_overlay.gd" id="2_overlay"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/ext_ground_asphalt.glb" id="3_ext_ground_asphalt"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_beam.glb" id="4_hosp_beam"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_dock_canopy.glb" id="5_hosp_dock_canopy"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_dock_platform.glb" id="6_hosp_dock_platform"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_dock_steps.glb" id="7_hosp_dock_steps"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_door.glb" id="8_hosp_door"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_door_metal.glb" id="9_hosp_door_metal"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_floor.glb" id="10_hosp_floor"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_floor_concrete.glb" id="11_hosp_floor_concrete"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_floor_half.glb" id="12_hosp_floor_half"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_gate_leaf.glb" id="13_hosp_gate_leaf"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_railing_straight.glb" id="14_hosp_railing_straight"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_stairs_flight.glb" id="15_hosp_stairs_flight"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_stairs_landing_half.glb" id="16_hosp_stairs_landing_half"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_stairs_railing_l.glb" id="17_hosp_stairs_railing_l"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_bsmt.glb" id="18_hosp_wall_bsmt"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_bsmt_ext.glb" id="19_hosp_wall_bsmt_ext"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_bsmt_ground.glb" id="20_hosp_wall_bsmt_ground"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_corner_brick.glb" id="21_hosp_wall_corner_brick"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_corner_bsmt.glb" id="22_hosp_wall_corner_bsmt"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_corner_tile.glb" id="23_hosp_wall_corner_tile"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_door_bsmt.glb" id="24_hosp_wall_door_bsmt"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_door_tile.glb" id="25_hosp_wall_door_tile"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_door_tile_bsmt.glb" id="26_hosp_wall_door_tile_bsmt"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_gate_bsmt_ext.glb" id="27_hosp_wall_gate_bsmt_ext"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_tile.glb" id="28_hosp_wall_tile"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/hosp_wall_tile_ext.glb" id="29_hosp_wall_tile_ext"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_bench.glb" id="30_prop_bench"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_bin_hazard.glb" id="31_prop_bin_hazard"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_box.glb" id="32_prop_box"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_bulkhead_lamp.glb" id="33_prop_bulkhead_lamp"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_ceiling_lamp.glb" id="34_prop_ceiling_lamp"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_coat_rack_suits.glb" id="35_prop_coat_rack_suits"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_floor_line.glb" id="36_prop_floor_line"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_med_cabinet.glb" id="37_prop_med_cabinet"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_oxygen_cylinder.glb" id="38_prop_oxygen_cylinder"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_pallet.glb" id="39_prop_pallet"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_pallet_boxes.glb" id="40_prop_pallet_boxes"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_pipe_run.glb" id="41_prop_pipe_run"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_shelf_rack.glb" id="42_prop_shelf_rack"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_sign_plate.glb" id="43_prop_sign_plate"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_sign_plate_red.glb" id="44_prop_sign_plate_red"]
+[ext_resource type="PackedScene" path="res://assets/models/kits/hospital/prop_sink.glb" id="45_prop_sink"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat_overcast"]
+sky_top_color = Color(0.42, 0.46, 0.5, 1)
+sky_horizon_color = Color(0.62, 0.64, 0.66, 1)
+ground_bottom_color = Color(0.18, 0.19, 0.2, 1)
+ground_horizon_color = Color(0.62, 0.64, 0.66, 1)
+
+[sub_resource type="Sky" id="Sky_overcast"]
+sky_material = SubResource("SkyMat_overcast")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky_overcast")
+ambient_light_source = 3
+ambient_light_energy = 0.35
+tonemap_mode = 2
+
+[node name="HospitalServiceDemo" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-35, -150, 0)
+light_color = Color(0.92, 0.94, 1, 1)
+light_energy = 0.7
+shadow_enabled = true
+
+[node name="Airlock" type="Node3D" parent="."]
+
+[node name="Receiving" type="Node3D" parent="."]
+
+[node name="Stairs" type="Node3D" parent="."]
+
+[node name="Basement" type="Node3D" parent="."]
+
+[node name="Yard" type="Node3D" parent="."]
+
+[node name="Lights" type="Node3D" parent="."]
+
+[node name="Labels" type="Node3D" parent="."]
+
+[node name="Floor0" parent="Airlock" instance=ExtResource("10_hosp_floor")]
+position = Vector3(-6, 0, 0)
+
+[node name="Ceiling0" parent="Airlock" instance=ExtResource("10_hosp_floor")]
+position = Vector3(-6, 3.3, 0)
+
+[node name="WallN0" parent="Airlock" instance=ExtResource("28_hosp_wall_tile")]
+position = Vector3(-6, 0, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="WallS0" parent="Airlock" instance=ExtResource("29_hosp_wall_tile_ext")]
+position = Vector3(-6, 0, 1.5)
+
+[node name="Lamp0" parent="Airlock" instance=ExtResource("34_prop_ceiling_lamp")]
+position = Vector3(-6, 3.1, 0)
+
+[node name="Floor1" parent="Airlock" instance=ExtResource("10_hosp_floor")]
+position = Vector3(-3, 0, 0)
+
+[node name="Ceiling1" parent="Airlock" instance=ExtResource("10_hosp_floor")]
+position = Vector3(-3, 3.3, 0)
+
+[node name="WallN1" parent="Airlock" instance=ExtResource("28_hosp_wall_tile")]
+position = Vector3(-3, 0, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="WallS1" parent="Airlock" instance=ExtResource("29_hosp_wall_tile_ext")]
+position = Vector3(-3, 0, 1.5)
+
+[node name="Lamp1" parent="Airlock" instance=ExtResource("34_prop_ceiling_lamp")]
+position = Vector3(-3, 3.1, 0)
+
+[node name="WallW" parent="Airlock" instance=ExtResource("25_hosp_wall_door_tile")]
+position = Vector3(-7.5, 0, 0)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="DoorW" parent="Airlock" instance=ExtResource("8_hosp_door")]
+position = Vector3(-7.5, 0, -0.54)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="WallE" parent="Airlock" instance=ExtResource("26_hosp_wall_door_tile_bsmt")]
+position = Vector3(-1.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="DoorE" parent="Airlock" instance=ExtResource("8_hosp_door")]
+position = Vector3(-1.5, 0, -0.54)
+
+[node name="CornerNW" parent="Airlock" instance=ExtResource("23_hosp_wall_corner_tile")]
+position = Vector3(-7.5, 0, -1.5)
+
+[node name="CornerNE" parent="Airlock" instance=ExtResource("23_hosp_wall_corner_tile")]
+position = Vector3(-1.5, 0, -1.5)
+
+[node name="CornerSW" parent="Airlock" instance=ExtResource("21_hosp_wall_corner_brick")]
+position = Vector3(-7.5, 0, 1.5)
+
+[node name="CornerSE" parent="Airlock" instance=ExtResource("21_hosp_wall_corner_brick")]
+position = Vector3(-1.5, 0, 1.5)
+
+[node name="RedLine" parent="Airlock" instance=ExtResource("36_prop_floor_line")]
+position = Vector3(-4.5, 0.001, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="Suits" parent="Airlock" instance=ExtResource("35_prop_coat_rack_suits")]
+position = Vector3(-6, 0, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="PPECabinet" parent="Airlock" instance=ExtResource("37_prop_med_cabinet")]
+position = Vector3(-6.9, 0, 1.5)
+
+[node name="Bench" parent="Airlock" instance=ExtResource("30_prop_bench")]
+position = Vector3(-5.5, 0, 1.15)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Sink" parent="Airlock" instance=ExtResource("45_prop_sink")]
+position = Vector3(-2.4, 0, 1.5)
+
+[node name="Bin0" parent="Airlock" instance=ExtResource("31_prop_bin_hazard")]
+position = Vector3(-3.6, 0, 1.1)
+
+[node name="Bin1" parent="Airlock" instance=ExtResource("31_prop_bin_hazard")]
+position = Vector3(-2, 0, -1.1)
+
+[node name="SignRed" parent="Airlock" instance=ExtResource("44_prop_sign_plate_red")]
+position = Vector3(-1.5, 2.35, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="SignClean" parent="Airlock" instance=ExtResource("43_prop_sign_plate")]
+position = Vector3(-7.5, 2.3, 0)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="Floor0" parent="Receiving" instance=ExtResource("11_hosp_floor_concrete")]
+position = Vector3(0, 0, 0)
+
+[node name="Floor1" parent="Receiving" instance=ExtResource("11_hosp_floor_concrete")]
+position = Vector3(3, 0, 0)
+
+[node name="FloorHalf0" parent="Receiving" instance=ExtResource("12_hosp_floor_half")]
+position = Vector3(6, 0, -0.75)
+
+[node name="Beam0" parent="Receiving" instance=ExtResource("4_hosp_beam")]
+position = Vector3(6, 0, 1.5)
+
+[node name="FloorHalf1" parent="Receiving" instance=ExtResource("12_hosp_floor_half")]
+position = Vector3(9, 0, -0.75)
+
+[node name="Beam1" parent="Receiving" instance=ExtResource("4_hosp_beam")]
+position = Vector3(9, 0, 1.5)
+
+[node name="FloorHalf2" parent="Receiving" instance=ExtResource("12_hosp_floor_half")]
+position = Vector3(12, 0, -0.75)
+
+[node name="Beam2" parent="Receiving" instance=ExtResource("4_hosp_beam")]
+position = Vector3(12, 0, 1.5)
+
+[node name="BeamE" parent="Receiving" instance=ExtResource("4_hosp_beam")]
+position = Vector3(13.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="Ceiling0" parent="Receiving" instance=ExtResource("10_hosp_floor")]
+position = Vector3(0, 3.3, 0)
+
+[node name="WallN0" parent="Receiving" instance=ExtResource("18_hosp_wall_bsmt")]
+position = Vector3(0, 0, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Ceiling1" parent="Receiving" instance=ExtResource("10_hosp_floor")]
+position = Vector3(3, 3.3, 0)
+
+[node name="WallN1" parent="Receiving" instance=ExtResource("18_hosp_wall_bsmt")]
+position = Vector3(3, 0, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="WallS1" parent="Receiving" instance=ExtResource("19_hosp_wall_bsmt_ext")]
+position = Vector3(3, 0, 1.5)
+
+[node name="Ceiling2" parent="Receiving" instance=ExtResource("10_hosp_floor")]
+position = Vector3(6, 3.3, 0)
+
+[node name="WallN2" parent="Receiving" instance=ExtResource("18_hosp_wall_bsmt")]
+position = Vector3(6, 0, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="WallS2" parent="Receiving" instance=ExtResource("19_hosp_wall_bsmt_ext")]
+position = Vector3(6, 0, 1.5)
+
+[node name="Ceiling3" parent="Receiving" instance=ExtResource("10_hosp_floor")]
+position = Vector3(9, 3.3, 0)
+
+[node name="WallN3" parent="Receiving" instance=ExtResource("18_hosp_wall_bsmt")]
+position = Vector3(9, 0, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="WallS3" parent="Receiving" instance=ExtResource("19_hosp_wall_bsmt_ext")]
+position = Vector3(9, 0, 1.5)
+
+[node name="Ceiling4" parent="Receiving" instance=ExtResource("10_hosp_floor")]
+position = Vector3(12, 3.3, 0)
+
+[node name="WallN4" parent="Receiving" instance=ExtResource("18_hosp_wall_bsmt")]
+position = Vector3(12, 0, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="WallS4" parent="Receiving" instance=ExtResource("19_hosp_wall_bsmt_ext")]
+position = Vector3(12, 0, 1.5)
+
+[node name="Gate" parent="Receiving" instance=ExtResource("27_hosp_wall_gate_bsmt_ext")]
+position = Vector3(0, 0, 1.5)
+
+[node name="GateLeafL" parent="Receiving" instance=ExtResource("13_hosp_gate_leaf")]
+position = Vector3(-1.14, 0, 1.5)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="GateLeafR" parent="Receiving" instance=ExtResource("13_hosp_gate_leaf")]
+position = Vector3(1.14, 0, 1.5)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="WallE" parent="Receiving" instance=ExtResource("18_hosp_wall_bsmt")]
+position = Vector3(13.5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="CornerNE" parent="Receiving" instance=ExtResource("22_hosp_wall_corner_bsmt")]
+position = Vector3(13.5, 0, -1.5)
+
+[node name="CornerSE" parent="Receiving" instance=ExtResource("21_hosp_wall_corner_brick")]
+position = Vector3(13.5, 0, 1.5)
+
+[node name="Railing0" parent="Receiving" instance=ExtResource("14_hosp_railing_straight")]
+position = Vector3(5.15, 0, -0.05)
+
+[node name="Railing1" parent="Receiving" instance=ExtResource("14_hosp_railing_straight")]
+position = Vector3(6.45, 0, -0.05)
+
+[node name="Railing2" parent="Receiving" instance=ExtResource("14_hosp_railing_straight")]
+position = Vector3(7.75, 0, -0.05)
+
+[node name="Railing3" parent="Receiving" instance=ExtResource("14_hosp_railing_straight")]
+position = Vector3(9.05, 0, -0.05)
+
+[node name="Railing4" parent="Receiving" instance=ExtResource("14_hosp_railing_straight")]
+position = Vector3(10.35, 0, -0.05)
+
+[node name="Railing5" parent="Receiving" instance=ExtResource("14_hosp_railing_straight")]
+position = Vector3(11.65, 0, -0.05)
+
+[node name="Railing6" parent="Receiving" instance=ExtResource("14_hosp_railing_straight")]
+position = Vector3(12.95, 0, -0.05)
+
+[node name="Lamp0" parent="Receiving" instance=ExtResource("34_prop_ceiling_lamp")]
+position = Vector3(0, 3.1, 0)
+
+[node name="Lamp1" parent="Receiving" instance=ExtResource("34_prop_ceiling_lamp")]
+position = Vector3(6, 3.1, 0)
+
+[node name="Lamp2" parent="Receiving" instance=ExtResource("34_prop_ceiling_lamp")]
+position = Vector3(12, 3.1, 0)
+
+[node name="Pallet0" parent="Receiving" instance=ExtResource("40_prop_pallet_boxes")]
+position = Vector3(2.6, 0, -0.7)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="Box0" parent="Receiving" instance=ExtResource("32_prop_box")]
+position = Vector3(1.6, 0, -1.1)
+
+[node name="FlightA" parent="Stairs" instance=ExtResource("15_hosp_stairs_flight")]
+position = Vector3(7.5, -1.65, 0.75)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="RailingA" parent="Stairs" instance=ExtResource("17_hosp_stairs_railing_l")]
+position = Vector3(7.5, -1.65, 0.75)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Landing" parent="Stairs" instance=ExtResource("16_hosp_stairs_landing_half")]
+position = Vector3(8.2, -1.65, 0.75)
+
+[node name="LandingRailing" parent="Stairs" instance=ExtResource("14_hosp_railing_straight")]
+position = Vector3(8.2, -1.65, 0.12)
+
+[node name="FlightB" parent="Stairs" instance=ExtResource("15_hosp_stairs_flight")]
+position = Vector3(11.9, -3.3, 0.75)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="RailingB" parent="Stairs" instance=ExtResource("17_hosp_stairs_railing_l")]
+position = Vector3(11.9, -3.3, 0.75)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Floor0" parent="Basement" instance=ExtResource("11_hosp_floor_concrete")]
+position = Vector3(0, -3.3, 0)
+
+[node name="WallS0" parent="Basement" instance=ExtResource("20_hosp_wall_bsmt_ground")]
+position = Vector3(0, -3.3, 1.5)
+
+[node name="Pipes0" parent="Basement" instance=ExtResource("41_prop_pipe_run")]
+position = Vector3(0, -0.75, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="WallN0" parent="Basement" instance=ExtResource("18_hosp_wall_bsmt")]
+position = Vector3(0, -3.3, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Floor1" parent="Basement" instance=ExtResource("11_hosp_floor_concrete")]
+position = Vector3(3, -3.3, 0)
+
+[node name="WallS1" parent="Basement" instance=ExtResource("20_hosp_wall_bsmt_ground")]
+position = Vector3(3, -3.3, 1.5)
+
+[node name="Pipes1" parent="Basement" instance=ExtResource("41_prop_pipe_run")]
+position = Vector3(3, -0.75, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="WallN1" parent="Basement" instance=ExtResource("18_hosp_wall_bsmt")]
+position = Vector3(3, -3.3, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Floor2" parent="Basement" instance=ExtResource("11_hosp_floor_concrete")]
+position = Vector3(6, -3.3, 0)
+
+[node name="WallS2" parent="Basement" instance=ExtResource("20_hosp_wall_bsmt_ground")]
+position = Vector3(6, -3.3, 1.5)
+
+[node name="Pipes2" parent="Basement" instance=ExtResource("41_prop_pipe_run")]
+position = Vector3(6, -0.75, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="WallN2" parent="Basement" instance=ExtResource("18_hosp_wall_bsmt")]
+position = Vector3(6, -3.3, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Floor3" parent="Basement" instance=ExtResource("11_hosp_floor_concrete")]
+position = Vector3(9, -3.3, 0)
+
+[node name="WallS3" parent="Basement" instance=ExtResource("20_hosp_wall_bsmt_ground")]
+position = Vector3(9, -3.3, 1.5)
+
+[node name="Pipes3" parent="Basement" instance=ExtResource("41_prop_pipe_run")]
+position = Vector3(9, -0.75, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="WallN3" parent="Basement" instance=ExtResource("24_hosp_wall_door_bsmt")]
+position = Vector3(9, -3.3, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Floor4" parent="Basement" instance=ExtResource("11_hosp_floor_concrete")]
+position = Vector3(12, -3.3, 0)
+
+[node name="WallS4" parent="Basement" instance=ExtResource("20_hosp_wall_bsmt_ground")]
+position = Vector3(12, -3.3, 1.5)
+
+[node name="Pipes4" parent="Basement" instance=ExtResource("41_prop_pipe_run")]
+position = Vector3(12, -0.75, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="WallN4" parent="Basement" instance=ExtResource("18_hosp_wall_bsmt")]
+position = Vector3(12, -3.3, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="StoreDoor" parent="Basement" instance=ExtResource("9_hosp_door_metal")]
+position = Vector3(8.46, -3.3, -1.5)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="WallW" parent="Basement" instance=ExtResource("20_hosp_wall_bsmt_ground")]
+position = Vector3(-1.5, -3.3, 0)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="WallE" parent="Basement" instance=ExtResource("20_hosp_wall_bsmt_ground")]
+position = Vector3(13.5, -3.3, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="Corner0" parent="Basement" instance=ExtResource("22_hosp_wall_corner_bsmt")]
+position = Vector3(-1.5, -3.3, -1.5)
+
+[node name="Corner1" parent="Basement" instance=ExtResource("22_hosp_wall_corner_bsmt")]
+position = Vector3(-1.5, -3.3, 1.5)
+
+[node name="Corner2" parent="Basement" instance=ExtResource("22_hosp_wall_corner_bsmt")]
+position = Vector3(13.5, -3.3, -1.5)
+
+[node name="Corner3" parent="Basement" instance=ExtResource("22_hosp_wall_corner_bsmt")]
+position = Vector3(13.5, -3.3, 1.5)
+
+[node name="Corner4" parent="Basement" instance=ExtResource("22_hosp_wall_corner_bsmt")]
+position = Vector3(4.5, -3.3, -1.5)
+
+[node name="Corner5" parent="Basement" instance=ExtResource("22_hosp_wall_corner_bsmt")]
+position = Vector3(4.5, -3.3, -4.5)
+
+[node name="Corner6" parent="Basement" instance=ExtResource("22_hosp_wall_corner_bsmt")]
+position = Vector3(10.5, -3.3, -4.5)
+
+[node name="Corner7" parent="Basement" instance=ExtResource("22_hosp_wall_corner_bsmt")]
+position = Vector3(10.5, -3.3, -1.5)
+
+[node name="StoreFloor0" parent="Basement" instance=ExtResource("11_hosp_floor_concrete")]
+position = Vector3(6, -3.3, -3)
+
+[node name="StoreCeiling0" parent="Basement" instance=ExtResource("11_hosp_floor_concrete")]
+position = Vector3(6, 0, -3)
+
+[node name="StoreWallN0" parent="Basement" instance=ExtResource("20_hosp_wall_bsmt_ground")]
+position = Vector3(6, -3.3, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="StoreFloor1" parent="Basement" instance=ExtResource("11_hosp_floor_concrete")]
+position = Vector3(9, -3.3, -3)
+
+[node name="StoreCeiling1" parent="Basement" instance=ExtResource("11_hosp_floor_concrete")]
+position = Vector3(9, 0, -3)
+
+[node name="StoreWallN1" parent="Basement" instance=ExtResource("20_hosp_wall_bsmt_ground")]
+position = Vector3(9, -3.3, -4.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="StoreWallW" parent="Basement" instance=ExtResource("18_hosp_wall_bsmt")]
+position = Vector3(4.5, -3.3, -3)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="StoreWallE" parent="Basement" instance=ExtResource("18_hosp_wall_bsmt")]
+position = Vector3(10.5, -3.3, -3)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="Rack0" parent="Basement" instance=ExtResource("42_prop_shelf_rack")]
+position = Vector3(6, -3.3, -4.1)
+
+[node name="Rack1" parent="Basement" instance=ExtResource("42_prop_shelf_rack")]
+position = Vector3(8.2, -3.3, -4.1)
+
+[node name="Rack2" parent="Basement" instance=ExtResource("42_prop_shelf_rack")]
+position = Vector3(4.85, -3.3, -2.9)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="StorePallet" parent="Basement" instance=ExtResource("40_prop_pallet_boxes")]
+position = Vector3(9.7, -3.3, -2.6)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="StoreBox0" parent="Basement" instance=ExtResource("32_prop_box")]
+position = Vector3(7.2, -3.3, -2.3)
+
+[node name="StoreBox1" parent="Basement" instance=ExtResource("32_prop_box")]
+position = Vector3(7.25, -3, -2.3)
+rotation_degrees = Vector3(0, 15, 0)
+
+[node name="Oxygen0" parent="Basement" instance=ExtResource("38_prop_oxygen_cylinder")]
+position = Vector3(0.6, -3.3, 1.2)
+
+[node name="Oxygen1" parent="Basement" instance=ExtResource("38_prop_oxygen_cylinder")]
+position = Vector3(0.9, -3.3, 1.2)
+
+[node name="Oxygen2" parent="Basement" instance=ExtResource("38_prop_oxygen_cylinder")]
+position = Vector3(1.2, -3.3, 1.2)
+
+[node name="Oxygen3" parent="Basement" instance=ExtResource("38_prop_oxygen_cylinder")]
+position = Vector3(1.5, -3.3, 1.2)
+
+[node name="Oxygen4" parent="Basement" instance=ExtResource("38_prop_oxygen_cylinder")]
+position = Vector3(1.8, -3.3, 1.2)
+
+[node name="Lamp0" parent="Basement" instance=ExtResource("33_prop_bulkhead_lamp")]
+position = Vector3(0, -0.2, -0.75)
+
+[node name="Lamp1" parent="Basement" instance=ExtResource("33_prop_bulkhead_lamp")]
+position = Vector3(6, -0.2, -0.75)
+
+[node name="Lamp2" parent="Basement" instance=ExtResource("33_prop_bulkhead_lamp")]
+position = Vector3(12, -0.2, -0.75)
+
+[node name="Lamp3" parent="Basement" instance=ExtResource("33_prop_bulkhead_lamp")]
+position = Vector3(7.5, -0.2, -3)
+
+[node name="StoreSign" parent="Basement" instance=ExtResource("43_prop_sign_plate")]
+position = Vector3(9.9, -1.7, -1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Asphalt0_0" parent="Yard" instance=ExtResource("3_ext_ground_asphalt")]
+position = Vector3(-7.5, -1.1, 4.5)
+
+[node name="Asphalt0_1" parent="Yard" instance=ExtResource("3_ext_ground_asphalt")]
+position = Vector3(-7.5, -1.1, 10.5)
+
+[node name="Asphalt1_0" parent="Yard" instance=ExtResource("3_ext_ground_asphalt")]
+position = Vector3(-1.5, -1.1, 4.5)
+
+[node name="Asphalt1_1" parent="Yard" instance=ExtResource("3_ext_ground_asphalt")]
+position = Vector3(-1.5, -1.1, 10.5)
+
+[node name="Asphalt2_0" parent="Yard" instance=ExtResource("3_ext_ground_asphalt")]
+position = Vector3(4.5, -1.1, 4.5)
+
+[node name="Asphalt2_1" parent="Yard" instance=ExtResource("3_ext_ground_asphalt")]
+position = Vector3(4.5, -1.1, 10.5)
+
+[node name="Asphalt3_0" parent="Yard" instance=ExtResource("3_ext_ground_asphalt")]
+position = Vector3(10.5, -1.1, 4.5)
+
+[node name="Asphalt3_1" parent="Yard" instance=ExtResource("3_ext_ground_asphalt")]
+position = Vector3(10.5, -1.1, 10.5)
+
+[node name="Asphalt4_0" parent="Yard" instance=ExtResource("3_ext_ground_asphalt")]
+position = Vector3(16.5, -1.1, 4.5)
+
+[node name="Asphalt4_1" parent="Yard" instance=ExtResource("3_ext_ground_asphalt")]
+position = Vector3(16.5, -1.1, 10.5)
+
+[node name="Dock0" parent="Yard" instance=ExtResource("6_hosp_dock_platform")]
+position = Vector3(0, 0, 3.1)
+
+[node name="Dock1" parent="Yard" instance=ExtResource("6_hosp_dock_platform")]
+position = Vector3(3, 0, 3.1)
+
+[node name="Dock2" parent="Yard" instance=ExtResource("6_hosp_dock_platform")]
+position = Vector3(6, 0, 3.1)
+
+[node name="DockSteps" parent="Yard" instance=ExtResource("7_hosp_dock_steps")]
+position = Vector3(9, -1.1, 3.1)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Canopy0" parent="Yard" instance=ExtResource("5_hosp_dock_canopy")]
+position = Vector3(-1.5, 0, 1.5)
+
+[node name="Canopy1" parent="Yard" instance=ExtResource("5_hosp_dock_canopy")]
+position = Vector3(1.5, 0, 1.5)
+
+[node name="Canopy2" parent="Yard" instance=ExtResource("5_hosp_dock_canopy")]
+position = Vector3(4.5, 0, 1.5)
+
+[node name="DockLamp" parent="Yard" instance=ExtResource("33_prop_bulkhead_lamp")]
+position = Vector3(0, 2.88, 2.2)
+
+[node name="DockPallet0" parent="Yard" instance=ExtResource("40_prop_pallet_boxes")]
+position = Vector3(4, 0, 3.4)
+rotation_degrees = Vector3(0, 10, 0)
+
+[node name="DockPallet1" parent="Yard" instance=ExtResource("40_prop_pallet_boxes")]
+position = Vector3(5.5, 0, 2.7)
+rotation_degrees = Vector3(0, -5, 0)
+
+[node name="DockPallet2" parent="Yard" instance=ExtResource("39_prop_pallet")]
+position = Vector3(6.6, 0, 3.9)
+rotation_degrees = Vector3(0, 30, 0)
+
+[node name="DockBox0" parent="Yard" instance=ExtResource("32_prop_box")]
+position = Vector3(2, 0, 4.1)
+rotation_degrees = Vector3(0, 20, 0)
+
+[node name="DockBox1" parent="Yard" instance=ExtResource("32_prop_box")]
+position = Vector3(2.1, 0.3, 4.05)
+rotation_degrees = Vector3(0, -10, 0)
+
+[node name="GateSign" parent="Yard" instance=ExtResource("43_prop_sign_plate")]
+position = Vector3(0, 2.62, 1.5)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="AirlockLight0" type="OmniLight3D" parent="Lights"]
+position = Vector3(-6, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.1
+omni_range = 6.0
+
+[node name="AirlockLight1" type="OmniLight3D" parent="Lights"]
+position = Vector3(-3, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.1
+omni_range = 6.0
+
+[node name="ReceivingLight0" type="OmniLight3D" parent="Lights"]
+position = Vector3(0, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="ReceivingLight1" type="OmniLight3D" parent="Lights"]
+position = Vector3(6, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 7.0
+
+[node name="ReceivingLight2" type="OmniLight3D" parent="Lights"]
+position = Vector3(12, 2.9, 0)
+light_color = Color(0.92, 1, 0.95, 1)
+light_energy = 1.0
+omni_range = 7.0
+
+[node name="BasementLight0" type="OmniLight3D" parent="Lights"]
+position = Vector3(0, -0.5, -0.75)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 0.9
+omni_range = 6.0
+
+[node name="BasementLight1" type="OmniLight3D" parent="Lights"]
+position = Vector3(6, -0.5, -0.75)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 0.9
+omni_range = 6.0
+
+[node name="BasementLight2" type="OmniLight3D" parent="Lights"]
+position = Vector3(12, -0.5, -0.75)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 0.9
+omni_range = 6.0
+
+[node name="StoreLight" type="OmniLight3D" parent="Lights"]
+position = Vector3(7.5, -0.5, -3)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 0.9
+omni_range = 6.0
+
+[node name="StairLight" type="OmniLight3D" parent="Lights"]
+position = Vector3(9.5, -1, 0.75)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 0.6
+omni_range = 5.0
+
+[node name="DockLight" type="OmniLight3D" parent="Lights"]
+position = Vector3(0, 2.6, 2.2)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 1.5
+omni_range = 6.0
+
+[node name="SignRedText" type="Label3D" parent="Labels"]
+position = Vector3(-1.613, 2.35, 0)
+rotation_degrees = Vector3(0, -90, 0)
+pixel_size = 0.001
+modulate = Color(1, 1, 1, 1)
+outline_size = 0
+text = "КРАСНАЯ ЗОНА"
+font_size = 44
+
+[node name="SignCleanText" type="Label3D" parent="Labels"]
+position = Vector3(-7.387, 2.3, 0)
+rotation_degrees = Vector3(0, 90, 0)
+pixel_size = 0.001
+modulate = Color(0.12, 0.12, 0.12, 1)
+outline_size = 0
+text = "ЧИСТАЯ ЗОНА"
+font_size = 36
+
+[node name="StoreSignText" type="Label3D" parent="Labels"]
+position = Vector3(9.9, -1.7, -1.387)
+pixel_size = 0.001
+modulate = Color(0.12, 0.12, 0.12, 1)
+outline_size = 0
+text = "АПТЕЧНЫЙ СКЛАД"
+font_size = 28
+
+[node name="GateSignText" type="Label3D" parent="Labels"]
+position = Vector3(0, 2.62, 1.613)
+pixel_size = 0.001
+modulate = Color(0.12, 0.12, 0.12, 1)
+outline_size = 0
+text = "ПРИЁМ ГРУЗОВ"
+font_size = 32
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+position = Vector3(-6.5, 0.05, 0.3)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="DebugOverlay" type="Label" parent="HUD" node_paths=PackedStringArray("player")]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 520.0
+offset_bottom = 200.0
+script = ExtResource("2_overlay")
+player = NodePath("../../Player")
