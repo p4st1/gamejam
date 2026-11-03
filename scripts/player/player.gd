@@ -116,8 +116,12 @@ func _physics_process(delta: float) -> void:
 			along = _slow_down(along, target_speed, ground_deceleration, delta)
 		else:
 			along = move_toward(along, target_speed, ground_acceleration * delta)
-		drift = drift.limit_length(_slow_down(drift.length(), 0.0, turn_deceleration, delta))
-		horizontal = direction * along + drift
+		# Снос гасится быстро всегда: иначе при повороте мышью на бегу он складывался бы
+		# с заново набранной скоростью вдоль взгляда и разгонял игрока.
+		drift = drift.move_toward(Vector3.ZERO, turn_deceleration * delta)
+		# Скорость не растёт выше большей из целевой и текущей.
+		horizontal = (direction * along + drift).limit_length(
+			maxf(target_speed, horizontal.length()))
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
 

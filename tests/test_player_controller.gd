@@ -91,6 +91,25 @@ func _run() -> void:
 	_check(reversal <= 0.3, "стрейф туда-обратно — %.2f с" % reversal)
 	await _wait(0.5)
 
+	# Поворот мышью на бегу (в том числе по диагонали) не разгоняет игрока сверх скорости бега.
+	_teleport(Vector3(0, 0.05, 20))
+	Input.action_press("move_forward")
+	Input.action_press("move_left")
+	Input.action_press("sprint")
+	await _wait(0.6)
+	var top_speed := 0.0
+	# Плавный поворот, затем резкие рывки мышью по ~90°.
+	for frame in 150:
+		_player.rotate_y(0.06 if frame < 60 else (0.5 if frame % 12 < 3 else 0.0))
+		await physics_frame
+		top_speed = maxf(top_speed, _player.get_horizontal_speed())
+	Input.action_release("sprint")
+	Input.action_release("move_left")
+	Input.action_release("move_forward")
+	_check(top_speed <= _player.sprint_speed + 0.05,
+		"поворот на бегу не разгоняет (макс. %.2f м/с)" % top_speed)
+	await _wait(1.0)
+
 	print("\nИТОГ: %s" % ("все проверки пройдены" if _failures == 0 else "провалено: %d" % _failures))
 	# Остановить звук до выхода: иначе воспроизведения остаются в AudioServer — «утечка».
 	root.propagate_call(&"stop")
