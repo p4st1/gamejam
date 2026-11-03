@@ -67,6 +67,30 @@ func _run() -> void:
 	Input.action_release("sprint")
 	Input.action_release("move_forward")
 
+	# Инерция бега: после остановки с бега игрок проскальзывает вперёд, с шага — почти нет.
+	var slide: float = await _stop_distance()
+	_check(slide > 1.2 and slide < 2.2, "остановка с бега — проскальзывание %.2f м" % slide)
+	_teleport(Vector3(0, 0.05, 20))
+	Input.action_press("move_forward")
+	await _wait(1.0)
+	Input.action_release("move_forward")
+	var step_stop: float = await _stop_distance()
+	_check(step_stop < 0.35, "остановка с шага — %.2f м" % step_stop)
+
+	# Стрейф влево → вправо: скорость шага в новую сторону набирается быстро.
+	_teleport(Vector3(0, 0.05, 20))
+	Input.action_press("move_left")
+	await _wait(1.0)
+	Input.action_release("move_left")
+	Input.action_press("move_right")
+	var reversal := 0.0
+	while _player.velocity.x < _player.walk_speed * 0.95 and reversal < 2.0:
+		await physics_frame
+		reversal += 1.0 / Engine.physics_ticks_per_second
+	Input.action_release("move_right")
+	_check(reversal <= 0.3, "стрейф туда-обратно — %.2f с" % reversal)
+	await _wait(0.5)
+
 	print("\nИТОГ: %s" % ("все проверки пройдены" if _failures == 0 else "провалено: %d" % _failures))
 	# Остановить звук до выхода: иначе воспроизведения остаются в AudioServer — «утечка».
 	root.propagate_call(&"stop")
@@ -79,6 +103,17 @@ func _teleport(pos: Vector3) -> void:
 	_player.velocity = Vector3.ZERO
 	_player.rotation = Vector3.ZERO
 	await physics_frame
+
+
+## Путь по горизонтали (м) от текущей точки до полной остановки.
+func _stop_distance() -> float:
+	var start: Vector3 = _player.global_position
+	var frames := 0
+	while _player.get_horizontal_speed() > 0.01 and frames < 300:
+		await physics_frame
+		frames += 1
+	var path: Vector3 = _player.global_position - start
+	return Vector2(path.x, path.z).length()
 
 
 func _wait(seconds: float) -> void:

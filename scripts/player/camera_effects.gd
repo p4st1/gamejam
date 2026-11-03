@@ -22,6 +22,11 @@ extends Node3D
 @export var strafe_roll_degrees := 1.2
 @export var roll_smoothing := 6.0
 
+@export_group("Торможение")
+## «Клевок» камеры вперёд при торможении по инерции бега (на полной скорости бега).
+@export var brake_pitch_degrees := 1.2
+@export var brake_pitch_smoothing := 8.0
+
 var _bob_time := 0.0
 var _land_offset := 0.0
 
@@ -54,6 +59,12 @@ func _process(delta: float) -> void:
 	var target_roll := -local_velocity.x / _player.sprint_speed \
 		* deg_to_rad(strafe_roll_degrees) * strength
 	rotation.z = lerpf(rotation.z, target_roll, minf(1.0, delta * roll_smoothing))
+
+	var target_pitch := 0.0
+	if _player.is_momentum_braking:
+		var excess := inverse_lerp(_player.walk_speed, _player.sprint_speed, speed)
+		target_pitch = -clampf(excess, 0.0, 1.0) * deg_to_rad(brake_pitch_degrees) * strength
+	rotation.x = lerpf(rotation.x, target_pitch, minf(1.0, delta * brake_pitch_smoothing))
 
 
 func _on_player_landed(fall_speed: float) -> void:

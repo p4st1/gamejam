@@ -12,8 +12,14 @@ signal jumped
 @export var walk_speed := 3.0
 @export var sprint_speed := 5.5
 @export var crouch_speed := 1.6
-@export var ground_acceleration := 12.0
-@export var ground_deceleration := 14.0
+## Разгон вдоль желаемого направления.
+@export var ground_acceleration := 20.0
+## Торможение без ввода.
+@export var ground_deceleration := 22.0
+## Гашение сноса поперёк желаемого направления и движения назад — резкая смена направления.
+@export var turn_deceleration := 30.0
+## Инерция бега: скорость сверх walk_speed гасится этим темпом — игрок проскальзывает.
+@export var sprint_momentum_deceleration := 7.0
 @export var air_control := 0.25
 
 @export_group("Прыжок")
@@ -33,6 +39,8 @@ signal jumped
 
 var is_crouching := false
 var is_sprinting := false
+## Идёт торможение по инерции бега (скорость сверх шага гасится медленно) — для эффектов камеры.
+var is_momentum_braking := false
 
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var _current_height := 1.8
@@ -91,11 +99,25 @@ func _physics_process(delta: float) -> void:
 		target_speed = sprint_speed
 
 	var horizontal := Vector3(velocity.x, 0.0, velocity.z)
-	var target := direction * target_speed
-	var rate := ground_acceleration if direction != Vector3.ZERO else ground_deceleration
+	is_momentum_braking = false
 	if not is_on_floor():
-		rate *= air_control
-	horizontal = horizontal.move_toward(target, rate * delta)
+		var rate := ground_acceleration if direction != Vector3.ZERO else ground_deceleration
+		horizontal = horizontal.move_toward(direction * target_speed, rate * air_control * delta)
+	elif direction == Vector3.ZERO:
+		horizontal = horizontal.limit_length(
+			_slow_down(horizontal.length(), 0.0, ground_deceleration, delta))
+	else:
+		# Скорость вдоль желаемого направления и снос поперёк гасятся раздельно.
+		var along := horizontal.dot(direction)
+		var drift := horizontal - direction * along
+		if along < 0.0:
+			along = -_slow_down(-along, 0.0, turn_deceleration, delta)
+		elif along > target_speed:
+			along = _slow_down(along, target_speed, ground_deceleration, delta)
+		else:
+			along = move_toward(along, target_speed, ground_acceleration * delta)
+		drift = drift.limit_length(_slow_down(drift.length(), 0.0, turn_deceleration, delta))
+		horizontal = direction * along + drift
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
 
@@ -111,6 +133,14 @@ func _physics_process(delta: float) -> void:
 ## Горизонтальная скорость — нужна эффектам камеры и отладочному оверлею.
 func get_horizontal_speed() -> float:
 	return Vector2(velocity.x, velocity.z).length()
+
+
+## Снижает скорость speed до target: сверх walk_speed — медленно (инерция бега), ниже — темпом rate.
+func _slow_down(speed: float, target: float, rate: float, delta: float) -> float:
+	if speed > walk_speed and speed > target:
+		is_momentum_braking = true
+		return maxf(speed - sprint_momentum_deceleration * delta, maxf(target, walk_speed))
+	return move_toward(speed, target, rate * delta)
 
 
 func _apply_settings() -> void:
