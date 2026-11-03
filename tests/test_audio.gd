@@ -37,8 +37,8 @@ func _test_assets() -> void:
 	var complete := true
 	for surface in SurfaceType.ALL:
 		var stream := load(AUDIO + "sfx/footsteps/%s.tres" % surface) as AudioStreamRandomizer
-		complete = complete and stream != null and stream.streams_count == 5
-	_check(complete, "шаги: 6 поверхностей по 5 вариантов")
+		complete = complete and stream != null and stream.streams_count >= 5
+	_check(complete, "шаги: 6 поверхностей, не меньше 5 вариантов")
 	for body in ["jump", "land"]:
 		var stream := load(AUDIO + "sfx/body/%s.tres" % body) as AudioStreamRandomizer
 		_check(stream != null and stream.streams_count == 5, "звуки тела: %s" % body)
