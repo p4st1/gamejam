@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://ghrli30ajwm7"]
+
+[ext_resource type="PackedScene" uid="uid://csxql2h4ke7uq" path="res://assets/models/myProp/medical_prop/medical_props.glb" id="1_hpilv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x4qak"]
+size = Vector3(1.685669, 2.2192383, 1)
+
+[node name="medical_prop" unique_id=1845680006 instance=ExtResource("1_hpilv")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." index="1" unique_id=1875072351]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" index="0" unique_id=369832813]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0044555664, 1.1053717, 0)
+shape = SubResource("BoxShape3D_x4qak")
